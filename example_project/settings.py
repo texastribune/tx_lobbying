@@ -123,6 +123,7 @@ INSTALLED_APPS = (
 
     # Uncomment the next line to get runshell_plus, shell_plus, etc
     # 'django_extensions',
+    'tx_lobbying',
 
     'django_nose',
 )
