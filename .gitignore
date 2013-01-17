@@ -1,0 +1,21 @@
+# Django generated files
+media
+*.sqlite
+
+
+# Randomly generated files
+*.log
+*.pot
+*.pyc
+.DS_Store
+.sass-cache
+
+# IDE
+.codeintel
+*.sublime-*
+
+
+# packaging
+MANIFEST
+dist/*
+*.egg-info
