@@ -28,11 +28,13 @@ def convert_date_format(str):
 
 
 def scrape(path):
+    logger.info("Processing %s" % path)
     with open(path, 'r') as f:
         reader = DictReader(f)
         for row in reader:
             report_date = convert_date_format(row['RPT_DATE'])
 
+            # lobbyist
             default_data = dict(
                 sort_name=row['SORTNAME'],
                 updated_at=report_date,
@@ -43,7 +45,10 @@ def scrape(path):
             if not created:
                 # need to update name?
                 pass
+            if created:
+                logger.debug(lobbyist)
 
+            # report
             report_id = row['REPNO']
             default_data = dict(
                 raw=json.dumps(row),
@@ -54,6 +59,8 @@ def scrape(path):
                 filer=lobbyist,
                 report_id=report_id,
                 defaults=default_data)
+            if created:
+                logger.debug(report)
 
 
 if __name__ == "__main__":
