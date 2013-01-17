@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 def convert_date_format(str):
     """Convert 12/25/2009 to 2009-12-25."""
+    # TODO convert to Date so we can do comparisons
     month, day, year = str.split('/')
     return u"-".join([year, month, day])
 
@@ -30,10 +31,20 @@ def scrape(path):
     with open(path, 'r') as f:
         reader = DictReader(f)
         for row in reader:
-            lobbyist, __ = Lobbyist.objects.get_or_create(
-                filer_id=row['FILER_ID'])
-            report_id = row['REPNO']
             report_date = convert_date_format(row['RPT_DATE'])
+
+            default_data = dict(
+                sort_name=row['SORTNAME'],
+                updated_at=report_date,
+            )
+            lobbyist, created = Lobbyist.objects.get_or_create(
+                filer_id=row['FILER_ID'],
+                defaults=default_data)
+            if not created:
+                # need to update name?
+                pass
+
+            report_id = row['REPNO']
             default_data = dict(
                 raw=json.dumps(row),
                 report_date=report_date,

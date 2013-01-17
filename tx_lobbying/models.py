@@ -3,10 +3,12 @@ from django.db import models
 
 class Lobbyist(models.Model):
     filer_id = models.IntegerField(unique=True)
+    sort_name = models.CharField(max_length=150)
+    updated_at = models.DateField()
     # name
 
     def __unicode__(self):
-        return unicode(self.filer_id)
+        return self.sort_name
 
 
 class RegistrationReport(models.Model):
