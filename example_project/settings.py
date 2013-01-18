@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     'tx_lobbying',
 
     'django_nose',
+    'example_project.test_app',
 )
 
 # A sample logging configuration. The only tangible logging
