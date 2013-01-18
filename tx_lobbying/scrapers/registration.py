@@ -15,7 +15,7 @@ import sys
 
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Interest, Lobbyist, RegistrationReport,
-    ClientList)
+    ClientList, Compensation)
 
 
 logger = logging.getLogger(__name__)
@@ -59,7 +59,13 @@ def scrape(path):
             clientlist, created = ClientList.objects.get_or_create(
                 lobbyist=lobbyist,
                 year=year)
-            clientlist.clients.add(interest)
+            default_data = dict(
+                updated_at=report_date,
+            )
+            Compensation.objects.get_or_create(
+                clientlist=clientlist,
+                interest=interest,
+                defaults=default_data)
 
             # report
             report_id = row['REPNO']

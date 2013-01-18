@@ -47,7 +47,7 @@ class RegistrationReport(models.Model):
 class ClientList(models.Model):
     lobbyist = models.ForeignKey(Lobbyist)
     year = models.IntegerField()
-    clients = models.ManyToManyField(Interest)
+    clients = models.ManyToManyField(Interest, through='Compensation')
 
     class Meta:
         ordering = ('-year', )
@@ -55,3 +55,16 @@ class ClientList(models.Model):
 
     def __unicode__(self):
         return u"%s (%s)" % (self.lobbyist, self.year)
+
+
+class Compensation(models.Model):
+    clientlist = models.ForeignKey(ClientList)
+    interest = models.ForeignKey(Interest)
+    updated_at = models.DateField()
+
+    class Meta:
+        # ordering = ('interest__name', )
+        unique_together = ('clientlist', 'interest')
+
+    def __unicode__(self):
+        return u"%s %s" % (self.clientlist.lobbyist, self.interest)

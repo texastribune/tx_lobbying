@@ -1,7 +1,9 @@
 from django.test import TestCase
 
 
-from tx_lobbying.factories import (InterestFactory, LobbyistFactory, ClientListFactory)
+from tx_lobbying.factories import (InterestFactory, LobbyistFactory,
+        ClientListFactory)
+from tx_lobbying.models import Compensation
 
 
 class NamedPoorlyTestCase(TestCase):
@@ -13,7 +15,8 @@ class NamedPoorlyTestCase(TestCase):
         try:
             # add an `Interest` to a `Lobbyist`
             c = ClientListFactory.create(lobbyist=l, year=2000)
-            c.clients.add(i)
+            Compensation.objects.create(clientlist=c, interest=i,
+                updated_at=l.updated_at)
 
             # get all the `Interests` for a `Lobbyist`
             for c in l.clientlist_set.all():
