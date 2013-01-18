@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 
 
 class Interest(models.Model):
@@ -10,6 +11,42 @@ class Interest(models.Model):
 
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.state)
+
+    def make_stats_for_year(self, year):
+        # TODO move into utils
+        guess = 0
+        high = 0
+        low = 0
+        count = 0
+        # TODO refactor
+        for compensation in self.compensation_set.filter(year__year=year):
+            guess += compensation.amount_guess
+            high += compensation.amount_high
+            low += compensation.amount_low
+            count += 1
+        stat, __ = InterestStats.objects.get_or_create(interest=self, year=year)
+        stat.guess = guess
+        stat.high = high
+        stat.low = low
+        stat.lobbyist_count = count
+        stat.save()
+        return stat
+
+
+class InterestStats(models.Model):
+    interest = models.ForeignKey(Interest, related_name='stats')
+    year = models.IntegerField(null=True, blank=True)
+    guess = models.IntegerField(null=True, blank=True)
+    high = models.IntegerField(null=True, blank=True)
+    low = models.IntegerField(null=True, blank=True)
+    lobbyist_count = models.IntegerField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('interest', 'year')
+
+    def __unicode__(self):
+        return (u"{0.interest} compensated {0.lobbyist_count} "
+            "${0.low} - ${0.high} ({0.year})".format(self))
 
 
 class Lobbyist(models.Model):
@@ -75,5 +112,5 @@ class Compensation(models.Model):
 
     def __unicode__(self):
         # TODO, thousands separator... requires python 2.7
-        return u"{1} pays {0} ~${2}".format(self.clientlist.lobbyist,
-            self.interest, self.amount_guess)
+        return u"{1.interest} pays {0} ~${1.amount_guess} ({1.year})".format(
+            self.year.lobbyist, self)

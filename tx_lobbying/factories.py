@@ -34,7 +34,7 @@ class LobbyistYearFactory(factory.Factory):
 class CompensationFactory(factory.Factory):
     FACTORY_FOR = Compensation
     amount_high = factory.LazyAttribute(lambda a: random.randint(10000, 100000))
-    amount_low = factory.LazyAttribute(lambda a: random.randint(a.amount_high, 100000))
+    amount_low = factory.LazyAttribute(lambda a: random.randint(0, a.amount_high))
     amount_guess = factory.LazyAttribute(lambda a: (a.amount_high + a.amount_low) / 2)
     year = factory.SubFactory(LobbyistYearFactory)
     interest = factory.SubFactory(InterestFactory)
