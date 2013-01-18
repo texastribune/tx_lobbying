@@ -44,10 +44,13 @@ class RegistrationReport(models.Model):
 
 
 # Fun data
-class ClientList(models.Model):
-    lobbyist = models.ForeignKey(Lobbyist)
+class LobbyistYear(models.Model):
+    """The list of `Interest`s a `Lobbyist` has for a year."""
+    lobbyist = models.ForeignKey(Lobbyist, related_name='years')
     year = models.IntegerField()
-    clients = models.ManyToManyField(Interest, through='Compensation')
+    clients = models.ManyToManyField(Interest, through='Compensation',
+        related_name='years_available')
+    # expenses
 
     class Meta:
         ordering = ('-year', )
@@ -61,14 +64,14 @@ class Compensation(models.Model):
     amount_guess = models.IntegerField()  # denormalized, f(amount_low, amount_high)
     amount_high = models.IntegerField()  # upper bound, exlusive
     amount_low = models.IntegerField()  # lower bound, inclusive
-    clientlist = models.ForeignKey(ClientList)
+    year = models.ForeignKey(LobbyistYear)
     interest = models.ForeignKey(Interest)
     raw = models.TextField()
     updated_at = models.DateField()
 
     class Meta:
         # ordering = ('interest__name', )
-        unique_together = ('clientlist', 'interest')
+        unique_together = ('year', 'interest')
 
     def __unicode__(self):
         # TODO, thousands separator... requires python 2.7
