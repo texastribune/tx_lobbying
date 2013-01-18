@@ -1,6 +1,17 @@
 from django.db import models
 
 
+class Interest(models.Model):
+    name = models.CharField(max_length=200)
+    state = models.CharField(max_length=2)
+
+    class Meta:
+        unique_together = ('name', 'state')
+
+    def __unicode__(self):
+        return u"%s (%s)" % (self.name, self.state)
+
+
 class Lobbyist(models.Model):
     filer_id = models.IntegerField(unique=True)
     sort_name = models.CharField(max_length=150)
@@ -30,3 +41,17 @@ class RegistrationReport(models.Model):
 
     def __unicode__(self):
         return u"%s %s %s" % (self.filer, self.report_date, self.report_id)
+
+
+# Fun data
+class ClientList(models.Model):
+    lobbyist = models.ForeignKey(Lobbyist)
+    year = models.IntegerField()
+    clients = models.ManyToManyField(Interest)
+
+    class Meta:
+        ordering = ('-year', )
+        unique_together = ('lobbyist', 'year')
+
+    def __unicode__(self):
+        return u"%s (%s)" % (self.lobbyist, self.year)

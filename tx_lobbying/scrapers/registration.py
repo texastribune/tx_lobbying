@@ -14,7 +14,8 @@ import os
 import sys
 
 # don't use relative imports so this can also be run from the command line
-from tx_lobbying.models import Lobbyist, RegistrationReport
+from tx_lobbying.models import (Interest, Lobbyist, RegistrationReport,
+    ClientList)
 
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,12 @@ def scrape(path):
         reader = DictReader(f)
         for row in reader:
             report_date = convert_date_format(row['RPT_DATE'])
+            year = row['YEAR_APPL']
+
+            # interest/concern/client
+            interest, created = Interest.objects.get_or_create(
+                name=row['CONCERNAME'],
+                state=row['EC_STCD'])
 
             # lobbyist
             default_data = dict(
@@ -48,12 +55,18 @@ def scrape(path):
             if created:
                 logger.debug(lobbyist)
 
+            # lobbyist/interest M2M
+            clientlist, created = ClientList.objects.get_or_create(
+                lobbyist=lobbyist,
+                year=year)
+            clientlist.clients.add(interest)
+
             # report
             report_id = row['REPNO']
             default_data = dict(
                 raw=json.dumps(row),
                 report_date=report_date,
-                year=row['YEAR_APPL'],
+                year=year,
             )
             report, created = RegistrationReport.objects.get_or_create(
                 filer=lobbyist,
