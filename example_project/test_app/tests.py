@@ -5,7 +5,7 @@ from django.test import TestCase
 from tx_lobbying.factories import (InterestFactory, LobbyistFactory,
         LobbyistYearFactory,
         CompensationFactory)
-from tx_lobbying.models import Interest
+from tx_lobbying.models import Interest, LobbyistYear
 
 
 class NamedPoorlyTestCase(TestCase):
@@ -62,3 +62,19 @@ class NamedPoorlyTestCase(TestCase):
 
         except Exception as e:
             self.fail("Ha ha, %s" % e)
+
+    def test_lobbyist_compensation_report_queryset(self):
+        NUM_CLIENTS = 3
+        YEAR = 2000
+
+        for i in range(10):
+            lobbyist = LobbyistFactory.create()
+            year = LobbyistYearFactory.create(lobbyist=lobbyist, year=YEAR)
+            for x in range(0, NUM_CLIENTS):
+                CompensationFactory.create(year=year)
+
+        # Here's a queryset to get the best paid `Lobbyist`s in a year
+        qs = LobbyistYear.objects.filter(year=YEAR).annotate(
+            income=Sum('compensation__amount_guess')).order_by('-income')
+        for year in qs:
+            print year.lobbyist, year.income
