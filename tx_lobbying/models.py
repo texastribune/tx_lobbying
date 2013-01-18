@@ -58,8 +58,12 @@ class ClientList(models.Model):
 
 
 class Compensation(models.Model):
+    amount_guess = models.IntegerField()  # denormalized, f(amount_low, amount_high)
+    amount_high = models.IntegerField()  # upper bound, exlusive
+    amount_low = models.IntegerField()  # lower bound, inclusive
     clientlist = models.ForeignKey(ClientList)
     interest = models.ForeignKey(Interest)
+    raw = models.TextField()
     updated_at = models.DateField()
 
     class Meta:
@@ -67,4 +71,6 @@ class Compensation(models.Model):
         unique_together = ('clientlist', 'interest')
 
     def __unicode__(self):
-        return u"%s %s" % (self.clientlist.lobbyist, self.interest)
+        # TODO, thousands separator... requires python 2.7
+        return u"{1} pays {0} ~${2}".format(self.clientlist.lobbyist,
+            self.interest, self.amount_guess)

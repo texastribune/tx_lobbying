@@ -60,8 +60,13 @@ def scrape(path):
                 lobbyist=lobbyist,
                 year=year)
             default_data = dict(
+                amount_high=int(round(float(row['NHIGH']))),  # I hate myself
+                amount_low=int(round(float(row['NLOW']))),
+                raw=json.dumps(row),
                 updated_at=report_date,
             )
+            default_data['amount_guess'] = (default_data['amount_high'] +
+                default_data['amount_low']) / 2
             Compensation.objects.get_or_create(
                 clientlist=clientlist,
                 interest=interest,
