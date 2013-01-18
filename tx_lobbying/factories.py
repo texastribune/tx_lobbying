@@ -1,4 +1,5 @@
 import datetime
+import random
 
 import factory
 
@@ -6,6 +7,7 @@ from .models import (
     Interest,
     Lobbyist,
     ClientList,
+    Compensation,
 )
 
 
@@ -27,3 +29,13 @@ class ClientListFactory(factory.Factory):
     FACTORY_FOR = ClientList
     lobbyist = factory.SubFactory(LobbyistFactory)
     year = 2013
+
+
+class CompensationFactory(factory.Factory):
+    FACTORY_FOR = Compensation
+    amount_high = factory.LazyAttribute(lambda a: random.randint(10000, 100000))
+    amount_low = factory.LazyAttribute(lambda a: random.randint(a.amount_high, 100000))
+    amount_guess = factory.LazyAttribute(lambda a: (a.amount_high + a.amount_low) / 2)
+    clientlist = factory.SubFactory(ClientListFactory)
+    interest = factory.SubFactory(InterestFactory)
+    updated_at = factory.LazyAttribute(lambda a: datetime.date.today())
