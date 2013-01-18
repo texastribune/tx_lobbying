@@ -5,8 +5,8 @@ from django.test import TestCase
 from tx_lobbying.factories import (InterestFactory, LobbyistFactory,
         LobbyistYearFactory,
         CompensationFactory)
-from tx_lobbying.models import (Interest, InterestStats, Lobbyist, LobbyistYear,
-    Compensation)
+from tx_lobbying.models import (Interest, InterestStats, Lobbyist,
+    LobbyistYear, )
 
 
 class NamedPoorlyTestCase(TestCase):
@@ -22,7 +22,7 @@ class NamedPoorlyTestCase(TestCase):
             CompensationFactory.create(year=year, interest=i)
 
             # get all the `Interest`s for a `Lobbyist`
-            Interest.objects.filter(compensation__year__lobbyist=lobbyist).distinct()
+            Interest.objects.filter(compensation__year__lobbyist=lobbyist)
 
             # get all the `Interest`s for a `Lobbyist` by year
             for year in lobbyist.years.all():
@@ -41,9 +41,11 @@ class NamedPoorlyTestCase(TestCase):
             self.fail("Ha ha, %s" % e)
 
     def test_lobbyist_compensation_relation_api(self):
-        lobbyist = LobbyistFactory.create()
-        year = LobbyistYearFactory.create(lobbyist=lobbyist, year=2000)
+        """More tests about getting between `Lobbyist`s and `Compensation`."""
+        # Make a `Lobbyist` with NUM_CLIENTS clients.
         NUM_CLIENTS = 3
+        lobbyist = LobbyistFactory.create()
+        year = LobbyistYearFactory.create(lobbyist=lobbyist)
         for x in range(0, NUM_CLIENTS):
             CompensationFactory.create(year=year)
 
@@ -53,7 +55,7 @@ class NamedPoorlyTestCase(TestCase):
             # number of clients a lobbyist had that year
             self.assertEqual(year.clients.count(), NUM_CLIENTS)
             self.assertEqual(year.compensation_set.count(), NUM_CLIENTS)
-            # we can .annotate income onto the queryset
+            # make sure we can .annotate income onto the queryset
             for year in lobbyist.years.all().annotate(
                     income=Sum('compensation__amount_guess')):
                 income = 0
@@ -65,6 +67,7 @@ class NamedPoorlyTestCase(TestCase):
             self.fail("Ha ha, %s" % e)
 
     def test_lobbyist_compensation_report_queryset(self):
+        """Get a list of `Lobbyist`s sorted by their paycheck."""
         NUM_CLIENTS = 3
         YEAR = 2000
 
@@ -82,6 +85,7 @@ class NamedPoorlyTestCase(TestCase):
             year
 
     def test_interest_compensation_report_queryset(self):
+        """Get a list of `Interest`s sorted by their bankroll of `Lobbyist`s."""
         YEAR = 2000
 
         for i in range(10):
@@ -108,6 +112,7 @@ class NamedPoorlyTestCase(TestCase):
 
 class UtilsTests(TestCase):
     def test_intereststats_are_accurate(self):
+        """Make sure the `Interest` data denormalization is accurate."""
         YEAR = 2000
         N = 10
 

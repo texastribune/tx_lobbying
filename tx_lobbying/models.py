@@ -1,8 +1,8 @@
 from django.db import models
-from django.db.models import Sum
 
 
 class Interest(models.Model):
+    """A lobbying interest such as a corporation or organization."""
     name = models.CharField(max_length=200)
     state = models.CharField(max_length=2)
 
@@ -34,6 +34,7 @@ class Interest(models.Model):
 
 
 class InterestStats(models.Model):
+    """Denormalized data about an `Interest` for a year."""
     interest = models.ForeignKey(Interest, related_name='stats')
     year = models.IntegerField(null=True, blank=True)
     guess = models.IntegerField(null=True, blank=True)
@@ -50,6 +51,7 @@ class InterestStats(models.Model):
 
 
 class Lobbyist(models.Model):
+    """An individual registered with the TEC as a lobbyist."""
     filer_id = models.IntegerField(unique=True)
     sort_name = models.CharField(max_length=150)
     updated_at = models.DateField()
@@ -98,9 +100,24 @@ class LobbyistYear(models.Model):
 
 
 class Compensation(models.Model):
+    """
+    Details about how a `Lobbyist` was compensated by an `Interest` for a year.
+
+    Compensation ranges are very loosely defined, and are usually not indicative
+    of the actual amount a `Lobbyist` was paid.
+
+    The `amount_guess` field is a derived field that is the a guess of what
+    the `Lobbyist` was actually paid. For now it is just the average of the
+    upper and lower bound of pay ranges, but in the future more variables could
+    be considered.
+
+    """
     amount_guess = models.IntegerField()  # denormalized, f(amount_low, amount_high)
     amount_high = models.IntegerField()  # upper bound, exlusive
     amount_low = models.IntegerField()  # lower bound, inclusive
+    # compensation type
+    # start
+    # end
     year = models.ForeignKey(LobbyistYear)
     interest = models.ForeignKey(Interest)
     raw = models.TextField()
