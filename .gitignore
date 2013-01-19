@@ -8,6 +8,7 @@ media
 *.pot
 *.pyc
 .DS_Store
+.csv-cache
 .sass-cache
 
 # IDE
