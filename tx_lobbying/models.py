@@ -55,9 +55,18 @@ class Lobbyist(models.Model):
     filer_id = models.IntegerField(unique=True)
     sort_name = models.CharField(max_length=150)
     updated_at = models.DateField()
-    # name
+    # name, max_length as defined by CSV schema
+    first_name = models.CharField(max_length=45)
+    last_name = models.CharField(max_length=100)
+    title = models.CharField(max_length=15)
+    suffix = models.CharField(max_length=5)
+    nick_name = models.CharField(max_length=25)
 
     def __unicode__(self):
+        if self.nick_name:
+            return u'{0.first_name} "{0.nick_name}" {0.last_name}'.format(self)
+        elif self.first_name:
+            return u'{0.first_name} {0.last_name}'.format(self)
         return self.sort_name
 
 
@@ -80,6 +89,20 @@ class RegistrationReport(models.Model):
 
     def __unicode__(self):
         return u"%s %s %s" % (self.filer, self.report_date, self.report_id)
+
+
+class Coversheet(models.Model):
+    """
+    Cover sheet.
+    """
+    lobbyist = models.ForeignKey(Lobbyist)
+    raw = models.TextField()
+    report_date = models.DateField()
+    report_id = models.IntegerField(unique=True)
+    year = models.IntegerField()
+
+    def __unicode__(self):
+        return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
 
 
 # Fun data

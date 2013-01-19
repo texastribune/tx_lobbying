@@ -16,16 +16,10 @@ import sys
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Interest, Lobbyist, RegistrationReport,
     ClientList, Compensation)
+from .utils import convert_date_format
 
 
 logger = logging.getLogger(__name__)
-
-
-def convert_date_format(str):
-    """Convert 12/25/2009 to 2009-12-25."""
-    # TODO convert to Date so we can do comparisons
-    month, day, year = str.split('/')
-    return u"-".join([year, month, day])
 
 
 def scrape(path):

@@ -1,11 +1,14 @@
+from calendar import timegm
+from csv import DictReader
 import datetime
 import logging
 import os
-import urllib
-from calendar import timegm
 import time
+import urllib
 
-from tx_lobbying.models import (Lobbyist, LobbyistYear)
+# don't use relative imports so this can also be run from the command line
+from tx_lobbying.models import (Lobbyist, Coversheet)
+from tx_lobbying.scrapers.utils import convert_date_format, setfield
 
 
 # CONFIGURATION
@@ -63,6 +66,58 @@ def download_zip(url, extract_to, force=False):
             if f[-3:] == 'csv']
 
 
+def covers(path):
+    logger.info("Processing %s" % path)
+    with open(path, 'r') as f:
+        reader = DictReader(f)
+        for row in reader:
+            try:
+                report_date = convert_date_format(row['FILED_DATE'] or row['RPT_DATE'])
+            except:
+                logger.warn('Row missing data: %s' % row)
+                continue
+
+            default_data = dict(
+                sort_name=row['LOB_SORT'],
+                updated_at=report_date)
+            lobbyist, dirty = Lobbyist.objects.get_or_create(
+                filer_id=row['FILER_ID'],
+                defaults=default_data
+                )
+            # if report_date > lobbyist.updated_at
+            setfield(lobbyist, 'first_name', row['FILER_NAMF'].decode('latin_1'))
+            setfield(lobbyist, 'last_name', row['FILER_NAML'].decode('latin_1'))
+            setfield(lobbyist, 'title', row['FILER_NAMT'].decode('latin_1'))
+            setfield(lobbyist, 'suffix', row['FILER_NAMS'].decode('latin_1'))
+            setfield(lobbyist, 'nick_name', row['FILERSHORT'].decode('latin_1'))
+            if getattr(lobbyist, '_is_dirty', None):
+                logger.debug(lobbyist._is_dirty)
+                lobbyist.save()
+                del lobbyist._is_dirty
+                dirty = True
+            if dirty:
+                logger.info("LOBBYIST: %s" % lobbyist)
+
+            default_data = dict(
+                lobbyist=lobbyist,
+                report_date=report_date,
+                year=row['YEAR_APPL'],
+            )
+            cover, dirty = Coversheet.objects.get_or_create(
+                report_id=row['REPNO'],
+                defaults=default_data)
+            setfield(cover, 'report_date', report_date)
+            if getattr(cover, '_is_dirty', None):
+                logger.debug(lobbyist._is_dirty)
+                cover.save()
+                del cover._is_dirty
+                dirty = True
+            if dirty:
+                logger.info("COVER: %s" % cover)
+
 if __name__ == "__main__":
     files = download_zip(url=TEC_URL, extract_to=DATA_DIR)
-    print files
+
+    cover_csv = os.path.join(DATA_DIR, "LaCVR.csv")
+    if cover_csv in files:
+        covers(cover_csv)
