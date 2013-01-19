@@ -54,7 +54,7 @@ class Lobbyist(models.Model):
     """An individual registered with the TEC as a lobbyist."""
     filer_id = models.IntegerField(unique=True)
     sort_name = models.CharField(max_length=150)
-    updated_at = models.DateField()
+    updated_at = models.DateField()  # manually set by import scripts
     # name, max_length as defined by CSV schema
     first_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=100)

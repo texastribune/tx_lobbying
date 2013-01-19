@@ -1,3 +1,9 @@
+"""
+
+I'm too lazy to do unicode csv reading the "proper" way, so you're going to see
+a lot of stupid .decode('latin_1') calls.
+
+"""
 from calendar import timegm
 from csv import DictReader
 import datetime
@@ -72,9 +78,11 @@ def covers(path):
         reader = DictReader(f)
         for row in reader:
             try:
-                report_date = convert_date_format(row['FILED_DATE'] or row['RPT_DATE'])
+                report_date = row['FILED_DATE'] or row['RPT_DATE']
+                report_date = convert_date_format(report_date)
             except:
                 logger.warn('Row missing data: %s' % row)
+                raise
                 continue
 
             default_data = dict(
@@ -84,14 +92,15 @@ def covers(path):
                 filer_id=row['FILER_ID'],
                 defaults=default_data
                 )
-            # if report_date > lobbyist.updated_at
-            setfield(lobbyist, 'first_name', row['FILER_NAMF'].decode('latin_1'))
-            setfield(lobbyist, 'last_name', row['FILER_NAML'].decode('latin_1'))
-            setfield(lobbyist, 'title', row['FILER_NAMT'].decode('latin_1'))
-            setfield(lobbyist, 'suffix', row['FILER_NAMS'].decode('latin_1'))
-            setfield(lobbyist, 'nick_name', row['FILERSHORT'].decode('latin_1'))
+            if report_date > lobbyist.updated_at:
+                setfield(lobbyist, 'first_name', row['FILER_NAMF'].decode('latin_1'))
+                setfield(lobbyist, 'last_name', row['FILER_NAML'].decode('latin_1'))
+                setfield(lobbyist, 'title', row['FILER_NAMT'].decode('latin_1'))
+                setfield(lobbyist, 'suffix', row['FILER_NAMS'].decode('latin_1'))
+                setfield(lobbyist, 'nick_name', row['FILERSHORT'].decode('latin_1'))
+                setfield(lobbyist, 'updated_at', report_date)
             if getattr(lobbyist, '_is_dirty', None):
-                logger.debug(lobbyist._is_dirty)
+                logger.debug("{} {} {}".format(lobbyist._is_dirty, report_date, lobbyist.updated_at))
                 lobbyist.save()
                 del lobbyist._is_dirty
                 dirty = True
@@ -106,7 +115,8 @@ def covers(path):
             cover, dirty = Coversheet.objects.get_or_create(
                 report_id=row['REPNO'],
                 defaults=default_data)
-            setfield(cover, 'report_date', report_date)
+            if report_date > cover.report_date:
+                setfield(cover, 'report_date', report_date)
             if getattr(cover, '_is_dirty', None):
                 logger.debug(lobbyist._is_dirty)
                 cover.save()

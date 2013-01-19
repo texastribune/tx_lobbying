@@ -1,8 +1,11 @@
+import datetime
+
+
 def convert_date_format(str):
-    """Convert 12/25/2009 to 2009-12-25."""
+    """Convert 12/25/2009 to date object."""
     # TODO convert to Date so we can do comparisons
     month, day, year = str.split('/')
-    return u"-".join([year, month, day])
+    return datetime.date(int(year), int(month), int(day))
 
 
 def setfield(obj, fieldname, value):
