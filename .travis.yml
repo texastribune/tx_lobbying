@@ -1,2 +1,4 @@
 language: python
+env:
+    PYTHONPATH='.'
 script: make test
