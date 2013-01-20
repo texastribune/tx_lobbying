@@ -125,6 +125,40 @@ class Coversheet(models.Model):
     report_date = models.DateField()
     report_id = models.IntegerField(unique=True)
     year = models.IntegerField()
+    # expenses
+    transportation = models.DecimalField("Transportation & Lodging",
+        max_digits=12, decimal_places=2, default="0.00")
+    food = models.DecimalField("Food & Beverages",
+        max_digits=12, decimal_places=2, default="0.00")
+    entertainment = models.DecimalField("Entertainment",
+        max_digits=12, decimal_places=2, default="0.00")
+    gifts = models.DecimalField("Gifts", max_digits=12, decimal_places=2, default="0.00")
+    awards = models.DecimalField("Awards & Memementos",
+        max_digits=12, decimal_places=2, default="0.00")
+    events = models.DecimalField("Political Fundraiers / Charity Events",
+        max_digits=12, decimal_places=2, default="0.00")
+    media = models.DecimalField("Mass Media Communications",
+        max_digits=12, decimal_places=2, default="0.00")
+    ben_senators = models.DecimalField("State Senators",
+        max_digits=12, decimal_places=2, default="0.00")
+    ben_representatives = models.DecimalField("State Representatives",
+        max_digits=12, decimal_places=2, default="0.00")
+    ben_other = models.DecimalField("Other Elected/Appointed Officials",
+        max_digits=12, decimal_places=2, default="0.00")
+    ben_legislative = models.DecimalField("Legislative Branch Employees",
+        max_digits=12, decimal_places=2, default="0.00")
+    ben_executive = models.DecimalField("Executive Agency Employees",
+        max_digits=12, decimal_places=2, default="0.00")
+    ben_family = models.DecimalField("Family of Legis/Exec Branch",
+        max_digits=12, decimal_places=2, default="0.00")
+    ben_events = models.DecimalField("Events - All Legis Invited",
+        max_digits=12, decimal_places=2, default="0.00")
+    ben_guests = models.DecimalField("Guests",
+        max_digits=12, decimal_places=2, default="0.00")
+    # derived fields
+    total_spent = models.DecimalField(max_digits=13, decimal_places=2, default="0.00")
+    total_benefited = models.DecimalField(max_digits=13, decimal_places=2, default="0.00")
+    spent_guess = models.DecimalField(max_digits=13, decimal_places=2, default="0.00")
 
     class Meta:
         ordering = ('report_date', )

@@ -100,13 +100,35 @@ def _covers_inner(row):
         lobbyist=lobbyist,
         raw=json.dumps(row),
         report_date=report_date,
-        year=row['YEAR_APPL'], )
+        year=row['YEAR_APPL'],
+        transportation=row['EXTYP_TRAN'] or "0.00",
+        food=row['EXTYP_FOOD'] or "0.00",
+        entertainment=row['EXTYP_GIFT'] or "0.00",
+        gifts=row['EXTYP_GIFT'] or "0.00",
+        awards=row['EXTYP_AWDS'] or "0.00",
+        events=row['EXTYP_EVNT'] or "0.00",
+        media=row['EXTYP_MEDA'] or "0.00",
+        ben_senators=row['EXBEN_SEN'] or "0.00",
+        ben_representatives=row['EXBEN_REP'] or "0.00",
+        ben_other=row['EXBEN_OTH'] or "0.00",
+        ben_legislative=row['EXBEN_LEG'] or "0.00",
+        ben_executive=row['EXBEN_EXEC'] or "0.00",
+        ben_family=row['EXBEN_FAM'] or "0.00",
+        ben_events=row['EXBEN_EVNT'] or "0.00",
+        ben_guests=row['EXBEN_GUES'] or "0.00",
+    )
+    total_spent = sum(float(y or 0) for x, y in row.items() if x.startswith("EXTYP"))
+    total_benefited = sum(float(y or 0) for x, y in row.items() if x.startswith("EXBEN"))
+    default_data['total_spent'] = total_spent
+    default_data['total_benefited'] = total_benefited
+    default_data['spent_guess'] = max(total_spent, total_benefited)
+
     cover, dirty = Coversheet.objects.get_or_create(
         report_id=row['REPNO'],
         defaults=default_data, )
     if report_date > cover.report_date:
-        setfield(cover, 'raw', json.dumps(row))
-        setfield(cover, 'report_date', report_date)
+        for key, value in default_data.items():
+            setfield(cover, key, value)
     if getattr(cover, '_is_dirty', None):
         logger.debug(cover._is_dirty)
         cover.save()
