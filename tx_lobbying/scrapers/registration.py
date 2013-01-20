@@ -7,7 +7,6 @@ http://www.ethics.state.tx.us/dfs/loblists.htm
 Open and re-save as CSV.
 
 """
-from csv import DictReader
 import json
 import logging
 import os
@@ -15,8 +14,9 @@ import sys
 
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Interest, Lobbyist, RegistrationReport,
-    ClientList, Compensation)
-from .utils import convert_date_format
+    LobbyistYear, Compensation)
+from tx_lobbying.scrapers.utils import (DictReader, convert_date_format,
+    setfield)
 
 
 logger = logging.getLogger(__name__)
@@ -36,49 +36,51 @@ def scrape(path):
                 state=row['EC_STCD'])
 
             # lobbyist
+            # very basic `Lobbyist` info here, most of it actually comes
+            # from the coversheets.
             default_data = dict(
-                sort_name=row['SORTNAME'],
+                name=row['LOBBYNAME'],
+                sort_name=row['SORTNAME'],  # not LOB_SORT like in coversheets
                 updated_at=report_date,
             )
             lobbyist, created = Lobbyist.objects.get_or_create(
                 filer_id=row['FILER_ID'],
                 defaults=default_data)
-            if not created:
-                # need to update name?
-                pass
             if created:
-                logger.debug(lobbyist)
+                logger.info("LOBBYIST: %s" % lobbyist)
 
             # lobbyist/interest M2M
-            clientlist, created = ClientList.objects.get_or_create(
+            lyear, created = LobbyistYear.objects.get_or_create(
                 lobbyist=lobbyist,
                 year=year)
+
+            # compensation
             default_data = dict(
                 amount_high=int(round(float(row['NHIGH']))),  # I hate myself
                 amount_low=int(round(float(row['NLOW']))),
                 raw=json.dumps(row),
                 updated_at=report_date,
             )
+            # TODO move this amount_guess logic into the model
             default_data['amount_guess'] = (default_data['amount_high'] +
                 default_data['amount_low']) / 2
             Compensation.objects.get_or_create(
-                clientlist=clientlist,
+                year=lyear,
                 interest=interest,
                 defaults=default_data)
 
-            # report
-            report_id = row['REPNO']
+            # registration report
             default_data = dict(
                 raw=json.dumps(row),
                 report_date=report_date,
                 year=year,
             )
             report, created = RegistrationReport.objects.get_or_create(
-                filer=lobbyist,
-                report_id=report_id,
+                lobbyist=lobbyist,
+                report_id=row['REPNO'],
                 defaults=default_data)
             if created:
-                logger.debug(report)
+                logger.info("REPORT: %s" % report)
 
 
 if __name__ == "__main__":

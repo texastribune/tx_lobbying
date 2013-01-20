@@ -106,14 +106,14 @@ class RegistrationReport(models.Model):
     TODO: clients...
 
     """
-    filer = models.ForeignKey(Lobbyist)
+    lobbyist = models.ForeignKey(Lobbyist)
     raw = models.TextField()
     report_date = models.DateField()
     report_id = models.IntegerField(unique=True)
     year = models.IntegerField()
 
     def __unicode__(self):
-        return u"%s %s %s" % (self.filer, self.report_date, self.report_id)
+        return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
 
 
 class Coversheet(models.Model):
