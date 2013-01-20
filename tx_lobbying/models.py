@@ -53,12 +53,21 @@ class InterestStats(models.Model):
 
 
 class Lobbyist(models.Model):
-    """An individual registered with the TEC as a lobbyist."""
+    """
+    An individual registered with the TEC as a lobbyist.
+
+    There are multiple name fields, and it may seem redundant, but there many
+    lobbyists are organizations, and not people. And they do not have first
+    and last names. The `sort_name` field is sort of redundant, but the TEC
+    gives it to us so it would behoove us to use it.
+
+    """
     filer_id = models.IntegerField(unique=True)
-    sort_name = models.CharField(max_length=150)
     updated_at = models.DateField()  # manually set by import scripts
     # name, max_length as defined by CSV schema
-    first_name = models.CharField(max_length=45)
+    name = models.CharField(max_length=100)
+    sort_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=45)  # if lobbyist is a person
     last_name = models.CharField(max_length=100)
     title = models.CharField(max_length=15)
     suffix = models.CharField(max_length=5)
@@ -73,7 +82,7 @@ class Lobbyist(models.Model):
             return u'%(first_name)s "%(nick_name)s" %(last_name)s' % data
         elif data['first_name']:
             return u'%(first_name)s %(last_name)s' % data
-        return data['sort_name']
+        return data['name']
 
     def get_name_history(self, unique=True):
         from .scrapers.utils import get_name_data

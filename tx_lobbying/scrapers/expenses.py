@@ -86,17 +86,15 @@ def covers(path):
                 continue
 
             default_data = dict(
-                sort_name=row['LOB_SORT'],
                 updated_at=report_date)
+            default_data.update(get_name_data(row))
             lobbyist, dirty = Lobbyist.objects.get_or_create(
                 filer_id=row['FILER_ID'],
                 defaults=default_data
                 )
             if report_date > lobbyist.updated_at:
-                name_data = get_name_data(row)
-                for key, value in name_data.items():
+                for key, value in default_data.items():
                     setfield(lobbyist, key, value)
-                setfield(lobbyist, 'updated_at', report_date)
             if getattr(lobbyist, '_is_dirty', None):
                 logger.debug(lobbyist._is_dirty)
                 lobbyist.save()
@@ -114,7 +112,7 @@ def covers(path):
             cover, dirty = Coversheet.objects.get_or_create(
                 report_id=row['REPNO'],
                 defaults=default_data)
-            if report_date >= cover.report_date:
+            if report_date > cover.report_date:
                 setfield(cover, 'raw', json.dumps(row))
                 setfield(cover, 'report_date', report_date)
             if getattr(cover, '_is_dirty', None):
