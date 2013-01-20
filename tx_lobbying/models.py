@@ -65,26 +65,22 @@ class Lobbyist(models.Model):
     nick_name = models.CharField(max_length=25)
 
     def __unicode__(self):
-        if self.nick_name:
-            return u'{0.first_name} "{0.nick_name}" {0.last_name}'.format(self)
-        elif self.first_name:
-            return u'{0.first_name} {0.last_name}'.format(self)
-        return self.sort_name
+        return Lobbyist.get_display_name(self.__dict__)
+
+    @staticmethod
+    def get_display_name(data):
+        if data['nick_name']:
+            return u'%(first_name)s "%(nick_name)s" %(last_name)s' % data
+        elif data['first_name']:
+            return u'%(first_name)s %(last_name)s' % data
+        return data['sort_name']
 
     def get_name_history(self, unique=True):
+        from .scrapers.utils import get_name_data
         history = []
         for report in self.coversheet_set.exclude(raw=''):
-            raw_data = json.loads(report.raw)
-            data = {}
-            data['first_name'] = raw_data['FILER_NAMF']
-            data['last_name'] = raw_data['FILER_NAML']
-            data['title'] = raw_data['FILER_NAMT']
-            data['suffix'] = raw_data['FILER_NAMS']
-            data['nick_name'] = raw_data['FILERSHORT']
-            if data['nick_name']:
-                name = u'{0.first_name} "{0.nick_name}" {0.last_name}'.format(self)
-            else:
-                name = u'{0.first_name} {0.last_name}'.format(self)
+            data = get_name_data(json.loads(report.raw))
+            name = Lobbyist.get_display_name(data)
             if (not unique or not history) or (history and name != history[-1][0]):
                 history.append((name, report))
         return history

@@ -20,6 +20,18 @@ def setfield(obj, fieldname, value):
         obj._is_dirty.append("%s %s->%s" % (fieldname, old, value))
 
 
+def get_name_data(row):
+    """Get name data from a coversheet row."""
+    data = {}
+    data['first_name'] = row['FILER_NAMF']
+    data['last_name'] = row['FILER_NAML']
+    data['title'] = row['FILER_NAMT']
+    data['suffix'] = row['FILER_NAMS']
+    data['nick_name'] = row['FILERSHORT']
+    data['sort_name'] = row['LOB_SORT']
+    return data
+
+
 # http://docs.python.org/2/library/csv.html#csv-examples
 class UTF8Recoder(object):
     """

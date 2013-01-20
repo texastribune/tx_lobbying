@@ -14,7 +14,8 @@ import urllib
 
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Lobbyist, Coversheet)
-from tx_lobbying.scrapers.utils import DictReader, convert_date_format, setfield
+from tx_lobbying.scrapers.utils import (DictReader, convert_date_format,
+    get_name_data, setfield)
 
 
 # CONFIGURATION
@@ -92,12 +93,9 @@ def covers(path):
                 defaults=default_data
                 )
             if report_date > lobbyist.updated_at:
-                setfield(lobbyist, 'first_name', row['FILER_NAMF'])
-                setfield(lobbyist, 'last_name', row['FILER_NAML'])
-                setfield(lobbyist, 'title', row['FILER_NAMT'])
-                setfield(lobbyist, 'suffix', row['FILER_NAMS'])
-                setfield(lobbyist, 'nick_name', row['FILERSHORT'])
-                setfield(lobbyist, 'sort_name', row['LOB_SORT'])
+                name_data = get_name_data(row)
+                for key, value in name_data.items():
+                    setfield(lobbyist, key, value)
                 setfield(lobbyist, 'updated_at', report_date)
             if getattr(lobbyist, '_is_dirty', None):
                 logger.debug(lobbyist._is_dirty)
@@ -116,7 +114,7 @@ def covers(path):
             cover, dirty = Coversheet.objects.get_or_create(
                 report_id=row['REPNO'],
                 defaults=default_data)
-            if report_date > cover.report_date:
+            if report_date >= cover.report_date:
                 setfield(cover, 'raw', json.dumps(row))
                 setfield(cover, 'report_date', report_date)
             if getattr(cover, '_is_dirty', None):
