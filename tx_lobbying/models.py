@@ -1,3 +1,4 @@
+from collections import defaultdict
 import json
 
 from django.db import models
@@ -93,6 +94,32 @@ class Lobbyist(models.Model):
             if (not unique or not history) or (history and name != history[-1][0]):
                 history.append((name, report))
         return history
+
+    def make_stats(self):
+        years = defaultdict(int)  # summing Decimals, but this seems to work
+        for x in self.coversheet_set.filter(spent_guess__gt=0):
+            years[x.year] += x.spent_guess
+        for year, spent in years.items():
+            try:
+                stat = LobbyistStat.objects.get(lobbyist=self, year=year)
+                if stat.spent != spent:
+                    stat.spent = spent
+                    stat.save()
+            except LobbyistStat.DoesNotExist:
+                LobbyistStat.objects.create(lobbyist=self, year=year, spent=spent)
+
+
+class LobbyistStat(models.Model):
+    lobbyist = models.ForeignKey(Lobbyist, related_name="stats")
+    year = models.IntegerField()
+    spent = models.DecimalField(max_digits=13, decimal_places=2, default="0.00")
+
+    class Meta:
+        ordering = ('year', )
+        unique_together = ('lobbyist', 'year')
+
+    def __unicode__(self):
+        return u"{0.lobbyist} spent ${0.spent:,.2f} ({0.year})".format(self)
 
 
 class RegistrationReport(models.Model):
