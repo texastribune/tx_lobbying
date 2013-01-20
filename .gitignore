@@ -1,6 +1,7 @@
 # Django generated files
 media
 *.sqlite
+*.sqlite-journal
 
 
 # Randomly generated files

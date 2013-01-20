@@ -5,16 +5,16 @@ a lot of stupid .decode('latin_1') calls.
 
 """
 from calendar import timegm
-from csv import DictReader
 import datetime
 import logging
+import json
 import os
 import time
 import urllib
 
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Lobbyist, Coversheet)
-from tx_lobbying.scrapers.utils import convert_date_format, setfield
+from tx_lobbying.scrapers.utils import DictReader, convert_date_format, setfield
 
 
 # CONFIGURATION
@@ -75,14 +75,13 @@ def download_zip(url, extract_to, force=False):
 def covers(path):
     logger.info("Processing %s" % path)
     with open(path, 'r') as f:
-        reader = DictReader(f)
+        reader = DictReader(f, encoding="latin_1")
         for row in reader:
             try:
                 report_date = row['FILED_DATE'] or row['RPT_DATE']
                 report_date = convert_date_format(report_date)
-            except:
+            except ValueError:
                 logger.warn('Row missing data: %s' % row)
-                raise
                 continue
 
             default_data = dict(
@@ -93,14 +92,14 @@ def covers(path):
                 defaults=default_data
                 )
             if report_date > lobbyist.updated_at:
-                setfield(lobbyist, 'first_name', row['FILER_NAMF'].decode('latin_1'))
-                setfield(lobbyist, 'last_name', row['FILER_NAML'].decode('latin_1'))
-                setfield(lobbyist, 'title', row['FILER_NAMT'].decode('latin_1'))
-                setfield(lobbyist, 'suffix', row['FILER_NAMS'].decode('latin_1'))
-                setfield(lobbyist, 'nick_name', row['FILERSHORT'].decode('latin_1'))
+                setfield(lobbyist, 'first_name', row['FILER_NAMF'])
+                setfield(lobbyist, 'last_name', row['FILER_NAML'])
+                setfield(lobbyist, 'title', row['FILER_NAMT'])
+                setfield(lobbyist, 'suffix', row['FILER_NAMS'])
+                setfield(lobbyist, 'nick_name', row['FILERSHORT'])
                 setfield(lobbyist, 'updated_at', report_date)
             if getattr(lobbyist, '_is_dirty', None):
-                logger.debug("{} {} {}".format(lobbyist._is_dirty, report_date, lobbyist.updated_at))
+                logger.debug(lobbyist._is_dirty)
                 lobbyist.save()
                 del lobbyist._is_dirty
                 dirty = True
@@ -109,6 +108,7 @@ def covers(path):
 
             default_data = dict(
                 lobbyist=lobbyist,
+                raw=json.dumps(row),
                 report_date=report_date,
                 year=row['YEAR_APPL'],
             )
@@ -116,6 +116,7 @@ def covers(path):
                 report_id=row['REPNO'],
                 defaults=default_data)
             if report_date > cover.report_date:
+                setfield(cover, 'raw', json.dumps(row))
                 setfield(cover, 'report_date', report_date)
             if getattr(cover, '_is_dirty', None):
                 logger.debug(lobbyist._is_dirty)
@@ -124,6 +125,7 @@ def covers(path):
                 dirty = True
             if dirty:
                 logger.info("COVER: %s" % cover)
+
 
 if __name__ == "__main__":
     files = download_zip(url=TEC_URL, extract_to=DATA_DIR)
