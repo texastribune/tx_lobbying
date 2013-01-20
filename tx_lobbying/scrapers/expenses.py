@@ -6,8 +6,8 @@ a lot of stupid .decode('latin_1') calls.
 """
 from calendar import timegm
 import datetime
-import logging
 import json
+import logging
 import os
 import time
 import urllib
@@ -73,55 +73,59 @@ def download_zip(url, extract_to, force=False):
             if f[-3:] == 'csv']
 
 
+def _covers_inner(row):
+    report_date = row['FILED_DATE'] or row['RPT_DATE']
+    report_date = convert_date_format(report_date)
+
+    # Lobbyist
+    default_data = dict(
+        updated_at=report_date)
+    default_data.update(get_name_data(row))
+    lobbyist, dirty = Lobbyist.objects.get_or_create(
+        filer_id=row['FILER_ID'],
+        defaults=default_data, )
+    if report_date > lobbyist.updated_at:
+        for key, value in default_data.items():
+            setfield(lobbyist, key, value)
+    if getattr(lobbyist, '_is_dirty', None):
+        logger.debug(lobbyist._is_dirty)
+        lobbyist.save()
+        del lobbyist._is_dirty
+        dirty = True
+    if dirty:
+        logger.info("LOBBYIST: %s" % lobbyist)
+
+    # Coversheet
+    default_data = dict(
+        lobbyist=lobbyist,
+        raw=json.dumps(row),
+        report_date=report_date,
+        year=row['YEAR_APPL'], )
+    cover, dirty = Coversheet.objects.get_or_create(
+        report_id=row['REPNO'],
+        defaults=default_data, )
+    if report_date > cover.report_date:
+        setfield(cover, 'raw', json.dumps(row))
+        setfield(cover, 'report_date', report_date)
+    if getattr(cover, '_is_dirty', None):
+        logger.debug(cover._is_dirty)
+        cover.save()
+        del cover._is_dirty
+        dirty = True
+    if dirty:
+        logger.info("COVER: %s" % cover)
+
+
 def covers(path):
     logger.info("Processing %s" % path)
     with open(path, 'r') as f:
         reader = DictReader(f, encoding="latin_1")
         for row in reader:
             try:
-                report_date = row['FILED_DATE'] or row['RPT_DATE']
-                report_date = convert_date_format(report_date)
+                _covers_inner(row)
             except ValueError:
                 logger.warn('Row missing data: %s' % row)
                 continue
-
-            default_data = dict(
-                updated_at=report_date)
-            default_data.update(get_name_data(row))
-            lobbyist, dirty = Lobbyist.objects.get_or_create(
-                filer_id=row['FILER_ID'],
-                defaults=default_data
-                )
-            if report_date > lobbyist.updated_at:
-                for key, value in default_data.items():
-                    setfield(lobbyist, key, value)
-            if getattr(lobbyist, '_is_dirty', None):
-                logger.debug(lobbyist._is_dirty)
-                lobbyist.save()
-                del lobbyist._is_dirty
-                dirty = True
-            if dirty:
-                logger.info("LOBBYIST: %s" % lobbyist)
-
-            default_data = dict(
-                lobbyist=lobbyist,
-                raw=json.dumps(row),
-                report_date=report_date,
-                year=row['YEAR_APPL'],
-            )
-            cover, dirty = Coversheet.objects.get_or_create(
-                report_id=row['REPNO'],
-                defaults=default_data)
-            if report_date > cover.report_date:
-                setfield(cover, 'raw', json.dumps(row))
-                setfield(cover, 'report_date', report_date)
-            if getattr(cover, '_is_dirty', None):
-                logger.debug(cover._is_dirty)
-                cover.save()
-                del cover._is_dirty
-                dirty = True
-            if dirty:
-                logger.info("COVER: %s" % cover)
 
 
 if __name__ == "__main__":
