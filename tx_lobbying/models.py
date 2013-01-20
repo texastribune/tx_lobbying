@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 
 
@@ -69,6 +71,24 @@ class Lobbyist(models.Model):
             return u'{0.first_name} {0.last_name}'.format(self)
         return self.sort_name
 
+    def get_name_history(self, unique=True):
+        history = []
+        for report in self.coversheet_set.exclude(raw=''):
+            raw_data = json.loads(report.raw)
+            data = {}
+            data['first_name'] = raw_data['FILER_NAMF']
+            data['last_name'] = raw_data['FILER_NAML']
+            data['title'] = raw_data['FILER_NAMT']
+            data['suffix'] = raw_data['FILER_NAMS']
+            data['nick_name'] = raw_data['FILERSHORT']
+            if data['nick_name']:
+                name = u'{0.first_name} "{0.nick_name}" {0.last_name}'.format(self)
+            else:
+                name = u'{0.first_name} {0.last_name}'.format(self)
+            if (not unique or not history) or (history and name != history[-1][0]):
+                history.append((name, report))
+        return history
+
 
 class RegistrationReport(models.Model):
     """
@@ -100,6 +120,9 @@ class Coversheet(models.Model):
     report_date = models.DateField()
     report_id = models.IntegerField(unique=True)
     year = models.IntegerField()
+
+    class Meta:
+        ordering = ('report_date', )
 
     def __unicode__(self):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)

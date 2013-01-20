@@ -97,6 +97,7 @@ def covers(path):
                 setfield(lobbyist, 'title', row['FILER_NAMT'])
                 setfield(lobbyist, 'suffix', row['FILER_NAMS'])
                 setfield(lobbyist, 'nick_name', row['FILERSHORT'])
+                setfield(lobbyist, 'sort_name', row['LOB_SORT'])
                 setfield(lobbyist, 'updated_at', report_date)
             if getattr(lobbyist, '_is_dirty', None):
                 logger.debug(lobbyist._is_dirty)
@@ -119,7 +120,7 @@ def covers(path):
                 setfield(cover, 'raw', json.dumps(row))
                 setfield(cover, 'report_date', report_date)
             if getattr(cover, '_is_dirty', None):
-                logger.debug(lobbyist._is_dirty)
+                logger.debug(cover._is_dirty)
                 cover.save()
                 del cover._is_dirty
                 dirty = True
