@@ -4,6 +4,7 @@ I'm too lazy to do unicode csv reading the "proper" way, so you're going to see
 a lot of stupid .decode('latin_1') calls.
 
 """
+from __beyond__ import disable_django_db_logging
 from calendar import timegm
 import datetime
 import json

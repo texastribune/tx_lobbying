@@ -7,6 +7,7 @@ http://www.ethics.state.tx.us/dfs/loblists.htm
 Open and re-save as CSV.
 
 """
+from __beyond__ import disable_django_db_logging
 import json
 import logging
 import os
