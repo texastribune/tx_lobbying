@@ -138,7 +138,7 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'root': {
-        'level': 'DEBUG',
+        'level': os.environ.get('LOGGING_LEVEL', 'DEBUG'),
         'handlers': ['console'],
     },
     'filters': {

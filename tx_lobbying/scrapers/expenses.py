@@ -10,6 +10,7 @@ import datetime
 import json
 import logging
 import os
+import sys
 import time
 import urllib
 
@@ -143,13 +144,17 @@ def covers(path):
     logger.info("Processing %s" % path)
     with open(path, 'r') as f:
         reader = DictReader(f, encoding="latin_1")
-        for row in reader:
+        for i, row in enumerate(reader):
+            if PRINT_PROGRESS and not i % 10000:
+                print i, row['FILED_DATE'] or row
             try:
                 _covers_inner(row)
             except ValueError:
                 logger.warn('Row missing data: %s' % row)
                 continue
 
+
+PRINT_PROGRESS = "--progress" in sys.argv
 
 if __name__ == "__main__":
     files = download_zip(url=TEC_URL, extract_to=DATA_DIR)
