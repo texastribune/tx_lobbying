@@ -143,7 +143,7 @@ class RegistrationReport(models.Model):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
 
 
-class Coversheet(models.Model):
+class ExpenseCoversheet(models.Model):
     """
     Cover sheet.
     """

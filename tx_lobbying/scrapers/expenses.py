@@ -15,7 +15,7 @@ import time
 import urllib
 
 # don't use relative imports so this can also be run from the command line
-from tx_lobbying.models import (Lobbyist, Coversheet)
+from tx_lobbying.models import (Lobbyist, ExpenseCoversheet)
 from tx_lobbying.scrapers.utils import (DictReader, convert_date_format,
     get_name_data, setfield)
 
@@ -97,7 +97,7 @@ def _covers_inner(row):
     if dirty:
         logger.info("LOBBYIST: %s" % lobbyist)
 
-    # Coversheet
+    # ExpenseCoversheet
     default_data = dict(
         lobbyist=lobbyist,
         raw=json.dumps(row),
@@ -125,7 +125,7 @@ def _covers_inner(row):
     default_data['total_benefited'] = total_benefited
     default_data['spent_guess'] = max(total_spent, total_benefited)
 
-    cover, dirty = Coversheet.objects.get_or_create(
+    cover, dirty = ExpenseCoversheet.objects.get_or_create(
         report_id=row['REPNO'],
         defaults=default_data, )
     if report_date > cover.report_date:
