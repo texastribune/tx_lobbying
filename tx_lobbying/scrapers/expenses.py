@@ -140,7 +140,7 @@ def _covers_inner(row):
         logger.info("COVER: %s" % cover)
 
 
-def covers(path):
+def process_csv(path, _inner_func):
     logger.info("Processing %s" % path)
     with open(path, 'r') as f:
         reader = DictReader(f, encoding="latin_1")
@@ -148,7 +148,7 @@ def covers(path):
             if PRINT_PROGRESS and not i % 10000:
                 print i, row['FILED_DATE'] or row
             try:
-                _covers_inner(row)
+                _inner_func(row)
             except ValueError:
                 logger.warn('Row missing data: %s' % row)
                 continue
@@ -159,6 +159,8 @@ PRINT_PROGRESS = "--progress" in sys.argv
 if __name__ == "__main__":
     files = download_zip(url=TEC_URL, extract_to=DATA_DIR)
 
-    cover_csv = os.path.join(DATA_DIR, "LaCVR.csv")
-    if cover_csv in files:
-        covers(cover_csv)
+    try:
+        process_csv(os.path.join(DATA_DIR, "LaCVR.csv"),
+            _inner_func=_covers_inner)
+    except Exception:
+        raise
