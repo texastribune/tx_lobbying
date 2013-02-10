@@ -6,6 +6,7 @@ a lot of stupid .decode('latin_1') calls.
 """
 from __beyond__ import disable_django_db_logging
 from calendar import timegm
+from decimal import Decimal
 import datetime
 import json
 import logging
@@ -15,7 +16,8 @@ import time
 import urllib
 
 # don't use relative imports so this can also be run from the command line
-from tx_lobbying.models import (Lobbyist, ExpenseCoversheet)
+from tx_lobbying.models import (Lobbyist,
+    ExpenseCoversheet, ExpenseDetailReport)
 from tx_lobbying.scrapers.utils import (DictReader, convert_date_format,
     get_name_data, setfield)
 
@@ -140,15 +142,44 @@ def _covers_inner(row):
         logger.info("COVER: %s" % cover)
 
 
-def process_csv(path, _inner_func):
+def _detail_inner(row, type):
+    lobbyist = Lobbyist.objects.get(
+        filer_id=row['FILER_ID'])
+    cover = ExpenseCoversheet.objects.get(report_id=row['REPNO'])
+
+    # ExpenseDetailreport
+    default_data = dict(
+        cover=cover,
+        lobbyist=lobbyist,
+        year=int(row['YEAR_APPL']),
+        amount=Decimal(row['EXPAMOUNT'] or row['nHigh']),
+        raw=json.dumps(row),
+    )
+
+    report, dirty = ExpenseDetailReport.objects.get_or_create(
+        idno=row['IDNO'], type="food",
+        defaults=default_data)
+    if not dirty:
+        for key, value in default_data.items():
+            setfield(report, key, value)
+    if getattr(report, '_is_dirty', None):
+        logger.debug(report._is_dirty)
+        report.save()
+        del report._is_dirty
+        dirty = True
+    if dirty:
+        logger.info("Detail: %s" % report)
+
+
+def process_csv(path, _inner_func, **kwargs):
     logger.info("Processing %s" % path)
     with open(path, 'r') as f:
         reader = DictReader(f, encoding="latin_1")
         for i, row in enumerate(reader):
             if PRINT_PROGRESS and not i % 10000:
-                print i, row['FILED_DATE'] or row
+                print i, row.get('FILED_DATE', row.get('RPT_DATE'))
             try:
-                _inner_func(row)
+                _inner_func(row, **kwargs)
             except ValueError:
                 logger.warn('Row missing data: %s' % row)
                 continue
@@ -162,5 +193,9 @@ if __name__ == "__main__":
     try:
         process_csv(os.path.join(DATA_DIR, "LaCVR.csv"),
             _inner_func=_covers_inner)
+        process_csv(os.path.join(DATA_DIR, "LaFood.csv"),
+            _inner_func=_detail_inner, type="food")
+    except KeyboardInterrupt:
+        exit(1)
     except Exception:
         raise

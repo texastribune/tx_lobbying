@@ -194,7 +194,7 @@ class ExpenseCoversheet(models.Model):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
 
 
-class ExpenseDetailreport(models.Model):
+class ExpenseDetailReport(models.Model):
     """
     Detailed expense report.
     """
@@ -204,6 +204,9 @@ class ExpenseDetailreport(models.Model):
     cover = models.ForeignKey(ExpenseCoversheet, related_name="details")
     # FILER_ID
     lobbyist = models.ForeignKey(Lobbyist)
+    # YEAR_APPL
+    year = models.IntegerField()
+    # other fields
     type = models.CharField(max_length=6)
     amount = models.DecimalField(max_digits=12, decimal_places=2,
         default="0.00")
@@ -214,7 +217,7 @@ class ExpenseDetailreport(models.Model):
         unique_together = ('idno', 'type')
 
     def __unicode__(self):
-        return u""
+        return u"%s - %s ($%s)" % (self.cover, self.type, self.amount)
 
 
 # Fun data
