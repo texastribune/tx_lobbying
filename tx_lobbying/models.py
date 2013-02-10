@@ -194,6 +194,29 @@ class ExpenseCoversheet(models.Model):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
 
 
+class ExpenseDetailreport(models.Model):
+    """
+    Detailed expense report.
+    """
+    # IDNO
+    idno = models.IntegerField()
+    # REPNO
+    cover = models.ForeignKey(ExpenseCoversheet, related_name="details")
+    # FILER_ID
+    lobbyist = models.ForeignKey(Lobbyist)
+    type = models.CharField(max_length=6)
+    amount = models.DecimalField(max_digits=12, decimal_places=2,
+        default="0.00")
+    raw = models.TextField()
+
+    class Meta:
+        ordering = ('cover__report_date', )
+        unique_together = ('idno', 'type')
+
+    def __unicode__(self):
+        return u""
+
+
 # Fun data
 class LobbyistYear(models.Model):
     """The list of `Interest`s a `Lobbyist` has for a year."""
