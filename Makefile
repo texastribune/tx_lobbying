@@ -10,8 +10,7 @@ test:
 
 
 resetdb:
-	$(foreach db, $(wildcard $(PROJECT)/*.sqlite),\
-		rm $(db);)
+	python $(PROJECT)/manage.py reset_db --router=default --noinput
 	python $(PROJECT)/manage.py syncdb --noinput
 
 
