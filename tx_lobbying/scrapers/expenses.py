@@ -148,14 +148,18 @@ def _detail_inner(row, type):
     cover = ExpenseCoversheet.objects.get(report_id=row['REPNO'])
 
     # ExpenseDetailreport
+    amount = float(row['EXPAMOUNT']) if row['EXPAMOUNT'] else None
     default_data = dict(
         cover=cover,
         lobbyist=lobbyist,
         year=int(row['YEAR_APPL']),
-        amount=Decimal(row['EXPAMOUNT'] or row['nHigh']),
         raw=json.dumps(row),
     )
-
+    if amount is not None:
+        default_data['amount'] = default_data['amount_guess'] = Decimal(amount)
+    else:
+        default_data['amount'] = None  # force this to null
+        default_data['amount_guess'] = (float(row['nLow']) + float(row['nHigh'])) / 2
     report, dirty = ExpenseDetailReport.objects.get_or_create(
         idno=row['IDNO'], type=type,
         defaults=default_data)
@@ -191,8 +195,8 @@ if __name__ == "__main__":
     files = download_zip(url=TEC_URL, extract_to=DATA_DIR)
 
     try:
-        process_csv(os.path.join(DATA_DIR, "LaCVR.csv"),
-            _inner_func=_covers_inner)
+        # process_csv(os.path.join(DATA_DIR, "LaCVR.csv"),
+        #     _inner_func=_covers_inner)
         process_csv(os.path.join(DATA_DIR, "LaFood.csv"),
             _inner_func=_detail_inner, type="food")
         process_csv(os.path.join(DATA_DIR, "LaAwrd.csv"),

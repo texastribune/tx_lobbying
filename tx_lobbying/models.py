@@ -206,9 +206,12 @@ class ExpenseDetailReport(models.Model):
     lobbyist = models.ForeignKey(Lobbyist)
     # YEAR_APPL
     year = models.IntegerField()
+    # EXPAMOUNT
+    amount = models.DecimalField(max_digits=12, decimal_places=2,
+        default="0.00", null=True)
     # other fields
     type = models.CharField(max_length=20)
-    amount = models.DecimalField(max_digits=12, decimal_places=2,
+    amount_guess = models.DecimalField(max_digits=12, decimal_places=2,
         default="0.00")
     raw = models.TextField()
 
