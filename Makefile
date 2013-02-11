@@ -2,7 +2,7 @@ PROJECT=./example_project
 
 help:
 	@echo "  make test    - run test suite"
-	@echo "  make resetdb - delete and recreate the sqlite database"
+	@echo "  make resetdb - delete and recreate the database"
 
 
 test:
