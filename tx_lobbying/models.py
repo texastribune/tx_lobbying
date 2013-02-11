@@ -207,7 +207,7 @@ class ExpenseDetailReport(models.Model):
     # REPNO
     cover = models.ForeignKey(ExpenseCoversheet, related_name="details")
     # FILER_ID
-    lobbyist = models.ForeignKey(Lobbyist)
+    lobbyist = models.ForeignKey(Lobbyist, related_name="expensedetails")
     # YEAR_APPL
     year = models.IntegerField()
     # EXPAMOUNT
