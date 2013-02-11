@@ -1,36 +1,71 @@
 {% load humanize %}
 
 {% block main %}
-  <table>
-    <thead>
-      <tr>
-        <th>Year</th>
-        <th>Transportation</th>
-        <th>Food</th>
-        <th>Entertainment</th>
-        <th>Gifts</th>
-        <th>Awards</th>
-        <th>Events</th>
-        <th>Mass Media</th>
-        <th>Total</th>
-        <th>Coversheet Count</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for year, data in covers.items %}
+  <section>
+    <h2>Total Spent</h2>
+    <table>
+      <thead>
         <tr>
-          <td>{{ year }}</td>
-          <td>${{ data.transportation__sum|intcomma }}</td>
-          <td>${{ data.food__sum|intcomma }}</td>
-          <td>${{ data.entertainment__sum|intcomma }}</td>
-          <td>${{ data.gifts__sum|intcomma }}</td>
-          <td>${{ data.awards__sum|intcomma }}</td>
-          <td>${{ data.events__sum|intcomma }}</td>
-          <td>${{ data.media__sum|intcomma }}</td>
-          <td>${{ data.total|intcomma }}</td>
-          <td>{{ data.count|intcomma }}</td>
+          <th>Year</th>
+          <th>Transportation</th>
+          <th>Food</th>
+          <th>Entertainment</th>
+          <th>Gifts</th>
+          <th>Awards</th>
+          <th>Events</th>
+          <th>Mass Media</th>
+          <th>Total</th>
+          <th>Coversheet Count</th>
+          <th>w/ details</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for year, data in covers.items %}
+          <tr>
+            <td>{{ year }}</td>
+            <td>${{ data.transportation__sum|intcomma }}</td>
+            <td>${{ data.food__sum|intcomma }}</td>
+            <td>${{ data.entertainment__sum|intcomma }}</td>
+            <td>${{ data.gifts__sum|intcomma }}</td>
+            <td>${{ data.awards__sum|intcomma }}</td>
+            <td>${{ data.events__sum|intcomma }}</td>
+            <td>${{ data.media__sum|intcomma }}</td>
+            <td>${{ data.total|intcomma }}</td>
+            <td>{{ data.count|intcomma }}</td>
+            <td>{{ data.itemized|intcomma }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Total Itemized Spent</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Food</th>
+          <th>Entertainment</th>
+          <th>Gifts</th>
+          <th>Awards</th>
+          <th>Total</th>
+          <th>Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for year, data in itemized.items %}
+          <tr>
+            <td>{{ year }}</td>
+            <td>${{ data.food.sum|intcomma }}</td>
+            <td>${{ data.entertainment.sum|intcomma }}</td>
+            <td>${{ data.gift.sum|intcomma }}</td>
+            <td>${{ data.award.sum|intcomma }}</td>
+            <td>${{ data.total|intcomma }}</td>
+            <td>{{ data.count|intcomma }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
 {% endblock %}

@@ -1,8 +1,8 @@
-from django.db.models import Sum
+from django.db.models import Count, Sum
 from django.views.generic import DetailView, ListView, TemplateView
 
 from .models import (Lobbyist,
-    ExpenseCoversheet)
+    ExpenseCoversheet, ExpenseDetailReport)
 
 
 class Landing(TemplateView):
@@ -17,12 +17,32 @@ class Landing(TemplateView):
             year_data = qs.aggregate(*map(Sum, facets))
             year_data['total'] = sum(year_data.values())
             year_data['count'] = qs.count()
+            year_data['itemized'] = qs.exclude(details__isnull=True).count()
+            data[year] = year_data
+        return data
+
+    def aggregate_details(self):
+        facets = ['food', 'entertainment', 'gift', 'award']
+        data = dict()
+        for year in self.years:
+            qs = ExpenseDetailReport.objects.filter(year=year)
+            year_data = {}
+            total = 0
+            count = 0
+            for facet in facets:
+                year_data[facet] = qs.filter(type=facet).\
+                    aggregate(sum=Sum('amount_guess'), count=Count('amount_guess'))
+                total += year_data[facet]['sum'] or 0
+                count += year_data[facet]['count'] or 0
+            year_data['total'] = total
+            year_data['count'] = count  # same as qs.count()
             data[year] = year_data
         return data
 
     def get_context_data(self, **kwargs):
         context = super(Landing, self).get_context_data(**kwargs)
         context['covers'] = self.aggregate_covers()
+        context['itemized'] = self.aggregate_details()
         return context
 
 
