@@ -157,7 +157,7 @@ def _detail_inner(row, type):
     )
 
     report, dirty = ExpenseDetailReport.objects.get_or_create(
-        idno=row['IDNO'], type="food",
+        idno=row['IDNO'], type=type,
         defaults=default_data)
     if not dirty:
         for key, value in default_data.items():
@@ -180,8 +180,8 @@ def process_csv(path, _inner_func, **kwargs):
                 print i, row.get('FILED_DATE', row.get('RPT_DATE'))
             try:
                 _inner_func(row, **kwargs)
-            except ValueError:
-                logger.warn('Row missing data: %s' % row)
+            except ValueError as e:
+                logger.warn('Row missing data: %s, %s' % (row, e))
                 continue
 
 
@@ -195,6 +195,12 @@ if __name__ == "__main__":
             _inner_func=_covers_inner)
         process_csv(os.path.join(DATA_DIR, "LaFood.csv"),
             _inner_func=_detail_inner, type="food")
+        process_csv(os.path.join(DATA_DIR, "LaAwrd.csv"),
+            _inner_func=_detail_inner, type="award")
+        process_csv(os.path.join(DATA_DIR, "LaEnt.csv"),
+            _inner_func=_detail_inner, type="entertainment")
+        process_csv(os.path.join(DATA_DIR, "LaGift.csv"),
+            _inner_func=_detail_inner, type="gift")
     except KeyboardInterrupt:
         exit(1)
     except Exception:
