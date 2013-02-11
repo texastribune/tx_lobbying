@@ -148,18 +148,19 @@ def _detail_inner(row, type):
     cover = ExpenseCoversheet.objects.get(report_id=row['REPNO'])
 
     # ExpenseDetailreport
-    amount = float(row['EXPAMOUNT']) if row['EXPAMOUNT'] else None
+    amount = Decimal(row['EXPAMOUNT']) if row['EXPAMOUNT'] else None
     default_data = dict(
         cover=cover,
         lobbyist=lobbyist,
         year=int(row['YEAR_APPL']),
         raw=json.dumps(row),
     )
-    if amount is not None:
-        default_data['amount'] = default_data['amount_guess'] = Decimal(amount)
-    else:
+    if amount is None:
         default_data['amount'] = None  # force this to null
-        default_data['amount_guess'] = (float(row['nLow']) + float(row['nHigh'])) / 2
+        default_data['amount_guess'] = Decimal((Decimal(row['nLow']) +
+            Decimal(row['nHigh'])) / 2).quantize(Decimal('.01'))
+    else:
+        default_data['amount'] = default_data['amount_guess'] = amount
     report, dirty = ExpenseDetailReport.objects.get_or_create(
         idno=row['IDNO'], type=type,
         defaults=default_data)
