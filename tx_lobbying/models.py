@@ -88,7 +88,7 @@ class Lobbyist(models.Model):
     def get_name_history(self, unique=True):
         from .scrapers.utils import get_name_data
         history = []
-        for report in self.coversheet_set.exclude(raw=''):
+        for report in self.coversheets.exclude(raw=''):
             data = get_name_data(json.loads(report.raw))
             name = Lobbyist.get_display_name(data)
             if (not unique or not history) or (history and name != history[-1][0]):
@@ -97,7 +97,7 @@ class Lobbyist(models.Model):
 
     def make_stats(self):
         years = defaultdict(int)  # summing Decimals, but this seems to work
-        for x in self.coversheet_set.filter(spent_guess__gt=0):
+        for x in self.coversheets.filter(spent_guess__gt=0):
             years[x.year] += x.spent_guess
         for year, spent in years.items():
             try:
@@ -147,7 +147,7 @@ class ExpenseCoversheet(models.Model):
     """
     Cover sheet.
     """
-    lobbyist = models.ForeignKey(Lobbyist)
+    lobbyist = models.ForeignKey(Lobbyist, related_name="coversheets")
     raw = models.TextField()
     report_date = models.DateField()
     report_id = models.IntegerField(unique=True)
