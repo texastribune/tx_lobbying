@@ -148,7 +148,7 @@ def _detail_inner(row, type):
     cover = ExpenseCoversheet.objects.get(report_id=row['REPNO'])
 
     # ExpenseDetailreport
-    amount = Decimal(row['EXPAMOUNT']) if row['EXPAMOUNT'] else None
+    amount = Decimal(row['EXPAMOUNT']) if row['EXPAMOUNT'] and row['EXPAMOUNT'] != '0' else None
     default_data = dict(
         cover=cover,
         lobbyist=lobbyist,
