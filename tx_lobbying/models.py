@@ -1,6 +1,7 @@
 from collections import defaultdict
 import json
 
+from django.core.urlresolvers import reverse
 from django.db import models
 
 
@@ -76,6 +77,9 @@ class Lobbyist(models.Model):
 
     def __unicode__(self):
         return Lobbyist.get_display_name(self.__dict__)
+
+    def get_absolute_url(self):
+        return reverse('tx_lobbying:lobbyist_detail', kwargs=dict(slug=self.filer_id))
 
     @staticmethod
     def get_display_name(data):
@@ -220,7 +224,7 @@ class ExpenseDetailReport(models.Model):
         unique_together = ('idno', 'type')
 
     def __unicode__(self):
-        return u"%s - %s ($%s)" % (self.cover, self.type, self.amount)
+        return u"%s - %s ($%s)" % (self.cover, self.type, self.amount_guess)
 
 
 # Fun data
