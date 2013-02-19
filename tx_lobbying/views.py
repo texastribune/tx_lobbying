@@ -46,6 +46,10 @@ class Landing(TemplateView):
         return context
 
 
+class YearLanding(TemplateView):
+    template_name = "tx_lobbying/year_landing.html"
+
+
 class LobbyistList(ListView):
     queryset = Lobbyist.objects.all().order_by('sort_name').\
         annotate(spent=Sum('coversheets__spent_guess')).\
