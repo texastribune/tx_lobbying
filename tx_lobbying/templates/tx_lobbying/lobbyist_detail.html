@@ -1,3 +1,5 @@
+{% load humanize %}
+
 {% block main %}
 
   <h1>{{ object }}</h1>
@@ -31,12 +33,12 @@
           <tr>
             <td>{{ cover.report_date }}</td>
             <td>{{ cover.transportation }}</td>
-            <td>{{ cover.food }}</td>
-            <td>{{ cover.entertainment }}</td>
-            <td>{{ cover.gifts }}</td>
-            <td>{{ cover.awards }}</td>
-            <td>{{ cover.events }}</td>
-            <td>{{ cover.media }}</td>
+            <td>${{ cover.food|intcomma }}</td>
+            <td>${{ cover.entertainment|intcomma }}</td>
+            <td>${{ cover.gifts|intcomma }}</td>
+            <td>${{ cover.awards|intcomma }}</td>
+            <td>${{ cover.events|intcomma }}</td>
+            <td>${{ cover.media|intcomma }}</td>
             <td>
               {% if cover.details.exists %}
                 <ul>
