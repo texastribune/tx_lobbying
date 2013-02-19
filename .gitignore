@@ -3,6 +3,9 @@ media
 *.sqlite
 *.sqlite-journal
 
+# raw data
+data/*/*
+
 
 # Randomly generated files
 *.log
