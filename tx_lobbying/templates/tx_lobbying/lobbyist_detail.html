@@ -25,6 +25,14 @@
           <th>Awards</th>
           <th>Events</th>
           <th>Media</th>
+          <th>Senators</th>
+          <th>Representatives</th>
+          <th>Other</th>
+          <th>Legislative</th>
+          <th>Executive</th>
+          <th>Family</th>
+          <th>Events</th>
+          <th>Guests</th>
           <th>Details</th>
         </tr>
       </thead>
@@ -39,6 +47,14 @@
             <td>${{ cover.awards|intcomma }}</td>
             <td>${{ cover.events|intcomma }}</td>
             <td>${{ cover.media|intcomma }}</td>
+            <td>${{ cover.ben_senators|intcomma }}</td>
+            <td>${{ cover.ben_representatives|intcomma }}</td>
+            <td>${{ cover.ben_other|intcomma }}</td>
+            <td>${{ cover.ben_legislative|intcomma }}</td>
+            <td>${{ cover.ben_executive|intcomma }}</td>
+            <td>${{ cover.ben_family|intcomma }}</td>
+            <td>${{ cover.ben_events|intcomma }}</td>
+            <td>${{ cover.ben_guests|intcomma }}</td>
             <td>
               {% if cover.details.exists %}
                 <ul>
