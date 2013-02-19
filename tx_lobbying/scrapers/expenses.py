@@ -196,8 +196,8 @@ if __name__ == "__main__":
     files = download_zip(url=TEC_URL, extract_to=DATA_DIR)
 
     try:
-        # process_csv(os.path.join(DATA_DIR, "LaCVR.csv"),
-        #     _inner_func=_covers_inner)
+        process_csv(os.path.join(DATA_DIR, "LaCVR.csv"),
+            _inner_func=_covers_inner)
         process_csv(os.path.join(DATA_DIR, "LaFood.csv"),
             _inner_func=_detail_inner, type="food")
         process_csv(os.path.join(DATA_DIR, "LaAwrd.csv"),
