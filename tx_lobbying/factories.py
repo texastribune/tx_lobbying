@@ -8,6 +8,7 @@ from .models import (
     Lobbyist,
     LobbyistYear,
     Compensation,
+    ExpenseCoversheet,
 )
 
 
@@ -39,3 +40,12 @@ class CompensationFactory(factory.Factory):
     year = factory.SubFactory(LobbyistYearFactory)
     interest = factory.SubFactory(InterestFactory)
     updated_at = factory.LazyAttribute(lambda a: datetime.date.today())
+
+
+class ExpenseCoversheetFactory(factory.Factory):
+    FACTORY_FOR = ExpenseCoversheet
+    lobbyist = factory.SubFactory(LobbyistFactory)
+    report_date = '2001-04-01'
+    report_id = factory.Sequence(lambda n: n)
+    year = '2001'
+    spent_guess = factory.LazyAttribute(lambda a: random.randint(10000, 100000))

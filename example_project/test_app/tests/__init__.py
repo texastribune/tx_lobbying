@@ -9,6 +9,9 @@ from tx_lobbying.models import (Interest, InterestStats, Lobbyist,
     LobbyistYear, )
 
 
+from .models import *
+
+
 class NamedPoorlyTestCase(TestCase):
     def test_model_relations_api(self):
         """Test the calls used to move between the relations for the models."""
