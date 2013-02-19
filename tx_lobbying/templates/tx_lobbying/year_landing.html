@@ -1,6 +1,21 @@
+{% load humanize %}
 
 
 {% block main %}
-
- HI
+  <table>
+    <thead>
+      <tr>
+        <th>Lobbyist</th>
+        <th>Spent</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in object_list %}
+        <tr>
+          <td><a href="{{ object.lobbyist.get_absolute_url }}">{{ object.lobbyist }}</a></td>
+          <td>${{ object.spent|intcomma }} </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

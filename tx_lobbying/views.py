@@ -1,7 +1,7 @@
 from django.db.models import Count, Sum
 from django.views.generic import DetailView, ListView, TemplateView
 
-from .models import (Lobbyist,
+from .models import (Lobbyist, LobbyistStat,
     ExpenseCoversheet, ExpenseDetailReport)
 
 
@@ -48,6 +48,13 @@ class Landing(TemplateView):
 
 class YearLanding(TemplateView):
     template_name = "tx_lobbying/year_landing.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(YearLanding, self).get_context_data(**kwargs)
+        year = kwargs['year']
+        qs = LobbyistStat.objects.filter(year=year).order_by('-spent')[:20]
+        context['object_list'] = qs
+        return context
 
 
 class LobbyistList(ListView):
