@@ -10,6 +10,7 @@ from .models import (
     Compensation,
     ExpenseCoversheet,
 )
+from .factory_names_list import surnames_list, first_names_list
 
 
 class InterestFactory(factory.Factory):
@@ -22,7 +23,10 @@ class InterestFactory(factory.Factory):
 class LobbyistFactory(factory.Factory):
     FACTORY_FOR = Lobbyist
     filer_id = factory.Sequence(lambda n: n)
-    sort_name = factory.Sequence(lambda n: 'Lobbyist {0}'.format(n))
+    first_name = factory.LazyAttribute(lambda a: random.choice(first_names_list))
+    last_name = factory.LazyAttribute(lambda a: random.choice(surnames_list))
+    sort_name = factory.LazyAttribute(lambda a: "%s %s" % (
+        a.last_name, a.first_name))
     updated_at = factory.LazyAttribute(lambda a: datetime.date.today())
 
 

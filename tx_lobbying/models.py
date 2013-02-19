@@ -83,6 +83,12 @@ class Lobbyist(models.Model):
 
     @staticmethod
     def get_display_name(data):
+        """
+        Get how to display a `Lobbyist`'s name from a dict.
+
+        This is a staticmethod and takes a dict so we can re-use this data on
+        any arbitrary dict (or json) data.
+        """
         if data['nick_name']:
             return u'%(first_name)s "%(nick_name)s" %(last_name)s' % data
         elif data['first_name']:
