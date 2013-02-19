@@ -10,6 +10,13 @@ def convert_date_format(str):
     return datetime.date(int(year), int(month), int(day))
 
 
+def convert_date_format_YMD(str):
+    """Convert 12/25/2009 to date object."""
+    # TODO convert to Date so we can do comparisons
+    year, month, day = str.split('-')
+    return datetime.date(int(year), int(month), int(day))
+
+
 def setfield(obj, fieldname, value):
     """Fancy setattr."""
     old = getattr(obj, fieldname)

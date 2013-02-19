@@ -16,7 +16,7 @@ import sys
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Interest, Lobbyist, RegistrationReport,
     LobbyistYear, Compensation)
-from tx_lobbying.scrapers.utils import (DictReader, convert_date_format,
+from tx_lobbying.scrapers.utils import (DictReader, convert_date_format_YMD,
     setfield)
 
 
@@ -28,7 +28,7 @@ def scrape(path):
     with open(path, 'r') as f:
         reader = DictReader(f)
         for row in reader:
-            report_date = convert_date_format(row['RPT_DATE'])
+            report_date = convert_date_format_YMD(row['RPT_DATE'])
             year = row['YEAR_APPL']
 
             # interest/concern/client
@@ -57,8 +57,8 @@ def scrape(path):
 
             # compensation
             default_data = dict(
-                amount_high=int(round(float(row['NHIGH']))),  # I hate myself
-                amount_low=int(round(float(row['NLOW']))),
+                amount_high=int(round(float(row['NHIGH'] or "0"))),  # I hate myself
+                amount_low=int(round(float(row['NLOW'] or "0"))),
                 raw=json.dumps(row),
                 updated_at=report_date,
             )
