@@ -13,6 +13,21 @@
     </ul>
   </section>
   <section>
+    <h2>Clients</h2>
+    <ul>
+      {% for yeardata in object.years.all %}
+        <li>
+          {{ yeardata.year }}
+          <ul>
+            {% for client in yeardata.compensation_set.all %}
+              <li>{{ client.interest }} ${{ client.amount_low|intcomma }} &mdash; ${{ client.amount_high|intcomma }}</li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+  <section>
     <h2>Cover Sheets</h2>
     <table>
       <thead>
