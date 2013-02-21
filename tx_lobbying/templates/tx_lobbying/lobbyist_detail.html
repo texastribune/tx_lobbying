@@ -20,7 +20,7 @@
           {{ yeardata.year }}
           <ul>
             {% for client in yeardata.compensation_set.all %}
-              <li>{{ client.interest }} ${{ client.amount_low|intcomma }} &mdash; ${{ client.amount_high|intcomma }}</li>
+              <li>{{ client.interest }} ${{ client.amount_low|floatformat:2|intcomma }} &mdash; ${{ client.amount_high|floatformat:2|intcomma }}</li>
             {% endfor %}
           </ul>
         </li>
@@ -56,20 +56,20 @@
           <tr>
             <td>{{ cover.report_date }}</td>
             <td>{{ cover.transportation }}</td>
-            <td>${{ cover.food|intcomma }}</td>
-            <td>${{ cover.entertainment|intcomma }}</td>
-            <td>${{ cover.gifts|intcomma }}</td>
-            <td>${{ cover.awards|intcomma }}</td>
-            <td>${{ cover.events|intcomma }}</td>
-            <td>${{ cover.media|intcomma }}</td>
-            <td>${{ cover.ben_senators|intcomma }}</td>
-            <td>${{ cover.ben_representatives|intcomma }}</td>
-            <td>${{ cover.ben_other|intcomma }}</td>
-            <td>${{ cover.ben_legislative|intcomma }}</td>
-            <td>${{ cover.ben_executive|intcomma }}</td>
-            <td>${{ cover.ben_family|intcomma }}</td>
-            <td>${{ cover.ben_events|intcomma }}</td>
-            <td>${{ cover.ben_guests|intcomma }}</td>
+            <td>${{ cover.food|floatformat:2|intcomma }}</td>
+            <td>${{ cover.entertainment|floatformat:2|intcomma }}</td>
+            <td>${{ cover.gifts|floatformat:2|intcomma }}</td>
+            <td>${{ cover.awards|floatformat:2|intcomma }}</td>
+            <td>${{ cover.events|floatformat:2|intcomma }}</td>
+            <td>${{ cover.media|floatformat:2|intcomma }}</td>
+            <td>${{ cover.ben_senators|floatformat:2|intcomma }}</td>
+            <td>${{ cover.ben_representatives|floatformat:2|intcomma }}</td>
+            <td>${{ cover.ben_other|floatformat:2|intcomma }}</td>
+            <td>${{ cover.ben_legislative|floatformat:2|intcomma }}</td>
+            <td>${{ cover.ben_executive|floatformat:2|intcomma }}</td>
+            <td>${{ cover.ben_family|floatformat:2|intcomma }}</td>
+            <td>${{ cover.ben_events|floatformat:2|intcomma }}</td>
+            <td>${{ cover.ben_guests|floatformat:2|intcomma }}</td>
             <td>
               {% if cover.details.exists %}
                 <ul>
