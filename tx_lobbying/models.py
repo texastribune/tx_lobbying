@@ -143,7 +143,7 @@ class RegistrationReport(models.Model):
     TODO: clients...
 
     """
-    lobbyist = models.ForeignKey(Lobbyist)
+    lobbyist = models.ForeignKey(Lobbyist, related_name="registrations")
     raw = models.TextField()
     report_date = models.DateField()
     report_id = models.IntegerField(unique=True)
