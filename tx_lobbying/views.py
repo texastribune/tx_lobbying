@@ -18,6 +18,8 @@ class Landing(TemplateView):
             year_data['total'] = sum(year_data.values())
             year_data['count'] = qs.count()
             year_data['itemized'] = qs.exclude(details__isnull=True).count()
+            year_data['registered'] = Lobbyist.objects.filter(
+                registrations__year__exact=year).distinct().count()
             data[year] = year_data
         return data
 
