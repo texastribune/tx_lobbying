@@ -16,6 +16,7 @@
           <th>Mass Media</th>
           <th>Total</th>
           <th># Registered</th>
+          <th># Spent</th>
           <th>Coversheet Count</th>
           <th>w/ details</th>
         </tr>
@@ -33,6 +34,7 @@
             <td>${{ data.media__sum|floatformat:2|intcomma }}</td>
             <td>${{ data.total|floatformat:2|intcomma }}</td>
             <td>{{ data.registered|intcomma }}</td>
+            <td>{{ data.spent_anything|intcomma }}</td>
             <td>{{ data.count|intcomma }}</td>
             <td>{{ data.itemized|intcomma }}</td>
           </tr>

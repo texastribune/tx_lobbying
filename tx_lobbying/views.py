@@ -20,6 +20,8 @@ class Landing(TemplateView):
             year_data['itemized'] = qs.exclude(details__isnull=True).count()
             year_data['registered'] = Lobbyist.objects.filter(
                 registrations__year__exact=year).distinct().count()
+            year_data['spent_anything'] = Lobbyist.objects.filter(
+                stats__year__exact=year, stats__spent__gt=0).distinct().count()
             data[year] = year_data
         return data
 
