@@ -150,10 +150,10 @@ class RegistrationReport(models.Model):
 
     """
     lobbyist = models.ForeignKey(Lobbyist, related_name="registrations")
-    raw = models.TextField()
-    report_date = models.DateField()
     report_id = models.IntegerField(unique=True)
+    report_date = models.DateField()
     year = models.IntegerField()
+    raw = models.TextField()
 
     def __unicode__(self):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
