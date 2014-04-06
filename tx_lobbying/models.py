@@ -75,6 +75,9 @@ class Lobbyist(models.Model):
     suffix = models.CharField(max_length=5)
     nick_name = models.CharField(max_length=25)
 
+    class Meta:
+        ordering = ('sort_name', )
+
     def __unicode__(self):
         return Lobbyist.get_display_name(self.__dict__)
 
