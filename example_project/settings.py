@@ -2,6 +2,7 @@
 import os
 
 import dj_database_url
+from project_runpy import env
 
 
 def project_dir(*paths):
@@ -9,7 +10,7 @@ def project_dir(*paths):
     return os.path.join(base, *paths)
 
 
-DEBUG = True
+DEBUG = env.get('DEBUG', True)
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -19,7 +20,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {'default': dj_database_url.config(default='sqlite:///' +
-    project_dir('example_project.sqlite'))}
+    project_dir('example_project.db'))}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -75,7 +76,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -85,7 +86,7 @@ SECRET_KEY = 'lolimasekrit'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    # 'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -138,7 +139,7 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'root': {
-        'level': os.environ.get('LOGGING_LEVEL', 'DEBUG'),
+        'level': os.environ.get('LOGGING_LEVEL', 'WARNING'),
         'handlers': ['console'],
     },
     'filters': {
@@ -154,7 +155,7 @@ LOGGING = {
         },
         'console': {
             'level': 'DEBUG',
-            'class': 'example_project.logging_handlers.ColorizingStreamHandler',
+            'class': 'project_runpy.ColorizingStreamHandler',
         },
     },
     'loggers': {
