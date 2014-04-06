@@ -140,7 +140,8 @@ def _covers_inner(row):
         del cover._is_dirty
         dirty = True
     if dirty:
-        logger.info("COVER: %s" % cover)
+        logger.info(u'COVER:    {} {} {}'
+            .format(cover.lobbyist, cover.report_id, cover.report_date))
 
 
 def _detail_inner(row, type):
@@ -183,8 +184,14 @@ def process_csv(path, _inner_func, **kwargs):
     with open(path, 'r') as f:
         reader = DictReader(f, encoding="latin_1")
         for i, row in enumerate(reader):
-            if PRINT_PROGRESS and not i % 10000:
-                print i, total, row.get('FILED_DATE', row.get('RPT_DATE'))
+            if not i % 1000:
+                logger.info(u'{}/{} filed date: {} report date:{}'
+                    .format(
+                        i,
+                        total,
+                        row.get('FILED_DATE'),
+                        row.get('RPT_DATE')
+                    ))
             try:
                 _inner_func(row, **kwargs)
             except ValueError as e:
@@ -192,14 +199,10 @@ def process_csv(path, _inner_func, **kwargs):
                 continue
 
 
-PRINT_PROGRESS = "--progress" in sys.argv
-
-
 def get_record_count(path):
     """Really Hacky."""
     working_dir, filename = os.path.split(path)
     csv_name = os.path.splitext(filename)[0]
-    print working_dir, csv_name
 
     try:
         with open(os.path.join(working_dir, 'Read_Me.txt')) as f:
