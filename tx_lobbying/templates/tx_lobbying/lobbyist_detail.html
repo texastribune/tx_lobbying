@@ -55,21 +55,21 @@
         {% for cover in object.coversheets.all %}
           <tr>
             <td>{{ cover.report_date }}</td>
-            <td>{{ cover.transportation }}</td>
-            <td>${{ cover.food|floatformat:2|intcomma }}</td>
-            <td>${{ cover.entertainment|floatformat:2|intcomma }}</td>
-            <td>${{ cover.gifts|floatformat:2|intcomma }}</td>
-            <td>${{ cover.awards|floatformat:2|intcomma }}</td>
-            <td>${{ cover.events|floatformat:2|intcomma }}</td>
-            <td>${{ cover.media|floatformat:2|intcomma }}</td>
-            <td>${{ cover.ben_senators|floatformat:2|intcomma }}</td>
-            <td>${{ cover.ben_representatives|floatformat:2|intcomma }}</td>
-            <td>${{ cover.ben_other|floatformat:2|intcomma }}</td>
-            <td>${{ cover.ben_legislative|floatformat:2|intcomma }}</td>
-            <td>${{ cover.ben_executive|floatformat:2|intcomma }}</td>
-            <td>${{ cover.ben_family|floatformat:2|intcomma }}</td>
-            <td>${{ cover.ben_events|floatformat:2|intcomma }}</td>
-            <td>${{ cover.ben_guests|floatformat:2|intcomma }}</td>
+            <td>{% if cover.transportation %}{{ cover.transportation }}{% endif %}</td>
+            <td>{% if cover.food %}${{ cover.food|intcomma }}{% endif %}</td>
+            <td>{% if cover.entertainment %}${{ cover.entertainment|intcomma }}{% endif %}</td>
+            <td>{% if cover.gifts %}${{ cover.gifts|intcomma }}{% endif %}</td>
+            <td>{% if cover.awards %}${{ cover.awards|intcomma }}{% endif %}</td>
+            <td>{% if cover.events %}${{ cover.events|intcomma }}{% endif %}</td>
+            <td>{% if cover.media %}${{ cover.media|intcomma }}{% endif %}</td>
+            <td>{% if cover.ben_senators %}${{ cover.ben_senators|intcomma }}{% endif %}</td>
+            <td>{% if cover.ben_representatives %}${{ cover.ben_representatives|intcomma }}{% endif %}</td>
+            <td>{% if cover.ben_other %}${{ cover.ben_other|intcomma }}{% endif %}</td>
+            <td>{% if cover.ben_legislative %}${{ cover.ben_legislative|intcomma }}{% endif %}</td>
+            <td>{% if cover.ben_executive %}${{ cover.ben_executive|intcomma }}{% endif %}</td>
+            <td>{% if cover.ben_family %}${{ cover.ben_family|intcomma }}{% endif %}</td>
+            <td>{% if cover.ben_events %}${{ cover.ben_events|intcomma }}{% endif %}</td>
+            <td>{% if cover.ben_guests %}${{ cover.ben_guests|intcomma }}{% endif %}</td>
             <td>
               {% if cover.details.exists %}
                 <ul>
