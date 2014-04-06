@@ -5,4 +5,9 @@ from . import models
 
 admin.site.register(models.Interest)
 
-admin.site.register(models.Lobbyist)
+
+class LobbyistAdmin(admin.ModelAdmin):
+    list_display = ('name', 'updated_at')
+    search_fields = ('name', )
+
+admin.site.register(models.Lobbyist, LobbyistAdmin)

@@ -58,11 +58,10 @@ class Lobbyist(models.Model):
     """
     An individual registered with the TEC as a lobbyist.
 
-    There are multiple name fields, and it may seem redundant, but there many
-    lobbyists are organizations, and not people. And they do not have first
-    and last names. The `sort_name` field is sort of redundant, but the TEC
-    gives it to us so it would behoove us to use it.
-
+    There are multiple name fields, and it may seem redundant, but many
+    lobbyists are organizations, not people. Organizations do not have first and
+    last names. The `sort_name` field is last, first for people, and just name
+    for organizations. It is given to us by the TEC in the data.
     """
     filer_id = models.IntegerField(unique=True)
     updated_at = models.DateField()  # manually set by import scripts
@@ -122,8 +121,12 @@ class Lobbyist(models.Model):
 
 
 class LobbyistStat(models.Model):
+    """
+    Stats about a lobbyist derived from other models for a year.
+    """
     lobbyist = models.ForeignKey(Lobbyist, related_name="stats")
     year = models.IntegerField()
+    # stats
     spent = models.DecimalField(max_digits=13, decimal_places=2, default="0.00")
 
     class Meta:
@@ -139,7 +142,7 @@ class RegistrationReport(models.Model):
     A reference to the registration report a `Lobbyist` files every year.
 
     This is the report where someone officially registers as a lobbyist. It also
-    lists the clients they represent. These reports can be ammended, so a
+    lists the clients they represent. These reports can be amended, so a
     registration from 2008 can be ammended in 2013 and change on you.
 
     TODO: clients...
@@ -158,6 +161,9 @@ class RegistrationReport(models.Model):
 class ExpenseCoversheet(models.Model):
     """
     Cover sheet.
+
+    Lobbyists have to file a cover sheet with all their expenses for the year
+    (or month? or what?). This contains everything.
     """
     lobbyist = models.ForeignKey(Lobbyist, related_name="coversheets")
     raw = models.TextField()
@@ -209,6 +215,10 @@ class ExpenseCoversheet(models.Model):
 class ExpenseDetailReport(models.Model):
     """
     Detailed expense report.
+
+    If a lobbyist spends enough, they have to file a detailed expense report.
+    This is not very useful data because there are a lot of loopholes so that
+    lobbyists can get around having to file a detailed expense report.
     """
     # IDNO
     idno = models.IntegerField()
@@ -265,7 +275,6 @@ class Compensation(models.Model):
     be considered.
 
     """
-    amount_guess = models.IntegerField()  # denormalized, f(amount_low, amount_high)
     amount_high = models.IntegerField()  # upper bound, exlusive
     amount_low = models.IntegerField()  # lower bound, inclusive
     # compensation type
@@ -275,6 +284,9 @@ class Compensation(models.Model):
     interest = models.ForeignKey(Interest)
     raw = models.TextField()
     updated_at = models.DateField()
+
+    # denormalized fields
+    amount_guess = models.IntegerField()  # denormalized, f(amount_low, amount_high)
 
     class Meta:
         # ordering = ('interest__name', )
