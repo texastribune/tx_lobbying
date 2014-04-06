@@ -81,6 +81,8 @@ class Lobbyist(models.Model):
     def get_absolute_url(self):
         return reverse('tx_lobbying:lobbyist_detail', kwargs=dict(slug=self.filer_id))
 
+    # CUSTOM METHODS
+
     @staticmethod
     def get_display_name(data):
         """
@@ -96,6 +98,7 @@ class Lobbyist(models.Model):
         return data['name']
 
     def get_name_history(self, unique=True):
+        """Get a list of all the different names a `Lobbyist` has used."""
         from .scrapers.utils import get_name_data
         history = []
         for report in self.coversheets.exclude(raw=''):
@@ -110,13 +113,9 @@ class Lobbyist(models.Model):
         for x in self.coversheets.filter(spent_guess__gt=0):
             years[x.year] += x.spent_guess
         for year, spent in years.items():
-            try:
-                stat = LobbyistStat.objects.get(lobbyist=self, year=year)
-                if stat.spent != spent:
-                    stat.spent = spent
-                    stat.save()
-            except LobbyistStat.DoesNotExist:
-                LobbyistStat.objects.create(lobbyist=self, year=year, spent=spent)
+            defaults = dict(spent=spent)
+            LobbyistStat.objects.update_or_create(lobbyist=self, year=year,
+                defaults=defaults)
 
 
 class LobbyistStat(models.Model):

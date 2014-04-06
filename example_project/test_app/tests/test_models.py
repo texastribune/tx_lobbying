@@ -13,7 +13,7 @@ from tx_lobbying.models import (Interest, InterestStats, Lobbyist,
     LobbyistYear, )
 
 
-class LobbyistTests(TestCase):
+class LobbyistTest(TestCase):
     def test_make_stats_is_accurate(self):
         lobbyist = LobbyistFactory()
         lobbyist.make_stats()
