@@ -82,5 +82,6 @@ class LobbyistList(ListView):
 
 
 class LobbyistDetail(DetailView):
-    queryset = Lobbyist.objects.all()
+    queryset = Lobbyist.objects.all().prefetch_related(
+        'years__compensation_set__interest', 'coversheets__details')
     slug_field = 'filer_id'
