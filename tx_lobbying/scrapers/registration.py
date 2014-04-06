@@ -16,14 +16,13 @@ import sys
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Interest, Lobbyist, RegistrationReport,
     LobbyistYear, Compensation)
-from tx_lobbying.scrapers.utils import (DictReader, convert_date_format_YMD,
-    setfield)
+from tx_lobbying.scrapers.utils import (DictReader, convert_date_format_YMD)
 
 
 logger = logging.getLogger(__name__)
 
 
-def scrape(path):
+def scrape(path, logger=logger):
     logger.info("Processing %s" % path)
     with open(path, 'r') as f:
         reader = DictReader(f)
