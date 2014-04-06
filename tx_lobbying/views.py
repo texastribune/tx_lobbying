@@ -7,7 +7,7 @@ from .models import (Lobbyist, LobbyistStat,
 
 class Landing(TemplateView):
     template_name = "tx_lobbying/landing.html"
-    years = range(2005, 2014)
+    years = range(2005, 2015)
 
     def aggregate_covers(self):
         facets = ['transportation', 'food', 'entertainment', 'gifts', 'awards', 'events', 'media']
@@ -15,7 +15,11 @@ class Landing(TemplateView):
         for year in self.years:
             qs = ExpenseCoversheet.objects.filter(year=year)
             year_data = qs.aggregate(*map(Sum, facets))
-            year_data['total'] = sum(year_data.values())
+            try:
+                year_data['total'] = sum(year_data.values())
+            except TypeError:
+                # no coversheets for that year
+                continue
             year_data['count'] = qs.count()
             year_data['itemized'] = qs.exclude(details__isnull=True).count()
             year_data['registered'] = Lobbyist.objects.filter(
@@ -45,11 +49,7 @@ class Landing(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(Landing, self).get_context_data(**kwargs)
-        try:
-            context['covers'] = self.aggregate_covers()
-        except TypeError:
-            # no coversheets in the database
-            pass
+        context['covers'] = self.aggregate_covers()
         context['itemized'] = self.aggregate_details()
         return context
 
