@@ -12,7 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for object in top_spenders %}
+        {% for object in top_lobbyists %}
           <tr>
             <td><a href="{{ object.lobbyist.get_absolute_url }}">{{ object.lobbyist }}</a></td>
             <td>${{ object.spent|intcomma }} </td>
@@ -20,5 +20,10 @@
         {% endfor %}
       </tbody>
   </table>
+  </section>
+
+  <section>
+    <h2>Top Interests</h2>
+    {{ top_interests }}
   </section>
 {% endblock %}

@@ -1,8 +1,8 @@
 from django.db.models import Count, Sum
 from django.views.generic import DetailView, ListView, TemplateView
 
-from .models import (Lobbyist, LobbyistStat,
-    ExpenseCoversheet, ExpenseDetailReport)
+from .models import (Lobbyist, ExpenseCoversheet, ExpenseDetailReport)
+from . import models
 
 
 class Landing(TemplateView):
@@ -57,15 +57,21 @@ class Landing(TemplateView):
 class YearLanding(TemplateView):
     template_name = "tx_lobbying/year_landing.html"
 
-    def get_top_spenders(self, count=20):
-        qs = (LobbyistStat.objects.filter(year=self.year)
+    def get_top_lobbyists(self, count=20):
+        qs = (models.LobbyistStat.objects.filter(year=self.year)
             .order_by('-spent')[:count])
+        return qs
+
+    def get_top_interests(self, count=20):
+        qs = (models.InterestStats.objects.filter(year=self.year)
+            .order_by('-high')[:count])
         return qs
 
     def get_context_data(self, **kwargs):
         self.year = kwargs['year']
         context = super(YearLanding, self).get_context_data(**kwargs)
-        context['top_spenders'] = self.get_top_spenders()
+        context['top_lobbyists'] = self.get_top_lobbyists()
+        context['top_interests'] = self.get_top_interests()
         return context
 
 
