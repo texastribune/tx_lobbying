@@ -45,7 +45,11 @@ class Landing(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(Landing, self).get_context_data(**kwargs)
-        context['covers'] = self.aggregate_covers()
+        try:
+            context['covers'] = self.aggregate_covers()
+        except TypeError:
+            # no coversheets in the database
+            pass
         context['itemized'] = self.aggregate_details()
         return context
 
