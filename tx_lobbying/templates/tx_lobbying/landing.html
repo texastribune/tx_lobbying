@@ -24,7 +24,7 @@
       <tbody>
         {% for year, data in covers.items %}
           <tr>
-            <td>{{ year }}</td>
+            <td><a href="{% url 'tx_lobbying:year_landing' year=year %}">{{ year }}</a></td>
             <td>${{ data.transportation__sum|floatformat:2|intcomma }}</td>
             <td>${{ data.food__sum|floatformat:2|intcomma }}</td>
             <td>${{ data.entertainment__sum|floatformat:2|intcomma }}</td>
@@ -60,7 +60,7 @@
       <tbody>
         {% for year, data in itemized.items %}
           <tr>
-            <td>{{ year }}</td>
+            <td><a href="{% url 'tx_lobbying:year_landing' year=year %}">{{ year }}</a></td>
             <td>${{ data.food.sum|floatformat:2|intcomma }}</td>
             <td>${{ data.entertainment.sum|floatformat:2|intcomma }}</td>
             <td>${{ data.gift.sum|floatformat:2|intcomma }}</td>
