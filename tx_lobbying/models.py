@@ -12,6 +12,7 @@ class Interest(models.Model):
 
     class Meta:
         unique_together = ('name', 'state')
+        ordering = ('name', )
 
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.state)
