@@ -12,7 +12,8 @@ TEMPLATE_DEBUG = DEBUG
 ALLOWED_HOSTS = ['*']  # XXX
 
 DATABASES = {'default': dj_database_url.config(
-    default='sqlite:///example_project.db')}
+    default='sqlite:///{}'
+    .format(os.path.join(BASE_DIR, 'example_project.db')))}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
