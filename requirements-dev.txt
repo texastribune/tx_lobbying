@@ -2,8 +2,6 @@
 
 Werkzeug>=0.8.3
 django-extensions>=0.9
-django-nose
 ipython
 ipdb
-ipdbplugin
 factory-boy

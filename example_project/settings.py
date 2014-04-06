@@ -126,7 +126,6 @@ INSTALLED_APPS = (
     'django_extensions',
     'tx_lobbying',
 
-    'django_nose',
     'example_project.test_app',
 )
 
@@ -176,5 +175,3 @@ LOGGING = {
         },
     }
 }
-
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'

@@ -9,7 +9,7 @@ from tx_lobbying.models import (Interest, InterestStats, Lobbyist,
     LobbyistYear, )
 
 
-from .models import *
+from tx_lobbying.models import *
 
 
 class NamedPoorlyTestCase(TestCase):
