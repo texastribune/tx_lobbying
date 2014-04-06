@@ -5,3 +5,4 @@ django-extensions>=0.9
 ipython
 ipdb
 factory-boy
+names==0.3.0

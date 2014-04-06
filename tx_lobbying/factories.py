@@ -2,6 +2,7 @@ import datetime
 import random
 
 import factory
+import names
 
 from .models import (
     Interest,
@@ -10,7 +11,6 @@ from .models import (
     Compensation,
     ExpenseCoversheet,
 )
-from .factory_names_list import surnames_list, first_names_list
 
 
 class InterestFactory(factory.DjangoModelFactory):
@@ -23,8 +23,8 @@ class InterestFactory(factory.DjangoModelFactory):
 class LobbyistFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Lobbyist
     filer_id = factory.Sequence(lambda n: n)
-    first_name = factory.LazyAttribute(lambda a: random.choice(first_names_list))
-    last_name = factory.LazyAttribute(lambda a: random.choice(surnames_list))
+    first_name = factory.LazyAttribute(lambda a: names.get_first_name())
+    last_name = factory.LazyAttribute(lambda a: names.get_last_name())
     sort_name = factory.LazyAttribute(lambda a: "%s %s" % (
         a.last_name, a.first_name))
     updated_at = factory.LazyAttribute(lambda a: datetime.date.today())
