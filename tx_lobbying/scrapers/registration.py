@@ -24,14 +24,15 @@ logger = logging.getLogger(__name__)
 
 def scrape(path, logger=logger):
     logger.info("Processing %s" % path)
-    with open(path, 'r') as f:
+    with open(path, 'rb') as f:
         reader = DictReader(f)
         for row in reader:
             report_date = convert_date_format_YMD(row['RPT_DATE'])
             year = row['YEAR_APPL']
 
             # interest/concern/client
-            interest, created = Interest.objects.get_or_create(
+            # TODO get other info from the csv
+            interest, created = Interest.objects.update_or_create(
                 name=row['CONCERNAME'],
                 state=row['EC_STCD'])
 
@@ -43,14 +44,14 @@ def scrape(path, logger=logger):
                 sort_name=row['SORTNAME'],  # not LOB_SORT like in coversheets
                 updated_at=report_date,
             )
-            lobbyist, created = Lobbyist.objects.get_or_create(
+            lobbyist, created = Lobbyist.objects.update_or_create(
                 filer_id=row['FILER_ID'],
                 defaults=default_data)
             if created:
                 logger.info("LOBBYIST: %s" % lobbyist)
 
             # lobbyist/interest M2M
-            lyear, created = LobbyistYear.objects.get_or_create(
+            lyear, created = LobbyistYear.objects.update_or_create(
                 lobbyist=lobbyist,
                 year=year)
 
@@ -61,10 +62,10 @@ def scrape(path, logger=logger):
                 raw=json.dumps(row),
                 updated_at=report_date,
             )
-            # TODO move this amount_guess logic into the model
+            # WISHLIST move this amount_guess logic into the model
             default_data['amount_guess'] = (default_data['amount_high'] +
                 default_data['amount_low']) / 2
-            Compensation.objects.get_or_create(
+            Compensation.objects.update_or_create(
                 year=lyear,
                 interest=interest,
                 defaults=default_data)
@@ -75,7 +76,7 @@ def scrape(path, logger=logger):
                 report_date=report_date,
                 year=year,
             )
-            report, created = RegistrationReport.objects.get_or_create(
+            report, created = RegistrationReport.objects.update_or_create(
                 lobbyist=lobbyist,
                 report_id=row['REPNO'],
                 defaults=default_data)
