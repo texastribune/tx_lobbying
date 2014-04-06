@@ -1,6 +1,1 @@
-"""
-TODO
-
-"""
-
-__version__ = "0.0.0"
+default_app_config = 'tx_lobbying.apps.Config'
