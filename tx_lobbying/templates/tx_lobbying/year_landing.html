@@ -2,20 +2,23 @@
 
 
 {% block main %}
-  <table>
-    <thead>
-      <tr>
-        <th>Lobbyist</th>
-        <th>Spent</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for object in object_list %}
+  <section>
+    <h2>Top Spenders</h2>
+    <table>
+      <thead>
         <tr>
-          <td><a href="{{ object.lobbyist.get_absolute_url }}">{{ object.lobbyist }}</a></td>
-          <td>${{ object.spent|intcomma }} </td>
+          <th>Lobbyist</th>
+          <th>Spent</th>
         </tr>
-      {% endfor %}
-    </tbody>
+      </thead>
+      <tbody>
+        {% for object in top_spenders %}
+          <tr>
+            <td><a href="{{ object.lobbyist.get_absolute_url }}">{{ object.lobbyist }}</a></td>
+            <td>${{ object.spent|intcomma }} </td>
+          </tr>
+        {% endfor %}
+      </tbody>
   </table>
+  </section>
 {% endblock %}

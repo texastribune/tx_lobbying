@@ -57,11 +57,15 @@ class Landing(TemplateView):
 class YearLanding(TemplateView):
     template_name = "tx_lobbying/year_landing.html"
 
+    def get_top_spenders(self, count=20):
+        qs = (LobbyistStat.objects.filter(year=self.year)
+            .order_by('-spent')[:count])
+        return qs
+
     def get_context_data(self, **kwargs):
+        self.year = kwargs['year']
         context = super(YearLanding, self).get_context_data(**kwargs)
-        year = kwargs['year']
-        qs = LobbyistStat.objects.filter(year=year).order_by('-spent')[:20]
-        context['object_list'] = qs
+        context['top_spenders'] = self.get_top_spenders()
         return context
 
 
