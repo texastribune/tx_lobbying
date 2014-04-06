@@ -1,4 +1,4 @@
-{% load humanize %}
+{% load intcomma from humanize %}
 
 
 {% block main %}
@@ -24,6 +24,18 @@
 
   <section>
     <h2>Top Interests</h2>
-    {{ top_interests }}
+    <table>
+      <thead></thead>
+      <tbody>
+        {% for object in top_interests %}
+          <tr>
+            <td>{{ object.interest }}</td>
+            <td>{{ object.lobbyist_count }}</td>
+            <td>${{ object.low|intcomma }}</td>
+            <td>${{ object.high|intcomma }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </section>
 {% endblock %}
