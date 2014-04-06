@@ -192,20 +192,27 @@ def process_csv(path, _inner_func, **kwargs):
 
 PRINT_PROGRESS = "--progress" in sys.argv
 
+
+def main(working_dir, logging_level=None):
+    if logging_level:
+        logger.setLevel(logging_level)
+    process_csv(os.path.join(working_dir, "LaCVR.csv"),
+        _inner_func=_covers_inner)
+    process_csv(os.path.join(working_dir, "LaFood.csv"),
+        _inner_func=_detail_inner, type="food")
+    process_csv(os.path.join(working_dir, "LaAwrd.csv"),
+        _inner_func=_detail_inner, type="award")
+    process_csv(os.path.join(working_dir, "LaEnt.csv"),
+        _inner_func=_detail_inner, type="entertainment")
+    process_csv(os.path.join(working_dir, "LaGift.csv"),
+        _inner_func=_detail_inner, type="gift")
+
+
 if __name__ == "__main__":
     files = download_zip(url=TEC_URL, extract_to=DATA_DIR)
 
     try:
-        process_csv(os.path.join(DATA_DIR, "LaCVR.csv"),
-            _inner_func=_covers_inner)
-        process_csv(os.path.join(DATA_DIR, "LaFood.csv"),
-            _inner_func=_detail_inner, type="food")
-        process_csv(os.path.join(DATA_DIR, "LaAwrd.csv"),
-            _inner_func=_detail_inner, type="award")
-        process_csv(os.path.join(DATA_DIR, "LaEnt.csv"),
-            _inner_func=_detail_inner, type="entertainment")
-        process_csv(os.path.join(DATA_DIR, "LaGift.csv"),
-            _inner_func=_detail_inner, type="gift")
+        main(DATA_DIR)
     except KeyboardInterrupt:
         exit(1)
     except Exception:
