@@ -130,33 +130,25 @@ LOGGING = {
     },
     'filters': {
         'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        'readable_sql': {
+            '()': 'project_runpy.ReadableSqlFilter',
+        },
     },
     'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        },
         'console': {
             'level': 'DEBUG',
+            'filters': ['require_debug_true', 'readable_sql'],
             'class': 'project_runpy.ColorizingStreamHandler',
         },
     },
     'loggers': {
         'django.db.backends': {
-            'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': True,
-        },
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-        'nose': {
-            'level': 'WARNING',
+            'level': 'DEBUG',
             'handlers': ['console'],
             'propagate': True,
         },
