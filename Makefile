@@ -1,4 +1,6 @@
 PROJECT=./example_project
+MANAGE=python $(PROJECT)/manage.py
+
 
 help:
 	@echo "make commands:"
@@ -18,12 +20,12 @@ clean:
 
 
 test:
-	python $(PROJECT)/manage.py test
+	$(MANAGE) test
 
 
 resetdb:
-	python $(PROJECT)/manage.py reset_db --router=default --noinput
-	python $(PROJECT)/manage.py syncdb --noinput
+	$(MANAGE) sqlclear tx_lobbying | $(MANAGE) dbshell
+	$(MANAGE) migrate --noinput
 
 
 .PHONY: help clean test resetdb

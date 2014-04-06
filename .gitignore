@@ -1,7 +1,8 @@
 # Django generated files
 media
-*.sqlite
-*.sqlite-journal
+static_root
+*.db
+*.db-journal
 
 # raw data
 data/*/*
