@@ -11,6 +11,7 @@ import datetime
 import json
 import logging
 import os
+import re
 import sys
 import time
 import urllib
@@ -178,11 +179,12 @@ def _detail_inner(row, type):
 
 def process_csv(path, _inner_func, **kwargs):
     logger.info("Processing %s" % path)
+    total = get_record_count(path)
     with open(path, 'r') as f:
         reader = DictReader(f, encoding="latin_1")
         for i, row in enumerate(reader):
             if PRINT_PROGRESS and not i % 10000:
-                print i, row.get('FILED_DATE', row.get('RPT_DATE'))
+                print i, total, row.get('FILED_DATE', row.get('RPT_DATE'))
             try:
                 _inner_func(row, **kwargs)
             except ValueError as e:
@@ -191,6 +193,25 @@ def process_csv(path, _inner_func, **kwargs):
 
 
 PRINT_PROGRESS = "--progress" in sys.argv
+
+
+def get_record_count(path):
+    """Really Hacky."""
+    working_dir, filename = os.path.split(path)
+    csv_name = os.path.splitext(filename)[0]
+    print working_dir, csv_name
+
+    try:
+        with open(os.path.join(working_dir, 'Read_Me.txt')) as f:
+            lines = f.readlines()
+            for line in lines:
+                bits = re.split(r'\s+', line)
+                if bits[1] == csv_name:
+                    human_count = bits[3]
+                    return int(human_count.replace(',', ''))
+        return 0
+    except Exception:  # XXX
+        return 0
 
 
 def main(working_dir, logging_level=None):
