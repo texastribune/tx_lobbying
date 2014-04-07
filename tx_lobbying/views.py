@@ -59,11 +59,13 @@ class YearLanding(TemplateView):
 
     def get_top_lobbyists(self, count=20):
         qs = (models.LobbyistStat.objects.filter(year=self.year)
+            .select_related('lobbyist')
             .order_by('-spent')[:count])
         return qs
 
     def get_top_interests(self, count=20):
         qs = (models.InterestStats.objects.filter(year=self.year)
+            .select_related('interest')
             .order_by('-high')[:count])
         return qs
 
