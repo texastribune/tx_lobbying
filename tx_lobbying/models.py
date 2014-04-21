@@ -3,6 +3,7 @@ import json
 
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models import Count, Sum
 
 
 class Interest(models.Model):
@@ -19,22 +20,16 @@ class Interest(models.Model):
 
     def make_stats_for_year(self, year):
         # WISHLIST move into utils
-        guess = 0
-        high = 0
-        low = 0
-        count = 0
-        # TODO refactor
-        for compensation in self.compensation_set.filter(year__year=year):
-            guess += compensation.amount_guess
-            high += compensation.amount_high
-            low += compensation.amount_low
-            count += 1
-        stat, __ = InterestStats.objects.get_or_create(interest=self, year=year)
-        stat.guess = guess
-        stat.high = high
-        stat.low = low
-        stat.lobbyist_count = count
-        stat.save()
+        qs = self.compensation_set
+        aggregate_stats = qs.filter(year__year=year).aggregate(
+            guess=Sum('amount_guess'),
+            high=Sum('amount_high'),
+            low=Sum('amount_low'),
+            lobbyist_count=Count('pk'),
+        )
+        stat, __ = InterestStats.objects.update_or_create(
+            interest=self, year=year,
+            defaults=aggregate_stats)
         return stat
 
 
