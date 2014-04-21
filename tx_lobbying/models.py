@@ -18,7 +18,7 @@ class Interest(models.Model):
         return u"%s (%s)" % (self.name, self.state)
 
     def make_stats_for_year(self, year):
-        # TODO move into utils
+        # WISHLIST move into utils
         guess = 0
         high = 0
         low = 0

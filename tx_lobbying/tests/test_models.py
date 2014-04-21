@@ -13,6 +13,35 @@ from tx_lobbying.models import (Interest, InterestStats, Lobbyist,
     LobbyistYear, )
 
 
+class InterestTest(TestCase):
+    def test_make_stats_for_year_works(self):
+        """Make sure the `Interest` data denormalization is accurate."""
+        YEAR = 2000
+        N = 10
+
+        # make one `Interest`
+        interest = InterestFactory.create()
+
+        # associate N `Lobbyist`s with it through `LobbyistYear`
+        for i in range(N):
+            year = LobbyistYearFactory.create(year=YEAR)
+            CompensationFactory.create(year=year, interest=interest,
+                amount_guess=i, amount_high=i * 2, amount_low=0)
+        interest.make_stats_for_year(YEAR)
+
+        # attempt to poison stats with extra data
+        for i in range(N)[::2]:
+            year = LobbyistYearFactory.create(year=YEAR + 1)
+            CompensationFactory.create(year=year, interest=interest)
+        interest.make_stats_for_year(YEAR + 1)
+
+        stat = interest.stats.all().get(year=YEAR)
+        self.assertEqual(stat.guess, N * (N - 1) / 2)  # math!
+        self.assertEqual(stat.high, N * (N - 1))
+        self.assertEqual(stat.low, 0)
+        # print interest.stats.all().get(year=YEAR + 1)
+
+
 class LobbyistTest(TestCase):
     def test_make_stats_is_accurate(self):
         lobbyist = LobbyistFactory()
@@ -138,32 +167,3 @@ class NamedPoorlyTestCase(TestCase):
                 '-guess'):
             # print stat
             stat
-
-
-class UtilsTests(TestCase):
-    def test_intereststats_are_accurate(self):
-        """Make sure the `Interest` data denormalization is accurate."""
-        YEAR = 2000
-        N = 10
-
-        # make one `Interest`
-        interest = InterestFactory.create()
-
-        # associate N `Lobbyist`s with it through `LobbyistYear`
-        for i in range(N):
-            year = LobbyistYearFactory.create(year=YEAR)
-            CompensationFactory.create(year=year, interest=interest,
-                amount_guess=i, amount_high=i * 2, amount_low=0)
-        interest.make_stats_for_year(YEAR)
-
-        # attempt to poison stats with extra data
-        for i in range(N)[::2]:
-            year = LobbyistYearFactory.create(year=YEAR + 1)
-            CompensationFactory.create(year=year, interest=interest)
-        interest.make_stats_for_year(YEAR + 1)
-
-        stat = interest.stats.all().get(year=YEAR)
-        self.assertEqual(stat.guess, N * (N - 1) / 2)  # math!
-        self.assertEqual(stat.high, N * (N - 1))
-        self.assertEqual(stat.low, 0)
-        # print interest.stats.all().get(year=YEAR + 1)
