@@ -20,7 +20,7 @@ clean:
 
 
 test:
-	$(MANAGE) test
+	ENVIRONMENT=test $(MANAGE) test
 
 
 resetdb:
