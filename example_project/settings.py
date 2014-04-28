@@ -18,6 +18,9 @@ database_url = env.get(
     'sqlite:///{}'.format(os.path.join(BASE_DIR, 'example_project.db')))
 if environment == 'test':
     database_url = 'sqlite:///:memory:'
+    MIGRATION_MODULES = {
+        'tx_lobbying': 'tx_lobbying.migraintions'
+    }
 DATABASES = {'default': dj_database_url.parse(database_url)}
 
 # Local time zone for this installation. Choices can be found here:
