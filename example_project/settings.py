@@ -160,5 +160,9 @@ LOGGING = {
         #     'filters': ['require_debug_true', 'readable_sql'],
         #     'propagate': False,
         # },
+        'factory': {
+            'level': 'ERROR',
+            'propagate': False,
+        }
     }
 }
