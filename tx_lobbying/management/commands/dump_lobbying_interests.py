@@ -1,7 +1,7 @@
 import csv
 import codecs
 import cStringIO
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 
 # https://docs.python.org/2/library/csv.html
@@ -39,9 +39,6 @@ class Command(BaseCommand):
         from tx_lobbying.models import Interest
         from sys import stdout
         writer = UnicodeWriter(stdout)
-        writer.writerow(['name', 'state'])  # header
+        writer.writerow(['name', 'address'])  # header
         for interest in Interest.objects.all():
-            writer.writerow([interest.name, interest.state])
-
-
-
+            writer.writerow([interest.name, interest.address])

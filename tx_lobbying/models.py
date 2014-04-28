@@ -37,7 +37,7 @@ class Interest(models.Model):
         if self.address2:
             bits.append(self.address2)
         bits.append(u'{0.city}, {0.state} {0.zipcode}'.format(self))
-        return u'\n'.join(bits)
+        return u' \n'.join(bits)
 
     # CUSTOM METHODS
 
