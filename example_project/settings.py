@@ -147,15 +147,15 @@ LOGGING = {
     'handlers': {
         'console': {
             'level': 'DEBUG',
-            'filters': ['require_debug_true', 'readable_sql'],
             'class': 'project_runpy.ColorizingStreamHandler',
         },
     },
     'loggers': {
-        'django.db.backends': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': True,
-        },
+        # 'django.db.backends': {
+        #     'level': 'DEBUG',
+        #     'handlers': ['console'],
+        #     'filters': ['require_debug_true', 'readable_sql'],
+        #     'propagate': False,
+        # },
     }
 }
