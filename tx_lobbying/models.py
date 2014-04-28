@@ -9,7 +9,16 @@ from django.db.models import Count, Sum
 class Interest(models.Model):
     """A lobbying interest such as a corporation or organization."""
     name = models.CharField(max_length=200)
+    address1 = models.CharField(max_length=200, null=True, blank=True)
+    address2 = models.CharField(max_length=200, null=True, blank=True)
+    city = models.CharField(max_length=75, null=True, blank=True)
     state = models.CharField(max_length=2)
+    zipcode = models.CharField(max_length=11, null=True, blank=True)
+
+    # custom fields
+    # canonincal = models.ForeignKey(self)
+    # latitude
+    # longitude
 
     class Meta:
         unique_together = ('name', 'state')
@@ -17,6 +26,20 @@ class Interest(models.Model):
 
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.state)
+
+    # CUSTOM PROPERTIES
+
+    @property
+    def address(self):
+        bits = []
+        if self.address1:
+            bits.append(self.address1)
+        if self.address2:
+            bits.append(self.address2)
+        bits.append(u'{0.city}, {0.state} {0.zipcode}'.format(self))
+        return u'\n'.join(bits)
+
+    # CUSTOM METHODS
 
     def make_stats_for_year(self, year):
         # WISHLIST move into utils

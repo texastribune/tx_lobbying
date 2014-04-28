@@ -7,7 +7,6 @@ http://www.ethics.state.tx.us/dfs/loblists.htm
 Open and re-save as CSV.
 
 """
-from __beyond__ import disable_django_db_logging
 import json
 import logging
 import os
@@ -22,6 +21,28 @@ from tx_lobbying.scrapers.utils import (DictReader, convert_date_format_YMD)
 logger = logging.getLogger(__name__)
 
 
+def update_or_create_interest(row):
+    """
+    Update or create an `Interest`.
+
+    Uses the name and state for uniquess. So we assume that AT&T Texas and AT&T
+    DC are two separate interests, but AT&T Texas and AT & T Texas are the same.
+    """
+    # TODO get other info from the csv
+    defaults = dict(
+        address1=row['EC_ADR1'],
+        address2=row['EC_ADR2'],
+        city=row['EC_CITY'],
+        zipcode=row['EC_ZIP4'],
+    )
+    interest, created = Interest.objects.update_or_create(
+        name=row['CONCERNAME'],
+        state=row['EC_STCD'],
+        defaults=defaults,
+    )
+    return interest, created
+
+
 def scrape(path, logger=logger):
     logger.info("Processing %s" % path)
     with open(path, 'rb') as f:
@@ -31,10 +52,7 @@ def scrape(path, logger=logger):
             year = row['YEAR_APPL']
 
             # interest/concern/client
-            # TODO get other info from the csv
-            interest, created = Interest.objects.update_or_create(
-                name=row['CONCERNAME'],
-                state=row['EC_STCD'])
+            interest, created = update_or_create_interest(row)
 
             # lobbyist
             # very basic `Lobbyist` info here, most of it actually comes
