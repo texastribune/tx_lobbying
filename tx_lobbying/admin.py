@@ -3,7 +3,10 @@ from django.contrib import admin
 from . import models
 
 
-admin.site.register(models.Interest)
+class InterestAdmin(admin.ModelAdmin):
+    list_display = ('name', 'city', 'state')
+    search_fields = ('name', 'city', 'state')
+admin.site.register(models.Interest, InterestAdmin)
 
 
 class LobbyingInline(admin.TabularInline):
