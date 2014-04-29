@@ -3,7 +3,7 @@ import json
 
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Q
 
 
 class Interest(models.Model):
@@ -15,7 +15,7 @@ class Interest(models.Model):
     state = models.CharField(max_length=2)
     zipcode = models.CharField(max_length=11, null=True, blank=True)
 
-    # CUSTOM FIELDS
+    # USER FIELDS
     canonical = models.ForeignKey('self', related_name='aliases',
         null=True, blank=True)
     # latitude
@@ -31,6 +31,12 @@ class Interest(models.Model):
     # CUSTOM PROPERTIES
 
     @property
+    def compensation_set_massive(self):
+        """Just like .compensation_set, but includes aliases too."""
+        return Compensation.objects.filter(Q(interest=self) |
+            Q(interest__in=self.aliases.all()))
+
+    @property
     def address(self):
         bits = []
         if self.address1:
@@ -44,15 +50,16 @@ class Interest(models.Model):
 
     def make_stats_for_year(self, year):
         # WISHLIST move into utils
-        qs = self.compensation_set
+        qs = self.compensation_set_massive
         aggregate_stats = qs.filter(year__year=year).aggregate(
             guess=Sum('amount_guess'),
             high=Sum('amount_high'),
             low=Sum('amount_low'),
             lobbyist_count=Count('pk'),
         )
+        interest = self.canonical if self.canonical else self
         stat, __ = InterestStats.objects.update_or_create(
-            interest=self, year=year,
+            interest=interest, year=year,
             defaults=aggregate_stats)
         return stat
 
