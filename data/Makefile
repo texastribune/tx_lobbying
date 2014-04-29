@@ -2,6 +2,7 @@ lobcon=LobCon
 
 help:
 	@echo "csv, download, lobcon, expenses"
+	@echo "  nomenklatura/interests.csv"
 
 
 csv:
@@ -30,4 +31,10 @@ expenses:
 	rm TEC_LA_CSV.zip
 
 
-.PHONY: help csv download lobcon expenses
+# CSV of mappings of canonical Interest names
+nomenklatura/interests.csv:
+	mkdir -p nomenklatura
+	curl "http://opennames.org/api/2/entities?dataset=tx-lobbying-interests&format=csv" > $@
+
+
+.PHONY: help csv download lobcon expenses nomenklatura/interests.csv
