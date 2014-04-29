@@ -61,4 +61,4 @@ class RegistrationTest(unittest.TestCase):
         self.assertEqual(interest.state, 'TX')
         self.assertEqual(interest.zipcode, '78701')
         # double check formatting
-        self.assertEqual(interest.address, '123 Fake\nB\nC, TX 78701')
+        self.assertEqual(interest.address, '123 Fake \nB \nC, TX 78701')
