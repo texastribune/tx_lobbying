@@ -15,8 +15,9 @@ class Interest(models.Model):
     state = models.CharField(max_length=2)
     zipcode = models.CharField(max_length=11, null=True, blank=True)
 
-    # custom fields
-    # canonincal = models.ForeignKey(self)
+    # CUSTOM FIELDS
+    canonical = models.ForeignKey('self', related_name='aliases',
+        null=True, blank=True)
     # latitude
     # longitude
 

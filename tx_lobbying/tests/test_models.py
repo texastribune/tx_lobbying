@@ -18,6 +18,10 @@ class InterestTest(TestCase):
         self.interest = InterestFactory()
         self.year = 2000
 
+    def test_canonical_field_works(self):
+        a1 = InterestFactory(canonical=self.interest)
+        self.assertIn(a1, self.interest.aliases.all())
+
     def test_make_stats_for_year_is_accurate(self):
         N = 10
 
