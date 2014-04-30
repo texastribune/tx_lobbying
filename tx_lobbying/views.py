@@ -95,6 +95,7 @@ class InterestDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         data = super(InterestDetail, self).get_context_data(**kwargs)
+        data['aliases'] = (self.object.aliases.all())
         data['compensation_set'] = (self.object.compensation_set_massive
             .prefetch_related('interest', 'year__lobbyist')
             .order_by('year__lobbyist', 'year__year'))

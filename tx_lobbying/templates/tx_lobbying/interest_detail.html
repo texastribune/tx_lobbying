@@ -4,6 +4,21 @@
   <h1>{{ object }}</h1>
   {{ object.address }}
 
+  {% if aliases %}
+    <h2>Aliases</h2>
+    <p>
+      Interests are entered by hand, typos and all. To give more realistic
+      numbers, these interests were combined to make this page:
+    </p>
+    <ul>
+      {% for alias in aliases %}
+        <li>
+          <a href="{{ alias.get_absolute_url }}">{{ alias.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
   <h2>Compensation</h2>
   <ul>
     {% for year in object.stats.all %}
