@@ -11,7 +11,9 @@ logger = logging.getLogger(__name__)
 
 
 def go():
-    path = os.path.join('..', '..', 'data', 'nomenklatura', 'interests.csv')
+    base_dir = os.path.dirname(__file__)
+    path = os.path.join(
+        base_dir, '..', '..', 'data', 'nomenklatura', 'interests.csv')
     if not os.path.isfile(path):
         exit('Make sure you ran `make nomenklatura/interests.csv` in the data dir.')
     with open(path, 'rb') as f:
