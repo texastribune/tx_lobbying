@@ -112,6 +112,31 @@ class InterestTest(TestCase):
         self.assertEqual(stat.high, num_lobbyists * (num_lobbyists - 1))
         self.assertEqual(stat.low, 0)
 
+    def test_make_stats_finds_all_years(self):
+        year2000 = LobbyistYearFactory.create(year=2000)
+        CompensationFactory.create(year=year2000, interest=self.interest,
+            amount_low=2000, amount_guess=2000, amount_high=2000)
+        year2001 = LobbyistYearFactory.create(year=2001)
+        CompensationFactory.create(year=year2001, interest=self.interest,
+            amount_low=2001, amount_guess=2001, amount_high=2001)
+        year2004 = LobbyistYearFactory.create(year=2004)
+        CompensationFactory.create(year=year2004, interest=self.interest,
+            amount_low=2004, amount_guess=2004, amount_high=2004)
+        self.interest.make_stats()
+        # assert stats are generated
+        self.assertFalse(self.interest.stats.filter(year=1999).exists())
+        self.assertTrue(self.interest.stats.filter(year=2000).exists())
+        self.assertTrue(self.interest.stats.filter(year=2001).exists())
+        self.assertTrue(self.interest.stats.filter(year=2002).exists())
+        self.assertTrue(self.interest.stats.filter(year=2003).exists())
+        self.assertTrue(self.interest.stats.filter(year=2004).exists())
+        self.assertFalse(self.interest.stats.filter(year=2005).exists())
+        # document that stats for empty year are None
+        stat = self.interest.stats.get(year=2002)
+        self.assertEqual(stat.low, None)
+        self.assertEqual(stat.guess, None)
+        self.assertEqual(stat.high, None)
+
 
 class LobbyistTest(TestCase):
     def test_make_stats_is_accurate(self):

@@ -63,6 +63,13 @@ class Interest(models.Model):
             defaults=aggregate_stats)
         return stat
 
+    def make_stats(self):
+        # This could be done a lot better, but works for now
+        year_min = self.years_available.earliest('year').year
+        year_max = self.years_available.latest('year').year
+        for year in range(year_min, year_max + 1):
+            self.make_stats_for_year(year)
+
 
 class InterestStats(models.Model):
     """Denormalized data about an `Interest` for a year."""
