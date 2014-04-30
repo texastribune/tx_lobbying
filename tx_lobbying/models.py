@@ -329,7 +329,7 @@ class Compensation(models.Model):
     amount_guess = models.IntegerField()  # denormalized, f(amount_low, amount_high)
 
     class Meta:
-        ordering = ('interest__name', )
+        ordering = ('interest__name', 'year__year', 'year__lobbyist', )
         unique_together = ('year', 'interest')
 
     def __unicode__(self):
