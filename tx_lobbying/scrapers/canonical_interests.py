@@ -1,5 +1,4 @@
 """
-Make sure you ran `make nomenklatura/interests.csv` in the data dir.
 """
 import logging
 import os
@@ -12,7 +11,10 @@ logger = logging.getLogger(__name__)
 
 
 def go():
-    with open(os.path.join('..', '..', 'data', 'nomenklatura', 'interests.csv'), 'rb') as f:
+    path = os.path.join('..', '..', 'data', 'nomenklatura', 'interests.csv')
+    if not os.path.isfile(path):
+        exit('Make sure you ran `make nomenklatura/interests.csv` in the data dir.')
+    with open(path, 'rb') as f:
         reader = DictReader(f)
         for row in reader:
             if not row['canonical']:
