@@ -28,6 +28,9 @@ class Interest(models.Model):
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.state)
 
+    def get_absolute_url(self):
+        return reverse('tx_lobbying:interest_detail', kwargs={'pk': self.pk})
+
     # CUSTOM PROPERTIES
 
     @property

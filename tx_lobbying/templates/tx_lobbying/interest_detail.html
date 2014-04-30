@@ -1,0 +1,18 @@
+{% block main %}
+  <h1>{{ object }}</h1>
+
+  <ul>
+    {% for year in object.stats.all %}
+      <li>
+        {{ year }}
+      </li>
+    {% endfor %}
+  </ul>
+  <ul>
+    {% for comp in object.compensation_set_massive %}
+      <li>
+        {{ comp }}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

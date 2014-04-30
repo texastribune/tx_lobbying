@@ -29,7 +29,7 @@
       <tbody>
         {% for object in top_interests %}
           <tr>
-            <td>{{ object.interest }}</td>
+            <td><a href="{{ object.interest.get_absolute_url }}">{{ object.interest }}</a></td>
             <td>{{ object.lobbyist_count }}</td>
             <td>${{ object.low|intcomma }}</td>
             <td>${{ object.high|intcomma }}</td>
