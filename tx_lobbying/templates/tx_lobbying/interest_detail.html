@@ -1,17 +1,28 @@
+{% load humanize %}
+
 {% block main %}
   <h1>{{ object }}</h1>
+  {{ object.address }}
 
+  <h2>Compensation</h2>
   <ul>
     {% for year in object.stats.all %}
       <li>
-        {{ year }}
+        In {{ year.year }}, they spent between ${{ year.low|intcomma }}
+        and ${{ year.high|intcomma }} on {{ year.lobbyist_count }} lobbyists.
       </li>
     {% endfor %}
   </ul>
+
+  <h2>Lobbyists</h2>
   <ul>
-    {% for comp in compensation_set %}
+    {% regroup compensation_set by year.lobbyist as comp_years %}
+    {% for lobbyist in comp_years %}
       <li>
-        {{ comp }}
+        <a href="{{ lobbyist.grouper.get_absolute_url }}">{{ lobbyist.grouper }}</a>
+        {% for year in lobbyist.list %}
+          {{ year.year.year }}
+        {% endfor %}
       </li>
     {% endfor %}
   </ul>
