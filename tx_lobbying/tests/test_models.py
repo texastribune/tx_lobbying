@@ -127,15 +127,10 @@ class InterestTest(TestCase):
         self.assertFalse(self.interest.stats.filter(year=1999).exists())
         self.assertTrue(self.interest.stats.filter(year=2000).exists())
         self.assertTrue(self.interest.stats.filter(year=2001).exists())
-        self.assertTrue(self.interest.stats.filter(year=2002).exists())
-        self.assertTrue(self.interest.stats.filter(year=2003).exists())
+        self.assertFalse(self.interest.stats.filter(year=2002).exists())
+        self.assertFalse(self.interest.stats.filter(year=2003).exists())
         self.assertTrue(self.interest.stats.filter(year=2004).exists())
         self.assertFalse(self.interest.stats.filter(year=2005).exists())
-        # document that stats for empty year are None
-        stat = self.interest.stats.get(year=2002)
-        self.assertEqual(stat.low, None)
-        self.assertEqual(stat.guess, None)
-        self.assertEqual(stat.high, None)
 
 
 class LobbyistTest(TestCase):

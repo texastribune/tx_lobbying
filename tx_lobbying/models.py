@@ -57,6 +57,8 @@ class Interest(models.Model):
             low=Sum('amount_low'),
             lobbyist_count=Count('pk'),
         )
+        if not aggregate_stats['lobbyist_count']:
+            return
         interest = self.canonical if self.canonical else self
         stat, __ = InterestStats.objects.update_or_create(
             interest=interest, year=year,
