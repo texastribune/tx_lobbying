@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 def go(path):
     if not os.path.isfile(path):
-        exit('Make sure you ran `make nomenklatura/interests.csv` in the data dir.')
+        exit('Make sure you ran `make nomenklatura` in the data dir.')
     with open(path, 'rb') as f:
         reader = DictReader(f)
         for row in reader:
