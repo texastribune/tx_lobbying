@@ -10,10 +10,7 @@ from tx_lobbying.scrapers.utils import DictReader
 logger = logging.getLogger(__name__)
 
 
-def go():
-    base_dir = os.path.dirname(__file__)
-    path = os.path.join(
-        base_dir, '..', '..', 'data', 'nomenklatura', 'interests.csv')
+def go(path):
     if not os.path.isfile(path):
         exit('Make sure you ran `make nomenklatura/interests.csv` in the data dir.')
     with open(path, 'rb') as f:
@@ -37,4 +34,7 @@ def go():
 if __name__ == '__main__':
     import django
     django.setup()
-    go()
+    base_dir = os.path.dirname(__file__)
+    path = os.path.join(
+        base_dir, '..', '..', 'data', 'nomenklatura', 'interests.csv')
+    go(path)
