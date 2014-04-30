@@ -1,0 +1,45 @@
+{% extends "tx_lobbying/base.html" %}
+{% load humanize %}
+
+{% block main %}
+  <h1>{{ object }}</h1>
+  {{ object.address }}
+
+  {% if aliases %}
+    <h2>Aliases</h2>
+    <p>
+      Interests are entered by hand, typos and all. To give more realistic
+      numbers, these interests were combined to make this page:
+    </p>
+    <ul>
+      {% for alias in aliases %}
+        <li>
+          <a href="{{ alias.get_absolute_url }}">{{ alias.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <h2>Compensation</h2>
+  <ul>
+    {% for year in object.stats.all %}
+      <li>
+        In {{ year.year }}, they spent between ${{ year.low|intcomma }}
+        and ${{ year.high|intcomma }} on {{ year.lobbyist_count }} lobbyists.
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h2>Lobbyists</h2>
+  <ul>
+    {% regroup compensation_set by year.lobbyist as comp_years %}
+    {% for lobbyist in comp_years %}
+      <li>
+        <a href="{{ lobbyist.grouper.get_absolute_url }}">{{ lobbyist.grouper }}</a>
+        {% for year in lobbyist.list %}
+          {{ year.year.year }}
+        {% endfor %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

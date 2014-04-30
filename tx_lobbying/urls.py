@@ -12,4 +12,6 @@ urlpatterns = patterns('',
         name="lobbyist_list"),
     url(r'^lobbyist/(?P<slug>\d+)/$', views.LobbyistDetail.as_view(),
         name="lobbyist_detail"),
+    url(r'^interest/(?P<pk>\d+)/$', views.InterestDetail.as_view(),
+        name='interest_detail'),
 )

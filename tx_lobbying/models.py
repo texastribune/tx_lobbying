@@ -28,6 +28,9 @@ class Interest(models.Model):
     def __unicode__(self):
         return u"%s (%s)" % (self.name, self.state)
 
+    def get_absolute_url(self):
+        return reverse('tx_lobbying:interest_detail', kwargs={'pk': self.pk})
+
     # CUSTOM PROPERTIES
 
     @property
@@ -84,6 +87,7 @@ class InterestStats(models.Model):
 
     class Meta:
         unique_together = ('interest', 'year')
+        ordering = ('year', )
 
     def __unicode__(self):
         return (u"{0.interest} compensated {0.lobbyist_count} "
@@ -325,7 +329,7 @@ class Compensation(models.Model):
     amount_guess = models.IntegerField()  # denormalized, f(amount_low, amount_high)
 
     class Meta:
-        ordering = ('interest__name', )
+        ordering = ('interest__name', 'year__year', 'year__lobbyist', )
         unique_together = ('year', 'interest')
 
     def __unicode__(self):

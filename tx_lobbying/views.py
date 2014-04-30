@@ -88,3 +88,15 @@ class LobbyistDetail(DetailView):
     queryset = Lobbyist.objects.all().prefetch_related(
         'years__compensation_set__interest', 'coversheets__details')
     slug_field = 'filer_id'
+
+
+class InterestDetail(DetailView):
+    model = models.Interest
+
+    def get_context_data(self, **kwargs):
+        data = super(InterestDetail, self).get_context_data(**kwargs)
+        data['aliases'] = (self.object.aliases.all())
+        data['compensation_set'] = (self.object.compensation_set_massive
+            .prefetch_related('interest', 'year__lobbyist')
+            .order_by('year__lobbyist', 'year__year'))
+        return data

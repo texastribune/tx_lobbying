@@ -1,3 +1,4 @@
+{% extends "tx_lobbying/base.html" %}
 {% load humanize %}
 
 {% block main %}
@@ -20,7 +21,10 @@
           {{ yeardata.year }}
           <ul>
             {% for client in yeardata.compensation_set.all %}
-              <li>{{ client.interest }} ${{ client.amount_low|floatformat:2|intcomma }} &mdash; ${{ client.amount_high|floatformat:2|intcomma }}</li>
+              <li>
+                <a href="{{ client.interest.get_absolute_url }}">{{ client.interest.name|default:"TODO" }}</a>
+                ${{ client.amount_low|intcomma }} &mdash; ${{ client.amount_high|intcomma }}
+              </li>
             {% endfor %}
           </ul>
         </li>
