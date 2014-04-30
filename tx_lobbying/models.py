@@ -87,6 +87,7 @@ class InterestStats(models.Model):
 
     class Meta:
         unique_together = ('interest', 'year')
+        ordering = ('year', )
 
     def __unicode__(self):
         return (u"{0.interest} compensated {0.lobbyist_count} "
