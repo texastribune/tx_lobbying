@@ -1,4 +1,5 @@
 """
+TODO change print to logger
 """
 import logging
 import os
@@ -16,15 +17,19 @@ def go(path):
     with open(path, 'rb') as f:
         reader = DictReader(f)
         for row in reader:
-            if not row['canonical']:
-                continue
             try:
                 interest = Interest.objects.get(name=row['name'])
-                canonical = Interest.objects.get(name=row['canonical'])
-                if interest.canonical != canonical:
-                    print "set", interest, canonical
-                    interest.canonical = canonical
-                    interest.save(update_fields=('canonical', ))
+                if not row['canonical']:
+                    if interest.canonical:
+                        print "remove", interest
+                        interest.canonical = None
+                        interest.save()
+                else:
+                    canonical = Interest.objects.get(name=row['canonical'])
+                    if interest.canonical != canonical:
+                        print "set", interest, canonical
+                        interest.canonical = canonical
+                        interest.save(update_fields=('canonical', ))
             except (Interest.DoesNotExist, Interest.MultipleObjectsReturned):
                 print "skip", interest
                 # TODO
