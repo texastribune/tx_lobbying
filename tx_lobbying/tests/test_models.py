@@ -1,6 +1,7 @@
+import random
+
 from django.db.models import Sum
 from django.test import TestCase
-
 
 from tx_lobbying.factories import (
     InterestFactory,
@@ -17,6 +18,24 @@ class InterestTest(TestCase):
     def setUp(self):
         self.interest = InterestFactory()
         self.year = 2000
+
+    def test_canonical_field_works(self):
+        a1 = InterestFactory(canonical=self.interest)
+        self.assertIn(a1, self.interest.aliases.all())
+
+    def test_compensation_set_massive_works_the_same_way(self):
+        comp = CompensationFactory(interest=self.interest)
+        with self.assertNumQueries(1):
+            self.assertIn(comp, self.interest.compensation_set.all())
+        with self.assertNumQueries(1):
+            self.assertIn(comp, self.interest.compensation_set_massive.all())
+
+    def test_compensation_set_massive_works(self):
+        c1 = CompensationFactory(interest=self.interest)
+        c2 = CompensationFactory(interest__canonical=self.interest)
+        self.assertIn(c1, self.interest.compensation_set.all())
+        self.assertNotIn(c2, self.interest.compensation_set.all())
+        self.assertIn(c2, self.interest.compensation_set_massive)
 
     def test_make_stats_for_year_is_accurate(self):
         N = 10
@@ -58,6 +77,71 @@ class InterestTest(TestCase):
         self.assertEqual(stat.guess, N * (N - 1) / 2)  # math!
         self.assertEqual(stat.high, N * (N - 1))
         self.assertEqual(stat.low, 0)
+
+    def test_make_stats_for_year_takes_aliases_into_account(self):
+        """
+        This is just like test_make_stats_for_year_is_accurate, except we
+        spread the lobbyists to a pool of interests that are all really the
+        same interest.
+        """
+        num_lobbyists = random.randint(7, 13)
+        num_interests = random.randint(2, 3)
+
+        # assert we started off with 1 `Interest` (self.interest)
+        self.assertEqual(Interest.objects.count(), 1)
+        for i in range(num_interests):
+            InterestFactory(canonical=self.interest)
+        # sanity check
+        self.assertEqual(self.interest.aliases.count(), num_interests)
+
+        # associate num_lobbyists `Lobbyist`s with it through `LobbyistYear`
+        for i in range(num_lobbyists):
+            year = LobbyistYearFactory.create(year=self.year)
+            interest = Interest.objects.all().order_by('?')[0]
+            CompensationFactory.create(year=year, interest=interest,
+                amount_guess=i, amount_high=i * 2, amount_low=0)
+        with self.assertNumQueries(5):
+            # 1 to get the stats
+            # 1 to GET
+            # 1 to INSERT
+            # 2 for transaction management
+            self.interest.make_stats_for_year(self.year)
+
+        stat = self.interest.stats.all().get(year=self.year)
+        self.assertEqual(stat.guess, num_lobbyists * (num_lobbyists - 1) / 2)  # math!
+        self.assertEqual(stat.high, num_lobbyists * (num_lobbyists - 1))
+        self.assertEqual(stat.low, 0)
+
+    def test_make_stats_for_year_does_nothing_for_noncanonical_interests(self):
+        interest = InterestFactory(canonical=self.interest)
+        year2000 = LobbyistYearFactory.create(year=2000)
+        CompensationFactory.create(year=year2000, interest=interest,
+            amount_low=2000, amount_guess=2000, amount_high=2000)
+        interest.make_stats_for_year(2000)
+        # assert noncanonical interest did not have stats generated
+        self.assertEqual(0, interest.stats.count())
+        # assert canonical interest got the stats instead
+        self.assertEqual(1, self.interest.stats.count())
+
+    def test_make_stats_finds_all_years(self):
+        year2000 = LobbyistYearFactory.create(year=2000)
+        CompensationFactory.create(year=year2000, interest=self.interest,
+            amount_low=2000, amount_guess=2000, amount_high=2000)
+        year2001 = LobbyistYearFactory.create(year=2001)
+        CompensationFactory.create(year=year2001, interest=self.interest,
+            amount_low=2001, amount_guess=2001, amount_high=2001)
+        year2004 = LobbyistYearFactory.create(year=2004)
+        CompensationFactory.create(year=year2004, interest=self.interest,
+            amount_low=2004, amount_guess=2004, amount_high=2004)
+        self.interest.make_stats()
+        # assert stats are generated
+        self.assertFalse(self.interest.stats.filter(year=1999).exists())
+        self.assertTrue(self.interest.stats.filter(year=2000).exists())
+        self.assertTrue(self.interest.stats.filter(year=2001).exists())
+        self.assertFalse(self.interest.stats.filter(year=2002).exists())
+        self.assertFalse(self.interest.stats.filter(year=2003).exists())
+        self.assertTrue(self.interest.stats.filter(year=2004).exists())
+        self.assertFalse(self.interest.stats.filter(year=2005).exists())
 
 
 class LobbyistTest(TestCase):

@@ -3,7 +3,7 @@ import json
 
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Q
 
 
 class Interest(models.Model):
@@ -15,8 +15,9 @@ class Interest(models.Model):
     state = models.CharField(max_length=2)
     zipcode = models.CharField(max_length=11, null=True, blank=True)
 
-    # custom fields
-    # canonincal = models.ForeignKey(self)
+    # USER FIELDS
+    canonical = models.ForeignKey('self', related_name='aliases',
+        null=True, blank=True)
     # latitude
     # longitude
 
@@ -28,6 +29,12 @@ class Interest(models.Model):
         return u"%s (%s)" % (self.name, self.state)
 
     # CUSTOM PROPERTIES
+
+    @property
+    def compensation_set_massive(self):
+        """Just like .compensation_set, but includes aliases too."""
+        return Compensation.objects.filter(Q(interest=self) |
+            Q(interest__in=self.aliases.all()))
 
     @property
     def address(self):
@@ -43,17 +50,27 @@ class Interest(models.Model):
 
     def make_stats_for_year(self, year):
         # WISHLIST move into utils
-        qs = self.compensation_set
+        qs = self.compensation_set_massive
         aggregate_stats = qs.filter(year__year=year).aggregate(
             guess=Sum('amount_guess'),
             high=Sum('amount_high'),
             low=Sum('amount_low'),
             lobbyist_count=Count('pk'),
         )
+        if not aggregate_stats['lobbyist_count']:
+            return
+        interest = self.canonical if self.canonical else self
         stat, __ = InterestStats.objects.update_or_create(
-            interest=self, year=year,
+            interest=interest, year=year,
             defaults=aggregate_stats)
         return stat
+
+    def make_stats(self):
+        # This could be done a lot better, but works for now
+        year_min = self.years_available.earliest('year').year
+        year_max = self.years_available.latest('year').year
+        for year in range(year_min, year_max + 1):
+            self.make_stats_for_year(year)
 
 
 class InterestStats(models.Model):
