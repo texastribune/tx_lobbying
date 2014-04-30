@@ -30,11 +30,17 @@ resetdb:
 
 
 import:
-# cd data && $(MAKE) all
-# python example_project/manage.py lobbying_expenses data/expenses
-	find data/lobcon/*.csv | xargs python example_project/manage.py lobbying_registrations
-	python tx_lobbying/scrapers/canonical_interests.py
-	python example_project/manage.py lobbying_stats
+	cd data && $(MAKE) all
+	DEBUG=0 python example_project/manage.py lobbying_expenses data/expenses -v 2
+# haha I suck at this
+	DEBUG=0 python example_project/manage.py lobbying_registrations data/lobcon/LobCon09.csv
+	DEBUG=0 python example_project/manage.py lobbying_registrations data/lobcon/LobCon10.csv
+	DEBUG=0 python example_project/manage.py lobbying_registrations data/lobcon/LobCon11.csv
+	DEBUG=0 python example_project/manage.py lobbying_registrations data/lobcon/LobCon12.csv
+	DEBUG=0 python example_project/manage.py lobbying_registrations data/lobcon/LobCon13.csv
+	DEBUG=0 python example_project/manage.py lobbying_registrations data/lobcon/LobCon14.csv
+	DEBUG=0 python tx_lobbying/scrapers/canonical_interests.py
+	DEBUG=0 python example_project/manage.py lobbying_stats
 
 
 .PHONY: help clean test resetdb import
