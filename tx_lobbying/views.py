@@ -64,7 +64,8 @@ class YearLanding(TemplateView):
         return qs
 
     def get_top_interests(self, count=20):
-        qs = (models.InterestStats.objects.filter(year=self.year)
+        qs = (models.InterestStats.objects
+            .filter(year=self.year, interest__canonical__isnull=True)
             .select_related('interest')
             .order_by('-high')[:count])
         return qs
