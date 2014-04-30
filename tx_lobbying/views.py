@@ -92,3 +92,9 @@ class LobbyistDetail(DetailView):
 
 class InterestDetail(DetailView):
     model = models.Interest
+
+    def get_context_data(self, **kwargs):
+        data = super(InterestDetail, self).get_context_data(**kwargs)
+        data['compensation_set'] = (self.object.compensation_set_massive
+            .prefetch_related('interest', 'year__lobbyist'))
+        return data
