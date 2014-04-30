@@ -27,20 +27,23 @@ to go back a few years.
 
 ## Getting up and running
 
-```bash
-# get your database up and running
-make resetdb
-# get raw data
-cd data && make all && cd ..
-# import expenses, this will take a long time
-django lobbying_expenses data/expenses
-# import registrations for all years, this will take a while
-find data/lobcon/*.csv | xargs django lobbying_registrations
-# import canonical names
-python scraper canonical_interests.py
-# generate stats, this will take a while
-django lobbying_stats
+Set your environment variables. One way is to have a `.env` file with:
+
 ```
+export DJANGO_SETTINGS_MODULE=example_project.settings
+export DATABASE_URL=postgres:///tx_lobbying
+```
+
+and then using autoenv or `source .env` to activate it.
+
+Get your database up and running with (Postgres instructions):
+
+    createdb tx_lobbying
+    python example_project/manage.py migrate
+
+Then load data with:
+
+    make import
 
 
 ## Running tests
