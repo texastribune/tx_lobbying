@@ -112,6 +112,17 @@ class InterestTest(TestCase):
         self.assertEqual(stat.high, num_lobbyists * (num_lobbyists - 1))
         self.assertEqual(stat.low, 0)
 
+    def test_make_stats_for_year_does_nothing_for_noncanonical_interests(self):
+        interest = InterestFactory(canonical=self.interest)
+        year2000 = LobbyistYearFactory.create(year=2000)
+        CompensationFactory.create(year=year2000, interest=interest,
+            amount_low=2000, amount_guess=2000, amount_high=2000)
+        interest.make_stats_for_year(2000)
+        # assert noncanonical interest did not have stats generated
+        self.assertEqual(0, interest.stats.count())
+        # assert canonical interest got the stats instead
+        self.assertEqual(1, self.interest.stats.count())
+
     def test_make_stats_finds_all_years(self):
         year2000 = LobbyistYearFactory.create(year=2000)
         CompensationFactory.create(year=year2000, interest=self.interest,
