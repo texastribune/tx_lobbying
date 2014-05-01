@@ -104,3 +104,7 @@ class InterestDetail(DetailView):
             .prefetch_related('interest', 'year__lobbyist')
             .order_by('year__lobbyist', 'year__year'))
         return data
+
+
+class AddressDetail(DetailView):
+    model = models.Address

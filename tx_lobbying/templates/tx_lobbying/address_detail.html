@@ -1,0 +1,7 @@
+{% extends "tx_lobbying/base.html" %}
+
+{% block main %}
+  {{ object }}
+  <h2>Interests at this address</h2>
+  {% include "tx_lobbying/includes/interest_list.html" with object_list=object.interest_set.all %}
+{% endblock %}

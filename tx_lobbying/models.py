@@ -25,6 +25,9 @@ class Address(models.Model):
         bits.append(u'{0.city}, {0.state} {0.zipcode}'.format(self))
         return u' \n'.join(bits)
 
+    def get_absolute_url(self):
+        return reverse('tx_lobbying:address_detail', kwargs={'pk': self.pk})
+
 
 class Interest(models.Model):
     """A lobbying interest such as a corporation or organization."""

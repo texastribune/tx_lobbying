@@ -3,7 +3,9 @@
 
 {% block main %}
   <h1>{{ object }}</h1>
-  {{ object.address }}
+  <a href="{{ object.address.get_absolute_url }}">
+    {{ object.address }}
+  </a>
 
   {% if aliases %}
     <h2>Aliases</h2>

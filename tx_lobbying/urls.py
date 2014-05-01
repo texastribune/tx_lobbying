@@ -19,4 +19,6 @@ urlpatterns = patterns('',
     url(r'^interest/$', RedirectView.as_view(url='../interests/')),
     url(r'^interest/(?P<pk>\d+)/$', views.InterestDetail.as_view(),
         name='interest_detail'),
+    url(r'^address/(?P<pk>\d+)/$', views.AddressDetail.as_view(),
+        name='address_detail'),
 )
