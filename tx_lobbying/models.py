@@ -6,27 +6,48 @@ from django.db import models
 from django.db.models import Count, Sum, Q
 
 
-class Interest(models.Model):
-    """A lobbying interest such as a corporation or organization."""
-    name = models.CharField(max_length=200)
+class Address(models.Model):
+    """An address"""
     address1 = models.CharField(max_length=200, null=True, blank=True)
     address2 = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=75, null=True, blank=True)
     state = models.CharField(max_length=2)
     zipcode = models.CharField(max_length=11, null=True, blank=True)
-
-    # USER FIELDS
-    canonical = models.ForeignKey('self', related_name='aliases',
-        null=True, blank=True)
     # latitude
     # longitude
 
     class Meta:
-        unique_together = ('name', 'state')
+        ordering = ('address1', )
+
+    def __unicode__(self):
+        bits = []
+        if self.address1:
+            bits.append(self.address1)
+        if self.address2:
+            bits.append(self.address2)
+        bits.append(u'{0.city}, {0.state} {0.zipcode}'.format(self))
+        return u' \n'.join(bits)
+
+    def get_absolute_url(self):
+        return reverse('tx_lobbying:address_detail', kwargs={'pk': self.pk})
+
+
+class Interest(models.Model):
+    """A lobbying interest such as a corporation or organization."""
+    name = models.CharField(max_length=200, unique=True)
+    address = models.ForeignKey(Address)
+
+    # USER FIELDS
+    canonical = models.ForeignKey('self', related_name='aliases',
+        null=True, blank=True)
+    # TODO show a list of all the addresses associated with this `Interest`
+    # addresses_used = models.ManyToMany(address, through=)
+
+    class Meta:
         ordering = ('name', )
 
     def __unicode__(self):
-        return u"%s (%s)" % (self.name, self.state)
+        return u"%s (%s)" % (self.name, self.address.state)
 
     def get_absolute_url(self):
         return reverse('tx_lobbying:interest_detail', kwargs={'pk': self.pk})
@@ -40,14 +61,12 @@ class Interest(models.Model):
             Q(interest__in=self.aliases.all()))
 
     @property
-    def address(self):
-        bits = []
-        if self.address1:
-            bits.append(self.address1)
-        if self.address2:
-            bits.append(self.address2)
-        bits.append(u'{0.city}, {0.state} {0.zipcode}'.format(self))
-        return u' \n'.join(bits)
+    def address_set(self):
+        return self.get_all_addresses()
+
+    @property
+    def address_set_massive(self):
+        return self.get_all_addresses(include_aliases=True)
 
     # CUSTOM METHODS
 
@@ -74,6 +93,12 @@ class Interest(models.Model):
         year_max = self.years_available.latest('year').year
         for year in range(year_min, year_max + 1):
             self.make_stats_for_year(year)
+
+    def get_all_addresses(self, include_aliases=False):
+        if include_aliases:
+            return Address.objects.filter(Q(compensation__interest=self) |
+                Q(compensation__interest__in=self.aliases.all())).distinct()
+        return Address.objects.filter(compensation__interest=self).distinct()
 
 
 class InterestStats(models.Model):
@@ -113,6 +138,8 @@ class Lobbyist(models.Model):
     title = models.CharField(max_length=15)
     suffix = models.CharField(max_length=5)
     nick_name = models.CharField(max_length=25)
+    # NORM_BUS
+    # TODO business = models.CharField(max_length=100)
 
     class Meta:
         ordering = ('sort_name', )
@@ -181,18 +208,19 @@ class RegistrationReport(models.Model):
     """
     A reference to the registration report a `Lobbyist` files every year.
 
-    This is the report where someone officially registers as a lobbyist. It also
-    lists the clients they represent. These reports can be amended, so a
+    This is the report where someone officially registers as a lobbyist. It
+    also lists the clients they represent. These reports can be amended, so a
     registration from 2008 can be ammended in 2013 and change on you.
 
-    TODO: clients...
-
+    A report only has one `Lobbyist`, but can have many `Interest`s.
     """
     lobbyist = models.ForeignKey(Lobbyist, related_name="registrations")
     report_id = models.IntegerField(unique=True)
     report_date = models.DateField()
     year = models.IntegerField()
     raw = models.TextField()
+    # TODO
+    # interests = models.ManyToMany(Interest)
 
     def __unicode__(self):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
@@ -306,22 +334,29 @@ class Compensation(models.Model):
     """
     Details about how a `Lobbyist` was compensated by an `Interest` for a year.
 
-    Compensation ranges are very loosely defined, and are usually not indicative
-    of the actual amount a `Lobbyist` was paid.
+    Compensation ranges are very loosely defined, and are usually not
+    indicative of the actual amount a `Lobbyist` was paid.
 
-    The `amount_guess` field is a derived field that is the a guess of what
-    the `Lobbyist` was actually paid. For now it is just the average of the
-    upper and lower bound of pay ranges, but in the future more variables could
-    be considered.
+    This model also holds extra information about a the lobbyist's relationship
+    from the registration form.
 
+    The `amount_guess` field is a derived field that is the a guess of what the
+    `Lobbyist` was actually paid. For now it is just the average of the upper
+    and lower bound of pay ranges, but in the future more variables could be
+    considered.
     """
     amount_high = models.IntegerField()  # upper bound, exlusive
     amount_low = models.IntegerField()  # lower bound, inclusive
-    # compensation type
-    # start
-    # end
+    # TYPECOPM
+    compensation_type = models.CharField(max_length=20, null=True, blank=True)
+    # STARTDR
+    start_date = models.DateField(null=True, blank=True)
+    # TERMDATE
+    end_date = models.DateField(null=True, blank=True)
     year = models.ForeignKey(LobbyistYear)
     interest = models.ForeignKey(Interest)
+    address = models.ForeignKey(Address, null=True, blank=True,
+        help_text='The address the lobbyist listed for the `Interest`')
     raw = models.TextField()
     updated_at = models.DateField()
 
@@ -336,3 +371,9 @@ class Compensation(models.Model):
         # TODO, thousands separator... requires python 2.7
         return u"{1.interest} pays {0} ~${1.amount_guess} ({1.year})".format(
             self.year.lobbyist, self)
+
+    # CUSTOM PROPERTIES
+
+    @property
+    def raw_data(self):
+        return json.loads(self.raw)

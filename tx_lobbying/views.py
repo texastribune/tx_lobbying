@@ -90,6 +90,10 @@ class LobbyistDetail(DetailView):
     slug_field = 'filer_id'
 
 
+class InterestList(ListView):
+    queryset = models.Interest.objects.all().select_related('canonical')
+
+
 class InterestDetail(DetailView):
     model = models.Interest
 
@@ -100,3 +104,7 @@ class InterestDetail(DetailView):
             .prefetch_related('interest', 'year__lobbyist')
             .order_by('year__lobbyist', 'year__year'))
         return data
+
+
+class AddressDetail(DetailView):
+    model = models.Address

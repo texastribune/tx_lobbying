@@ -4,6 +4,7 @@ import random
 import factory
 import names
 
+from . import models
 from .models import (
     Interest,
     Lobbyist,
@@ -13,11 +14,16 @@ from .models import (
 )
 
 
+class AddressFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = models.Address
+    state = u'TX'
+
+
 class InterestFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Interest
 
     name = factory.Sequence(lambda n: 'Interest {0}'.format(n))
-    state = 'TX'
+    address = factory.SubFactory(AddressFactory)
 
 
 class LobbyistFactory(factory.DjangoModelFactory):

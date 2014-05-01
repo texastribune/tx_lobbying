@@ -13,7 +13,9 @@ import os
 import sys
 
 # don't use relative imports so this can also be run from the command line
-from tx_lobbying.models import (Interest, Lobbyist, RegistrationReport,
+from tx_lobbying.models import (
+    Address,
+    Interest, Lobbyist, RegistrationReport,
     LobbyistYear, Compensation)
 from tx_lobbying.scrapers.utils import (DictReader, convert_date_format_YMD)
 
@@ -28,19 +30,22 @@ def update_or_create_interest(row):
     Uses the name and state for uniquess. So we assume that AT&T Texas and AT&T
     DC are two separate interests, but AT&T Texas and AT & T Texas are the same.
     """
-    # TODO get other info from the csv
-    defaults = dict(
+    address, __ = Address.objects.get_or_create(
         address1=row['EC_ADR1'],
         address2=row['EC_ADR2'],
         city=row['EC_CITY'],
+        state=row['EC_STCD'],
         zipcode=row['EC_ZIP4'],
+    )
+    # TODO get other info from the csv
+    defaults = dict(
+        address=address,
     )
     interest, created = Interest.objects.update_or_create(
         name=row['CONCERNAME'],
-        state=row['EC_STCD'],
         defaults=defaults,
     )
-    return interest, created
+    return interest, address, created
 
 
 def scrape(path, logger=logger):
@@ -50,9 +55,6 @@ def scrape(path, logger=logger):
         for row in reader:
             report_date = convert_date_format_YMD(row['RPT_DATE'])
             year = row['YEAR_APPL']
-
-            # interest/concern/client
-            interest, created = update_or_create_interest(row)
 
             # lobbyist
             # very basic `Lobbyist` info here, most of it actually comes
@@ -68,25 +70,12 @@ def scrape(path, logger=logger):
             if created:
                 logger.info("LOBBYIST: %s" % lobbyist)
 
-            # lobbyist/interest M2M
-            lyear, created = LobbyistYear.objects.update_or_create(
-                lobbyist=lobbyist,
-                year=year)
-
-            # compensation
-            default_data = dict(
-                amount_high=int(round(float(row['NHIGH'] or "0"))),  # I hate myself
-                amount_low=int(round(float(row['NLOW'] or "0"))),
-                raw=json.dumps(row),
-                updated_at=report_date,
-            )
-            # WISHLIST move this amount_guess logic into the model
-            default_data['amount_guess'] = (default_data['amount_high'] +
-                default_data['amount_low']) / 2
-            Compensation.objects.update_or_create(
-                year=lyear,
-                interest=interest,
-                defaults=default_data)
+            if row['CONCERNAME']:
+                # interest/concern/client
+                interest, address, created = update_or_create_interest(row)
+            else:
+                address = None
+                interest = None
 
             # registration report
             default_data = dict(
@@ -100,6 +89,32 @@ def scrape(path, logger=logger):
                 defaults=default_data)
             if created:
                 logger.info("REPORT: %s" % report)
+
+            if interest:
+                # lobbyist M2M to `Interest` through `Compensation`
+                lyear, created = LobbyistYear.objects.update_or_create(
+                    lobbyist=lobbyist,
+                    year=year)
+                # compensation
+                default_data = dict(
+                    amount_high=int(round(float(row['NHIGH'] or "0"))),  # I hate myself
+                    amount_low=int(round(float(row['NLOW'] or "0"))),
+                    compensation_type=row['TYPECOPM'],
+                    address=address,
+                    raw=json.dumps(row),
+                    updated_at=report_date,
+                )
+                if row['STARTDT']:
+                    default_data['start_date'] = row['STARTDT']
+                if row['TERMDATE']:
+                    default_data['end_date'] = row['TERMDATE']
+                # WISHLIST move this amount_guess logic into the model
+                default_data['amount_guess'] = (default_data['amount_high'] +
+                    default_data['amount_low']) / 2
+                Compensation.objects.update_or_create(
+                    year=lyear,
+                    interest=interest,
+                    defaults=default_data)
 
 
 if __name__ == "__main__":

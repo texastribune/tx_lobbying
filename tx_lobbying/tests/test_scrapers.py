@@ -52,13 +52,13 @@ class RegistrationTest(unittest.TestCase):
             'EC_STCD': 'TX',
             'EC_ZIP4': '78701',
         }
-        interest, created = update_or_create_interest(row)
+        interest, address, created = update_or_create_interest(row)
 
         self.assertEqual(interest.name, 'Megacorp')
-        self.assertEqual(interest.address1, '123 Fake')
-        self.assertEqual(interest.address2, 'B')
-        self.assertEqual(interest.city, 'C')
-        self.assertEqual(interest.state, 'TX')
-        self.assertEqual(interest.zipcode, '78701')
+        self.assertEqual(interest.address.address1, '123 Fake')
+        self.assertEqual(interest.address.address2, 'B')
+        self.assertEqual(interest.address.city, 'C')
+        self.assertEqual(interest.address.state, 'TX')
+        self.assertEqual(interest.address.zipcode, '78701')
         # double check formatting
-        self.assertEqual(interest.address, '123 Fake \nB \nC, TX 78701')
+        self.assertEqual(unicode(interest.address), '123 Fake \nB \nC, TX 78701')

@@ -3,7 +3,21 @@
 
 {% block main %}
   <h1>{{ object }}</h1>
-  {{ object.address }}
+  <a href="{{ object.address.get_absolute_url }}">
+    {{ object.address }}
+  </a>
+  <p>
+    Also listed under these addresses:
+  </p>
+  <ul>
+    {% for address in object.address_set_massive %}
+      <li>
+        {{ address }}
+      </li>
+    {% empty %}
+      <li><em>None</em></li>
+    {% endfor %}
+  </ul>
 
   {% if aliases %}
     <h2>Aliases</h2>
