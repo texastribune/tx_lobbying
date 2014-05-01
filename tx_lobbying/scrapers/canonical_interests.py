@@ -29,14 +29,14 @@ def go(path):
         for row in reader:
             try:
                 interest = Interest.objects.get(name=row['name'])
-                if not row['canonical'] and interest.canonical:
-                    print "remove", interest
-                    set_canonical(interest, None)
-                else:
+                if row['canonical']:
                     canonical = Interest.objects.get(name=row['canonical'])
                     if interest.canonical != canonical:
                         print "set", interest, canonical
                         set_canonical(interest, canonical)
+                elif interest.canonical:
+                    print "remove", interest
+                    set_canonical(interest, None)
             except (Interest.DoesNotExist, Interest.MultipleObjectsReturned) as e:
                 print "skip", row['name'], row['canonical'], e
                 # TODO
