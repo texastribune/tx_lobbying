@@ -4,6 +4,7 @@ from django.db.models import Sum
 from django.test import TestCase
 
 from tx_lobbying.factories import (
+    AddressFactory,
     InterestFactory,
     LobbyistFactory,
     LobbyistYearFactory,
@@ -142,6 +143,25 @@ class InterestTest(TestCase):
         self.assertFalse(self.interest.stats.filter(year=2003).exists())
         self.assertTrue(self.interest.stats.filter(year=2004).exists())
         self.assertFalse(self.interest.stats.filter(year=2005).exists())
+
+    def test_get_all_addresses_works(self):
+        a1 = AddressFactory()
+        a2 = AddressFactory()
+        CompensationFactory(interest=self.interest, address=a1)
+        CompensationFactory(interest=self.interest, address=a2)
+        addresses = self.interest.get_all_addresses()
+        self.assertIn(a1, addresses)
+        self.assertIn(a2, addresses)
+        # property version too
+        self.assertIn(a1, self.interest.address_set)
+        self.assertIn(a2, self.interest.address_set)
+
+    def test_get_all_addresses_is_distinct(self):
+        a1 = AddressFactory()
+        CompensationFactory(interest=self.interest, address=a1)
+        CompensationFactory(interest=self.interest, address=a1)
+        addresses = self.interest.get_all_addresses()
+        self.assertEqual(addresses.count(), 1)
 
 
 class LobbyistTest(TestCase):

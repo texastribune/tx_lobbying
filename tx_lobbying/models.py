@@ -16,6 +16,9 @@ class Address(models.Model):
     # latitude
     # longitude
 
+    class Meta:
+        ordering = ('address1', )
+
     def __unicode__(self):
         bits = []
         if self.address1:
@@ -57,6 +60,10 @@ class Interest(models.Model):
         return Compensation.objects.filter(Q(interest=self) |
             Q(interest__in=self.aliases.all()))
 
+    @property
+    def address_set(self):
+        return self.get_all_addresses()
+
     # CUSTOM METHODS
 
     def make_stats_for_year(self, year):
@@ -82,6 +89,9 @@ class Interest(models.Model):
         year_max = self.years_available.latest('year').year
         for year in range(year_min, year_max + 1):
             self.make_stats_for_year(year)
+
+    def get_all_addresses(self, include_aliases=False):
+        return Address.objects.filter(compensation__interest=self).distinct()
 
 
 class InterestStats(models.Model):
