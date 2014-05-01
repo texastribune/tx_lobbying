@@ -18,7 +18,7 @@ lobcon:
 	cd $@ && wget http://www.ethics.state.tx.us/tedd/LobCon10.xls
 	cd $@ && wget http://www.ethics.state.tx.us/tedd/LobCon09.xls
 	@echo "Converting Lobbyist Registrations from XLS to CSV"
-	$(foreach file, $(wildcard $(lobcon)/*.xls), \
+	$(foreach file, $(wildcard $@/*.xls), \
 		in2csv $(file) > $(subst xls,csv,$(file));)
 
 
