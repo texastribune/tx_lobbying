@@ -28,6 +28,8 @@
             {% endfor %}
           </ul>
         </li>
+      {% empty %}
+        <li><em>None</em></li>
       {% endfor %}
     </ul>
   </section>
@@ -58,8 +60,8 @@
       <tbody>
         {% for cover in object.coversheets.all %}
           <tr>
-            <td>{{ cover.report_date }}</td>
-            <td>{% if cover.transportation %}{{ cover.transportation }}{% endif %}</td>
+            <td>{{ cover.report_date|date:"Y-m-d" }}</td>
+            <td>{% if cover.transportation %}${{ cover.transportation|intcomma }}{% endif %}</td>
             <td>{% if cover.food %}${{ cover.food|intcomma }}{% endif %}</td>
             <td>{% if cover.entertainment %}${{ cover.entertainment|intcomma }}{% endif %}</td>
             <td>{% if cover.gifts %}${{ cover.gifts|intcomma }}{% endif %}</td>
