@@ -189,9 +189,11 @@ class RegistrationReport(models.Model):
     """
     A reference to the registration report a `Lobbyist` files every year.
 
-    This is the report where someone officially registers as a lobbyist. It also
-    lists the clients they represent. These reports can be amended, so a
+    This is the report where someone officially registers as a lobbyist. It
+    also lists the clients they represent. These reports can be amended, so a
     registration from 2008 can be ammended in 2013 and change on you.
+
+    A report only has one `Lobbyist`, but can have many `Interest`s.
     """
     lobbyist = models.ForeignKey(Lobbyist, related_name="registrations")
     report_id = models.IntegerField(unique=True)
