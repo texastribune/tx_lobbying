@@ -91,7 +91,8 @@ class LobbyistDetail(DetailView):
 
 
 class InterestList(ListView):
-    queryset = models.Interest.objects.all().select_related('canonical')
+    queryset = (models.Interest.objects.filter(canonical__isnull=True)
+        .prefetch_related('aliases'))
 
 
 class InterestDetail(DetailView):

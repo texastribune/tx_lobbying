@@ -2,5 +2,29 @@
 
 
 {% block main %}
-  {% include "tx_lobbying/includes/interest_list.html" %}
+  {# this grouping might be better done with regroup or client side #}
+  <ul>
+    {% for interest in object_list %}
+      <li>
+        <a href="{{ interest.get_absolute_url }}">
+          {{ interest.name|default:"(missing name)" }}
+        </a>
+        {% with aliases=interest.aliases.all %}
+          {% if aliases %}
+            <br>
+            <b>Aliases:</b>
+            <ul>
+              {% for interest in interest.aliases.all %}
+                <li>
+                  <a href="{{ interest.get_absolute_url }}">
+                    {{ interest.name|default:"(missing name)" }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+      </li>
+    {% endfor %}
+  </ul>
 {% endblock %}
