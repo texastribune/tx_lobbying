@@ -33,11 +33,11 @@ def update_or_create_interest(row):
         address1=row['EC_ADR1'],
         address2=row['EC_ADR2'],
         city=row['EC_CITY'],
+        state=row['EC_STCD'],
         zipcode=row['EC_ZIP4'],
     )
     interest, created = Interest.objects.update_or_create(
         name=row['CONCERNAME'],
-        state=row['EC_STCD'],
         defaults=defaults,
     )
     return interest, created

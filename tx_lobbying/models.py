@@ -8,7 +8,7 @@ from django.db.models import Count, Sum, Q
 
 class Interest(models.Model):
     """A lobbying interest such as a corporation or organization."""
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     address1 = models.CharField(max_length=200, null=True, blank=True)
     address2 = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=75, null=True, blank=True)
@@ -22,7 +22,6 @@ class Interest(models.Model):
     # longitude
 
     class Meta:
-        unique_together = ('name', 'state')
         ordering = ('name', )
 
     def __unicode__(self):
