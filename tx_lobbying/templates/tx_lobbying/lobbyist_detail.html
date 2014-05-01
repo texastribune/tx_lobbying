@@ -22,7 +22,14 @@
           <ul>
             {% for client in yeardata.compensation_set.all %}
               <li>
-                <a href="{{ client.interest.get_absolute_url }}">{{ client.interest.name|default:"TODO" }}</a>
+                <a href="{{ client.interest.get_absolute_url }}">
+                  {{ client.interest.name|default:"TODO" }}
+                </a>
+                {% if client.interest.canonical %}
+                  <em>(data cleaned to: <a href="{{ client.interest.canonical.get_absolute_url }}">
+                    {{ client.interest.canonical.name|default:"TODO" }}
+                  </a>)</em>
+                {% endif %}
                 ${{ client.amount_low|intcomma }} &mdash; ${{ client.amount_high|intcomma }}
               </li>
             {% endfor %}
