@@ -13,7 +13,9 @@ import os
 import sys
 
 # don't use relative imports so this can also be run from the command line
-from tx_lobbying.models import (Interest, Lobbyist, RegistrationReport,
+from tx_lobbying.models import (
+    Address,
+    Interest, Lobbyist, RegistrationReport,
     LobbyistYear, Compensation)
 from tx_lobbying.scrapers.utils import (DictReader, convert_date_format_YMD)
 
@@ -28,13 +30,16 @@ def update_or_create_interest(row):
     Uses the name and state for uniquess. So we assume that AT&T Texas and AT&T
     DC are two separate interests, but AT&T Texas and AT & T Texas are the same.
     """
-    # TODO get other info from the csv
-    defaults = dict(
+    address, __ = Address.objects.get_or_create(
         address1=row['EC_ADR1'],
         address2=row['EC_ADR2'],
         city=row['EC_CITY'],
         state=row['EC_STCD'],
         zipcode=row['EC_ZIP4'],
+    )
+    # TODO get other info from the csv
+    defaults = dict(
+        address=address,
     )
     interest, created = Interest.objects.update_or_create(
         name=row['CONCERNAME'],

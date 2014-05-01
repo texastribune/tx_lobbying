@@ -173,7 +173,7 @@ class LobbyistTest(TestCase):
 class NamedPoorlyTestCase(TestCase):
     def test_model_relations_api(self):
         """Test the calls used to move between the relations for the models."""
-        i = InterestFactory.create()
+        i = InterestFactory()
         lobbyist = LobbyistFactory.create()
         YEAR = 2000
 

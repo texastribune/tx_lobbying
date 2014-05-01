@@ -4,8 +4,8 @@ from . import models
 
 
 class InterestAdmin(admin.ModelAdmin):
-    list_display = ('name', 'city', 'state')
-    search_fields = ('name', 'city', 'state')
+    list_display = ('name', 'address')
+    search_fields = ('name', 'address__city', 'address__state')
 admin.site.register(models.Interest, InterestAdmin)
 
 
