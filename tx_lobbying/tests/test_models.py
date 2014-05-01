@@ -163,6 +163,20 @@ class InterestTest(TestCase):
         addresses = self.interest.get_all_addresses()
         self.assertEqual(addresses.count(), 1)
 
+    def test_get_all_addresses_can_get_aliases(self):
+        interest = InterestFactory(canonical=self.interest)
+        a1 = AddressFactory()
+        a2 = AddressFactory()
+        CompensationFactory(interest=self.interest, address=a1)
+        CompensationFactory(interest=interest, address=a2)
+        addresses = self.interest.get_all_addresses(include_aliases=True)
+        self.assertIn(a1, addresses)
+        self.assertIn(a2, addresses)
+        # property version too
+        self.assertIn(a1, self.interest.address_set_massive)
+        self.assertNotIn(a2, self.interest.address_set)
+        self.assertIn(a2, self.interest.address_set_massive)
+
 
 class LobbyistTest(TestCase):
     def test_make_stats_is_accurate(self):

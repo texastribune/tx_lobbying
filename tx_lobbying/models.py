@@ -64,6 +64,10 @@ class Interest(models.Model):
     def address_set(self):
         return self.get_all_addresses()
 
+    @property
+    def address_set_massive(self):
+        return self.get_all_addresses(include_aliases=True)
+
     # CUSTOM METHODS
 
     def make_stats_for_year(self, year):
@@ -91,6 +95,9 @@ class Interest(models.Model):
             self.make_stats_for_year(year)
 
     def get_all_addresses(self, include_aliases=False):
+        if include_aliases:
+            return Address.objects.filter(Q(compensation__interest=self) |
+                Q(compensation__interest__in=self.aliases.all())).distinct()
         return Address.objects.filter(compensation__interest=self).distinct()
 
 
