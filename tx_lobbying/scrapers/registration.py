@@ -70,8 +70,12 @@ def scrape(path, logger=logger):
             if created:
                 logger.info("LOBBYIST: %s" % lobbyist)
 
-            # interest/concern/client
-            interest, address, created = update_or_create_interest(row)
+            if row['CONCERNAME']:
+                # interest/concern/client
+                interest, address, created = update_or_create_interest(row)
+            else:
+                address = None
+                interest = None
 
             # registration report
             default_data = dict(
@@ -86,30 +90,31 @@ def scrape(path, logger=logger):
             if created:
                 logger.info("REPORT: %s" % report)
 
-            # lobbyist M2M to `Interest` through `Compensation`
-            lyear, created = LobbyistYear.objects.update_or_create(
-                lobbyist=lobbyist,
-                year=year)
-            # compensation
-            default_data = dict(
-                amount_high=int(round(float(row['NHIGH'] or "0"))),  # I hate myself
-                amount_low=int(round(float(row['NLOW'] or "0"))),
-                compensation_type=row['TYPECOPM'],
-                address=address,
-                raw=json.dumps(row),
-                updated_at=report_date,
-            )
-            if row['STARTDT']:
-                default_data['start_date'] = row['STARTDT']
-            if row['TERMDATE']:
-                default_data['end_date'] = row['TERMDATE']
-            # WISHLIST move this amount_guess logic into the model
-            default_data['amount_guess'] = (default_data['amount_high'] +
-                default_data['amount_low']) / 2
-            Compensation.objects.update_or_create(
-                year=lyear,
-                interest=interest,
-                defaults=default_data)
+            if interest:
+                # lobbyist M2M to `Interest` through `Compensation`
+                lyear, created = LobbyistYear.objects.update_or_create(
+                    lobbyist=lobbyist,
+                    year=year)
+                # compensation
+                default_data = dict(
+                    amount_high=int(round(float(row['NHIGH'] or "0"))),  # I hate myself
+                    amount_low=int(round(float(row['NLOW'] or "0"))),
+                    compensation_type=row['TYPECOPM'],
+                    address=address,
+                    raw=json.dumps(row),
+                    updated_at=report_date,
+                )
+                if row['STARTDT']:
+                    default_data['start_date'] = row['STARTDT']
+                if row['TERMDATE']:
+                    default_data['end_date'] = row['TERMDATE']
+                # WISHLIST move this amount_guess logic into the model
+                default_data['amount_guess'] = (default_data['amount_high'] +
+                    default_data['amount_low']) / 2
+                Compensation.objects.update_or_create(
+                    year=lyear,
+                    interest=interest,
+                    defaults=default_data)
 
 
 if __name__ == "__main__":

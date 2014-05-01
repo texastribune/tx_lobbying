@@ -138,6 +138,8 @@ class Lobbyist(models.Model):
     title = models.CharField(max_length=15)
     suffix = models.CharField(max_length=5)
     nick_name = models.CharField(max_length=25)
+    # NORM_BUS
+    # TODO business = models.CharField(max_length=100)
 
     class Meta:
         ordering = ('sort_name', )
@@ -369,3 +371,9 @@ class Compensation(models.Model):
         # TODO, thousands separator... requires python 2.7
         return u"{1.interest} pays {0} ~${1.amount_guess} ({1.year})".format(
             self.year.lobbyist, self)
+
+    # CUSTOM PROPERTIES
+
+    @property
+    def raw_data(self):
+        return json.loads(self.raw)
