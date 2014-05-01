@@ -56,9 +56,6 @@ def scrape(path, logger=logger):
             report_date = convert_date_format_YMD(row['RPT_DATE'])
             year = row['YEAR_APPL']
 
-            # interest/concern/client
-            interest, created = update_or_create_interest(row)
-
             # lobbyist
             # very basic `Lobbyist` info here, most of it actually comes
             # from the coversheets.
@@ -73,11 +70,26 @@ def scrape(path, logger=logger):
             if created:
                 logger.info("LOBBYIST: %s" % lobbyist)
 
-            # lobbyist/interest M2M
+            # interest/concern/client
+            interest, created = update_or_create_interest(row)
+
+            # registration report
+            default_data = dict(
+                raw=json.dumps(row),
+                report_date=report_date,
+                year=year,
+            )
+            report, created = RegistrationReport.objects.update_or_create(
+                lobbyist=lobbyist,
+                report_id=row['REPNO'],
+                defaults=default_data)
+            if created:
+                logger.info("REPORT: %s" % report)
+
+            # lobbyist M2M to `Interest` through `Compensation`
             lyear, created = LobbyistYear.objects.update_or_create(
                 lobbyist=lobbyist,
                 year=year)
-
             # compensation
             default_data = dict(
                 amount_high=int(round(float(row['NHIGH'] or "0"))),  # I hate myself
@@ -92,19 +104,6 @@ def scrape(path, logger=logger):
                 year=lyear,
                 interest=interest,
                 defaults=default_data)
-
-            # registration report
-            default_data = dict(
-                raw=json.dumps(row),
-                report_date=report_date,
-                year=year,
-            )
-            report, created = RegistrationReport.objects.update_or_create(
-                lobbyist=lobbyist,
-                report_id=row['REPNO'],
-                defaults=default_data)
-            if created:
-                logger.info("REPORT: %s" % report)
 
 
 if __name__ == "__main__":
