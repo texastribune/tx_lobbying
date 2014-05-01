@@ -336,7 +336,7 @@ class Compensation(models.Model):
     end_date = models.DateField(null=True, blank=True)
     year = models.ForeignKey(LobbyistYear)
     interest = models.ForeignKey(Interest)
-    address = models.ForeignKey(Address,
+    address = models.ForeignKey(Address, null=True, blank=True,
         help_text='The address the lobbyist listed for the `Interest`')
     raw = models.TextField()
     updated_at = models.DateField()

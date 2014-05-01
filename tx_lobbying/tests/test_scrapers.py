@@ -52,7 +52,7 @@ class RegistrationTest(unittest.TestCase):
             'EC_STCD': 'TX',
             'EC_ZIP4': '78701',
         }
-        interest, created = update_or_create_interest(row)
+        interest, address, created = update_or_create_interest(row)
 
         self.assertEqual(interest.name, 'Megacorp')
         self.assertEqual(interest.address.address1, '123 Fake')
