@@ -315,22 +315,29 @@ class Compensation(models.Model):
     """
     Details about how a `Lobbyist` was compensated by an `Interest` for a year.
 
-    Compensation ranges are very loosely defined, and are usually not indicative
-    of the actual amount a `Lobbyist` was paid.
+    Compensation ranges are very loosely defined, and are usually not
+    indicative of the actual amount a `Lobbyist` was paid.
 
-    The `amount_guess` field is a derived field that is the a guess of what
-    the `Lobbyist` was actually paid. For now it is just the average of the
-    upper and lower bound of pay ranges, but in the future more variables could
-    be considered.
+    This model also holds extra information about a the lobbyist's relationship
+    from the registration form.
 
+    The `amount_guess` field is a derived field that is the a guess of what the
+    `Lobbyist` was actually paid. For now it is just the average of the upper
+    and lower bound of pay ranges, but in the future more variables could be
+    considered.
     """
     amount_high = models.IntegerField()  # upper bound, exlusive
     amount_low = models.IntegerField()  # lower bound, inclusive
-    # compensation type
-    # start
-    # end
+    # TYPECOPM
+    compensation_type = models.CharField(max_length=20, null=True, blank=True)
+    # STARTDR
+    start_date = models.DateField(null=True, blank=True)
+    # TERMDATE
+    end_date = models.DateField(null=True, blank=True)
     year = models.ForeignKey(LobbyistYear)
     interest = models.ForeignKey(Interest)
+    address = models.ForeignKey(Address,
+        help_text='The address the lobbyist listed for the `Interest`')
     raw = models.TextField()
     updated_at = models.DateField()
 
