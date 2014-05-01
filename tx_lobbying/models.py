@@ -189,15 +189,14 @@ class RegistrationReport(models.Model):
     This is the report where someone officially registers as a lobbyist. It also
     lists the clients they represent. These reports can be amended, so a
     registration from 2008 can be ammended in 2013 and change on you.
-
-    TODO: clients...
-
     """
     lobbyist = models.ForeignKey(Lobbyist, related_name="registrations")
     report_id = models.IntegerField(unique=True)
     report_date = models.DateField()
     year = models.IntegerField()
     raw = models.TextField()
+    # TODO
+    # interests = models.ManyToMany(Interest)
 
     def __unicode__(self):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)

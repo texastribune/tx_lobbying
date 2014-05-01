@@ -37,9 +37,11 @@ def go(path):
                 elif interest.canonical:
                     print "remove", interest
                     set_canonical(interest, None)
-            except (Interest.DoesNotExist, Interest.MultipleObjectsReturned) as e:
+            except Interest.MultipleObjectsReturned as e:
                 print "skip", row['name'], row['canonical'], e
                 # TODO
+                continue
+            except Interest.DoesNotExist:
                 continue
 
 
