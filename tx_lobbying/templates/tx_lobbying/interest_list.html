@@ -1,0 +1,17 @@
+{% extends "tx_lobbying/base.html" %}
+
+
+{% block main %}
+  <ul>
+    {% for interest in object_list %}
+      <li>
+        <a href="{{ interest.get_absolute_url }}">
+          {{ interest.name }}
+        </a>
+        {% if interest.canonical %}
+          aka {{ interest.canonical.name }}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -90,6 +90,10 @@ class LobbyistDetail(DetailView):
     slug_field = 'filer_id'
 
 
+class InterestList(ListView):
+    queryset = models.Interest.objects.all().select_related('canonical')
+
+
 class InterestDetail(DetailView):
     model = models.Interest
 
