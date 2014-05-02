@@ -27,7 +27,9 @@ test:
 
 
 resetdb:
-	$(MANAGE) sqlclear tx_lobbying | $(MANAGE) dbshell
+	$(MANAGE) dbshell <<< "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+# sqlclear does not work on postgres
+#	$(MANAGE) sqlclear tx_lobbying | $(MANAGE) dbshell
 	$(MANAGE) migrate --noinput
 
 
