@@ -18,6 +18,7 @@ from tx_lobbying.scrapers.utils import (DictReader, convert_date_format,
 
 
 # CONFIGURATION
+DEBUG = True
 TIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
 
 
@@ -27,6 +28,10 @@ logger = logging.getLogger(__name__)
 def _covers_inner(row):
     report_date = row['FILED_DATE'] or row['RPT_DATE']
     report_date = convert_date_format(report_date)
+
+    # DELETEME speed up code during debugging
+    if DEBUG and report_date.year < 2012:
+        return
 
     # Lobbyist
     default_data = dict(
@@ -103,6 +108,11 @@ def _detail_inner(row, type):
         year=int(row['YEAR_APPL']),
         raw=json.dumps(row),
     )
+
+    # DELETEME speed up code during debugging
+    if DEBUG and default_data['year'] < 2012:
+        return
+
     if amount is None:
         default_data['amount'] = None  # force this to null
         default_data['amount_guess'] = Decimal((Decimal(row['nLow']) +
