@@ -96,9 +96,16 @@ def _covers_inner(row):
 
 
 def _detail_inner(row, type):
-    lobbyist = Lobbyist.objects.get(
-        filer_id=row['FILER_ID'])
-    cover = ExpenseCoversheet.objects.get(report_id=row['REPNO'])
+    try:
+        lobbyist = Lobbyist.objects.get(
+            filer_id=row['FILER_ID'])
+        cover = ExpenseCoversheet.objects.get(report_id=row['REPNO'])
+    except Lobbyist.DoesNotExist:
+        logger.error('missing lobbyist {FILER_ID}'.format(**row))
+        return
+    except ExpenseCoversheet.DoesNotExist:
+        logger.error('missing cover sheet {REPNO}'.format(**row))
+        return
 
     # ExpenseDetailreport
     amount = Decimal(row['EXPAMOUNT']) if row['EXPAMOUNT'] and row['EXPAMOUNT'] != '0' else None
