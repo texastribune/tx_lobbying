@@ -179,29 +179,34 @@ class InterestTest(TestCase):
 
 
 class LobbyistTest(TestCase):
+    def setUp(self):
+        self.lobbyist = LobbyistFactory()
+
+    def test_make_stats_does_nothing_with_no_coversheets(self):
+        self.assertEqual(self.lobbyist.coversheets.count(), 0)
+        self.lobbyist.make_stats()
+        self.assertEqual(self.lobbyist.stats.count(), 0)
+
     def test_make_stats_is_accurate(self):
-        lobbyist = LobbyistFactory()
-        lobbyist.make_stats()
-        self.assertEqual(lobbyist.stats.count(), 0)
-
         ExpenseCoversheetFactory(
-            lobbyist=lobbyist, year=2000, spent_guess=100)
-        lobbyist.make_stats()
-        self.assertEqual(lobbyist.stats.count(), 1)
-        self.assertEqual(lobbyist.stats.get(year=2000).spent_guess, 100)
+            lobbyist=self.lobbyist, year=2000, spent_guess=100)
+        self.lobbyist.make_stats()
+        self.assertEqual(self.lobbyist.stats.count(), 1)
+        self.assertEqual(self.lobbyist.stats.get(year=2000).spent_guess, 100)
 
-        ExpenseCoversheetFactory.create(lobbyist=lobbyist,
-            year=2000, spent_guess="200")
-        lobbyist.make_stats()
-        self.assertEqual(lobbyist.stats.count(), 1)
-        self.assertEqual(lobbyist.stats.get(year=2000).spent_guess, 300)
+        ExpenseCoversheetFactory.create(lobbyist=self.lobbyist,
+            year=2000, spent_guess=200)
+        self.lobbyist.make_stats()
+        self.assertEqual(self.lobbyist.stats.count(), 1)
+        self.assertEqual(self.lobbyist.stats.get(year=2000).spent_guess, 300)
 
-        ExpenseCoversheetFactory.create(lobbyist=lobbyist,
-            year=2001, spent_guess="400")
-        lobbyist.make_stats()
-        self.assertEqual(lobbyist.stats.count(), 2)
-        self.assertEqual(lobbyist.stats.get(year=2000).spent_guess, 300)
-        self.assertEqual(lobbyist.stats.get(year=2001).spent_guess, 400)
+        ExpenseCoversheetFactory.create(lobbyist=self.lobbyist,
+            year=2001, spent_guess=400, transportation=1)
+        self.lobbyist.make_stats()
+        self.assertEqual(self.lobbyist.stats.count(), 2)
+        self.assertEqual(self.lobbyist.stats.get(year=2000).spent_guess, 300)
+        self.assertEqual(self.lobbyist.stats.get(year=2001).spent_guess, 400)
+        self.assertEqual(self.lobbyist.stats.get(year=2001).transportation, 1)
 
 
 class NamedPoorlyTestCase(TestCase):
