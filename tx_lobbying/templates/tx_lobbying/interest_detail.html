@@ -36,22 +36,22 @@
 
   <h2>Compensation</h2>
   <ul>
-    {% for year in object.stats.all %}
+    {% for annum in object.stats.all %}
       <li>
-        In {{ year.year }}, they spent between ${{ year.low|intcomma }}
-        and ${{ year.high|intcomma }} on {{ year.lobbyist_count }} lobbyists.
+        In {{ annum.year }}, they spent between ${{ annum.low|intcomma }}
+        and ${{ annum.high|intcomma }} on {{ annum.lobbyist_count }} lobbyists.
       </li>
     {% endfor %}
   </ul>
 
   <h2>Lobbyists</h2>
   <ul>
-    {% regroup compensation_set by year.lobbyist as comp_years %}
+    {% regroup compensation_set by annum.lobbyist as comp_years %}
     {% for lobbyist in comp_years %}
       <li>
         <a href="{{ lobbyist.grouper.get_absolute_url }}">{{ lobbyist.grouper }}</a>
-        {% for year in lobbyist.list %}
-          {{ year.year.year }}
+        {% for comp in lobbyist.list %}
+          {{ comp.annum.year }}
         {% endfor %}
       </li>
     {% endfor %}

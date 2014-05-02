@@ -102,8 +102,8 @@ class InterestDetail(DetailView):
         data = super(InterestDetail, self).get_context_data(**kwargs)
         data['aliases'] = (self.object.aliases.all())
         data['compensation_set'] = (self.object.compensation_set_massive
-            .prefetch_related('interest', 'year__lobbyist')
-            .order_by('year__lobbyist', 'year__year'))
+            .prefetch_related('interest', 'annum__lobbyist')
+            .order_by('annum__lobbyist', 'annum__year'))
         return data
 
 
