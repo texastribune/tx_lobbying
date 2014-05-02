@@ -4,17 +4,11 @@ I'm too lazy to do unicode csv reading the "proper" way, so you're going to see
 a lot of stupid .decode('latin_1') calls.
 
 """
-from __beyond__ import disable_django_db_logging
-from calendar import timegm
 from decimal import Decimal
-import datetime
 import json
 import logging
 import os
 import re
-import sys
-import time
-import urllib
 
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Lobbyist,
@@ -24,58 +18,10 @@ from tx_lobbying.scrapers.utils import (DictReader, convert_date_format,
 
 
 # CONFIGURATION
-DATA_DIR = '.csv-cache'
 TIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
-STALE_DAYS = 7  # expect errors from rounding and utc offset
-TEC_URL = 'http://www.ethics.state.tx.us/tedd/TEC_LA_CSV.zip'
 
 
 logger = logging.getLogger(__name__)
-
-
-def download_zip(url, extract_to, force=False):
-    """
-    Return a list of files fresh from the TEC oven.
-
-    Downloads to a temporary file and extracts it using your OS's unzip to
-    `extract_to`. This only happens if the local copy of the data exists and
-    isn't stale.
-
-    """
-    def get_remote_mtime():
-        data = urllib.urlopen(url)
-        date = data.info()['last-modified']
-        logger.debug("remote modified: %s" % date)
-        return timegm(time.strptime(date, TIME_FORMAT))
-
-    def get_local_mtime():
-        date = 0
-        try:
-            # BUG: utc offset gets applied wrong, but we don't care
-            date = int(os.path.getmtime(os.path.join(
-                extract_to, os.listdir(extract_to)[0])))
-        except IndexError:
-            pass
-        logger.debug("local modified: %s" %
-            datetime.datetime.fromtimestamp(date).strftime(TIME_FORMAT))
-        return date
-
-    if not os.path.exists(extract_to):
-        os.mkdir(extract_to)
-
-    local_mtime = get_local_mtime()
-    staleness = abs(time.time() - local_mtime) / 86400
-    logger.debug('Local Stale Check: ~%s days off' % staleness)
-    if staleness > STALE_DAYS:
-        remote_mtime = get_remote_mtime()
-        staleness = abs(remote_mtime - local_mtime) / 86400
-        logger.debug('Remote Stale Check: ~%s days off' % staleness)
-    if force or staleness > STALE_DAYS:
-        logger.info('Too stale: Pulling new files')
-        filename, header = urllib.urlretrieve(url)
-        os.system('unzip %s -d %s' % (filename, os.path.abspath(extract_to)))
-    return [os.path.join(extract_to, f) for f in os.listdir(extract_to)
-            if f[-3:] == 'csv']
 
 
 def _covers_inner(row):
@@ -181,8 +127,8 @@ def _detail_inner(row, type):
 def process_csv(path, _inner_func, **kwargs):
     logger.info("Processing %s" % path)
     total = get_record_count(path)
-    with open(path, 'r') as f:
-        reader = DictReader(f, encoding="latin_1")
+    with open(path, 'rb') as f:
+        reader = DictReader(f, encoding='latin_1')
         for i, row in enumerate(reader):
             if not i % 1000:
                 logger.info(u'{}/{} filed date: {} report date:{}'
@@ -230,14 +176,3 @@ def main(working_dir, logging_level=None):
         _inner_func=_detail_inner, type="entertainment")
     process_csv(os.path.join(working_dir, "LaGift.csv"),
         _inner_func=_detail_inner, type="gift")
-
-
-if __name__ == "__main__":
-    files = download_zip(url=TEC_URL, extract_to=DATA_DIR)
-
-    try:
-        main(DATA_DIR)
-    except KeyboardInterrupt:
-        exit(1)
-    except Exception:
-        raise
