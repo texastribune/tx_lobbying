@@ -1,8 +1,8 @@
 -r requirements.txt
 
-Werkzeug>=0.8.3
-django-extensions>=0.9
-ipython
-ipdb
-factory-boy
+Werkzeug==0.9.4
+django-extensions==1.3.4
+ipython==2.0.0
+ipdb==0.8
+factory-boy==2.3.1
 names==0.3.0

@@ -2,5 +2,5 @@
 https://www.djangoproject.com/download/1.7b3/tarball/
 
 dj-database-url>=0.2.1
-psycopg2>=2.4.5
+psycopg2==2.5.2
 project-runpy==0.3.0
