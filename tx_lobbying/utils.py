@@ -19,6 +19,6 @@ def update_lobbyists_stats(starting=None):
 def update_interests_stats():
     qs = Interest.objects.filter(canonical__isnull=True)
     count = qs.count()
-    for i, interest in enumerate(qs):
+    for i, interest in enumerate(qs, 1):
         logger.info(u'{:>4} / {} - {}'.format(i, count, interest))
         interest.make_stats()
