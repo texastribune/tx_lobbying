@@ -15,7 +15,7 @@
         {% for object in top_lobbyists %}
           <tr>
             <td><a href="{{ object.lobbyist.get_absolute_url }}">{{ object.lobbyist }}</a></td>
-            <td>${{ object.spent|intcomma }} </td>
+            <td>${{ object.spent_guess|intcomma }} </td>
           </tr>
         {% endfor %}
       </tbody>

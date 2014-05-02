@@ -25,7 +25,7 @@ class Landing(TemplateView):
             year_data['registered'] = Lobbyist.objects.filter(
                 registrations__year__exact=year).distinct().count()
             year_data['spent_anything'] = Lobbyist.objects.filter(
-                stats__year__exact=year, stats__spent__gt=0).distinct().count()
+                stats__year__exact=year, stats__spent_guess__gt=0).distinct().count()
             data[year] = year_data
         return data
 
@@ -60,7 +60,7 @@ class YearLanding(TemplateView):
     def get_top_lobbyists(self, count=20):
         qs = (models.LobbyistStat.objects.filter(year=self.year)
             .select_related('lobbyist')
-            .order_by('-spent')[:count])
+            .order_by('-spent_guess')[:count])
         return qs
 
     def get_top_interests(self, count=20):
