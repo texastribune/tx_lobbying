@@ -44,7 +44,26 @@
     <h2>Stats</h2>
     <table>
       <thead>
-        <tr></tr>
+        <tr>
+          <th>Year</th>
+          <th>Total</th>
+          <th>Transportation</th>
+          <th>Food</th>
+          <th>Entertainment</th>
+          <th>Gifts</th>
+          <th>Awards</th>
+          <th>Events</th>
+          <th>Media</th>
+          <th>Senators</th>
+          <th>Representatives</th>
+          <th>Other</th>
+          <th>Legislative</th>
+          <th>Executive</th>
+          <th>Family</th>
+          <th>Events</th>
+          <th>Guests</th>
+          <th>Details</th>
+        </tr>
       </thead>
       <tbody>
         {% for stat in object.stats.all %}
@@ -53,8 +72,23 @@
               {{ stat.year }}
             </td>
             <td>
-              ${{ stat.spent|floatformat:0|intcomma }}
+              ${{ stat.spent_guess|intcomma }}
             </td>
+            <td>{% if stat.transportation %}${{ stat.transportation|intcomma }}{% endif %}</td>
+            <td>{% if stat.food %}${{ stat.food|intcomma }}{% endif %}</td>
+            <td>{% if stat.entertainment %}${{ stat.entertainment|intcomma }}{% endif %}</td>
+            <td>{% if stat.gifts %}${{ stat.gifts|intcomma }}{% endif %}</td>
+            <td>{% if stat.awards %}${{ stat.awards|intcomma }}{% endif %}</td>
+            <td>{% if stat.events %}${{ stat.events|intcomma }}{% endif %}</td>
+            <td>{% if stat.media %}${{ stat.media|intcomma }}{% endif %}</td>
+            <td>{% if stat.ben_senators %}${{ stat.ben_senators|intcomma }}{% endif %}</td>
+            <td>{% if stat.ben_representatives %}${{ stat.ben_representatives|intcomma }}{% endif %}</td>
+            <td>{% if stat.ben_other %}${{ stat.ben_other|intcomma }}{% endif %}</td>
+            <td>{% if stat.ben_legislative %}${{ stat.ben_legislative|intcomma }}{% endif %}</td>
+            <td>{% if stat.ben_executive %}${{ stat.ben_executive|intcomma }}{% endif %}</td>
+            <td>{% if stat.ben_family %}${{ stat.ben_family|intcomma }}{% endif %}</td>
+            <td>{% if stat.ben_events %}${{ stat.ben_events|intcomma }}{% endif %}</td>
+            <td>{% if stat.ben_guests %}${{ stat.ben_guests|intcomma }}{% endif %}</td>
           </tr>
         {% endfor %}
       </tbody>
