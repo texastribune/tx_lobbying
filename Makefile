@@ -8,7 +8,9 @@ help:
 	@echo "  make clean   - remove temporary files in .gitignore"
 	@echo "  make test    - run test suite"
 	@echo "  make resetdb - delete and recreate the database"
-	@echo "  make import  - download everything, import everything"
+	@echo "  make data    - download everything"
+	@echo "  make import  - import everything"
+	@echo "  make scrape  - download everything, import everything"
 
 
 clean:
@@ -29,8 +31,10 @@ resetdb:
 	$(MANAGE) migrate --noinput
 
 
-import:
+data:
 	cd data && $(MAKE) all
+
+import:
 	DEBUG=0 python example_project/manage.py lobbying_expenses data/expenses -v 2
 # haha I suck at this
 	DEBUG=0 python example_project/manage.py lobbying_registrations data/lobcon/LobCon09.csv
@@ -42,5 +46,7 @@ import:
 	DEBUG=0 python tx_lobbying/scrapers/canonical_interests.py
 	DEBUG=0 python example_project/manage.py lobbying_stats
 
+scrape: data import
 
-.PHONY: help clean test resetdb import
+
+.PHONY: help clean test resetdb data import scrape

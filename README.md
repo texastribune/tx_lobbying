@@ -43,7 +43,7 @@ Get your database up and running with (Postgres instructions):
 
 Then load data with:
 
-    make import
+    make scrape
 
 
 ## Running tests
