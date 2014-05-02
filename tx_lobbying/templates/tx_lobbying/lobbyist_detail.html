@@ -41,6 +41,26 @@
     </ul>
   </section>
   <section>
+    <h2>Stats</h2>
+    <table>
+      <thead>
+        <tr></tr>
+      </thead>
+      <tbody>
+        {% for stat in object.stats.all %}
+          <tr>
+            <td>
+              {{ stat.year }}
+            </td>
+            <td>
+              ${{ stat.spent|floatformat:0|intcomma }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  <section>
     <h2>Cover Sheets</h2>
     <table>
       <thead>
