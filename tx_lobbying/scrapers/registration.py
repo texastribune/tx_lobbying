@@ -92,7 +92,7 @@ def scrape(path, logger=logger):
 
             if interest:
                 # lobbyist M2M to `Interest` through `Compensation`
-                lyear, created = LobbyistYear.objects.update_or_create(
+                annum, created = LobbyistYear.objects.update_or_create(
                     lobbyist=lobbyist,
                     year=year)
                 # compensation
@@ -112,7 +112,7 @@ def scrape(path, logger=logger):
                 default_data['amount_guess'] = (default_data['amount_high'] +
                     default_data['amount_low']) / 2
                 Compensation.objects.update_or_create(
-                    year=lyear,
+                    annum=annum,
                     interest=interest,
                     defaults=default_data)
 
