@@ -72,7 +72,7 @@ class Interest(models.Model):
     def make_stats_for_year(self, year):
         # WISHLIST move into utils
         qs = self.compensation_set_massive
-        aggregate_stats = qs.filter(year__year=year).aggregate(
+        aggregate_stats = qs.filter(annum__year=year).aggregate(
             guess=Sum('amount_guess'),
             high=Sum('amount_high'),
             low=Sum('amount_low'),
@@ -408,7 +408,7 @@ class Compensation(models.Model):
     start_date = models.DateField(null=True, blank=True)
     # TERMDATE
     end_date = models.DateField(null=True, blank=True)
-    year = models.ForeignKey(LobbyistYear)
+    annum = models.ForeignKey(LobbyistYear)
     interest = models.ForeignKey(Interest)
     address = models.ForeignKey(Address, null=True, blank=True,
         help_text='The address the lobbyist listed for the `Interest`')
@@ -419,8 +419,8 @@ class Compensation(models.Model):
     amount_guess = models.IntegerField()  # denormalized, f(amount_low, amount_high)
 
     class Meta:
-        ordering = ('interest__name', 'year__year', 'year__lobbyist', )
-        unique_together = ('year', 'interest')
+        ordering = ('interest__name', 'annum__year', 'annum__lobbyist', )
+        unique_together = ('annum', 'interest')
 
     def __unicode__(self):
         # TODO, thousands separator... requires python 2.7

@@ -47,7 +47,7 @@ class CompensationFactory(factory.DjangoModelFactory):
     amount_high = factory.LazyAttribute(lambda a: random.randint(10000, 100000))
     amount_low = factory.LazyAttribute(lambda a: random.randint(0, a.amount_high))
     amount_guess = factory.LazyAttribute(lambda a: (a.amount_high + a.amount_low) / 2)
-    year = factory.SubFactory(LobbyistYearFactory)
+    annum = factory.SubFactory(LobbyistYearFactory)
     interest = factory.SubFactory(InterestFactory)
     updated_at = factory.LazyAttribute(lambda a: datetime.date.today())
 
