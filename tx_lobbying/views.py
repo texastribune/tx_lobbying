@@ -58,7 +58,7 @@ class YearLanding(TemplateView):
     template_name = "tx_lobbying/year_landing.html"
 
     def get_top_lobbyists(self, count=20):
-        qs = (models.LobbyistStat.objects.filter(year=self.year)
+        qs = (models.LobbyistStats.objects.filter(year=self.year)
             .select_related('lobbyist')
             .order_by('-spent_guess')[:count])
         return qs

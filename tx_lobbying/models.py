@@ -200,11 +200,11 @@ class Lobbyist(models.Model):
         for data in values:
             year = data.pop('year')
             defaults = {k[:-5]: v for k, v in data.items()}
-            LobbyistStat.objects.update_or_create(lobbyist=self, year=year,
+            LobbyistStats.objects.update_or_create(lobbyist=self, year=year,
                 defaults=defaults)
 
 
-class LobbyistStat(models.Model):
+class LobbyistStats(models.Model):
     """
     Stats about a lobbyist derived from other models for a year.
     """
