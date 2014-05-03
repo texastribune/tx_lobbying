@@ -40,8 +40,9 @@
     $page.find('a.clicked').removeClass('clicked');
     $el.addClass('clicked');
 
-    $page.find('div.placeholder').remove();
-    $('<div class="placeholder"/>').appendTo($page)
+    var $pageContent = $page.children().first();
+    $pageContent.find('div.placeholder').remove();
+    $('<div class="placeholder"/>').appendTo($pageContent)
       .css('top', $el.position().top + $el.outerHeight());
   };
 

@@ -14,6 +14,7 @@ body
   min-height: $breadcrumbs-height
   position: fixed
   top: 0
+  white-space: nowrap
   width: 100%
   z-index: 1
   > *
@@ -37,11 +38,12 @@ article.page
   display: inline-block
   min-height: 100px
   margin: 0 $gutter / 2
-  position: relative
   vertical-align: top
   width: 320px
 
 .page-content
+  max-height: 94vh
+  position: relative  // offset parent for .placeholder
   overflow-x: auto
 
 .clicked
@@ -50,4 +52,4 @@ article.page
 .placeholder
   border-bottom: 2px solid red
   position: absolute
-  width: 320px + $gutter
+  width: 100%
