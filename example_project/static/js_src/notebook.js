@@ -24,6 +24,14 @@
     var $el = $(this);
     $nav.append('<span class="link">' + $el.text() + '</span>');
     retrieve($el.attr('href'));
+    var $page = $el.closest('article.page');
+
+    $page.find('a.clicked').removeClass('clicked');
+    $el.addClass('clicked');
+
+    $page.find('div.placeholder').remove();
+    $('<div class="placeholder"/>').appendTo($page)
+      .css('top', $el.position().top + $el.outerHeight());
   });
 
   // exports

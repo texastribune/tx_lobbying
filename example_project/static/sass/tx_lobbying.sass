@@ -1,4 +1,5 @@
 $breadcrumbs-height: 20px
+$gutter: 14px  // should be an even number so it's divisible by 2
 
 body
   background: #aaa
@@ -33,7 +34,18 @@ article.page
   background: white
   border: 1px solid gray
   display: inline-block
-  margin: 0 0.5em
-  overflow-x: auto
+  margin: 0 $gutter / 2
+  position: relative
   vertical-align: top
   width: 320px
+
+.page-content
+  overflow-x: auto
+
+.clicked
+  background: yellow
+
+.placeholder
+  border-bottom: 2px solid red
+  position: absolute
+  width: 320px + $gutter
