@@ -1,2 +1,22 @@
+$breadcrumbs-height: 20px
+
 body
-  background: white
+  padding-top: $breadcrumbs-height
+  margin: 0
+
+#breadcrumbs
+  font-weight: bold
+  height: $breadcrumbs-height
+  position: fixed
+  top: 0
+  > span
+    background: #ddd
+    border: 1px solid gray
+    border-radius: 0.25em
+    color: #666
+    padding: 0 0.4em
+
+.page
+  border: 1px solid gray
+  overflow-x: scroll
+  width: 400px
