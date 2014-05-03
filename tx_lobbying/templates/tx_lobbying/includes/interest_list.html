@@ -8,5 +8,7 @@
         aka {{ interest.canonical.name }}
       {% endif %}
     </li>
+  {% empty %}
+    <li><em>None</em></li>
   {% endfor %}
 </ul>
