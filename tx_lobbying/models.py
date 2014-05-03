@@ -185,16 +185,7 @@ class Lobbyist(models.Model):
         history = []
         Item = namedtuple('Item', ['address', 'registration'])
         for reg in self.registrations.all().order_by('year'):
-            row = json.loads(reg.raw)
-            # allow this to blow up if Address.DoesNotExist
-            address = Address.objects.get(
-                address1=row['ADDRESS1'],
-                address2=row['ADDRESS2'],
-                city=row['CITY'],
-                state=row['STATE'],
-                zipcode=row['ZIPCODE'],
-            )
-            print address
+            address = reg.address
             if not history or address != history[-1].address:
                 # only append address if it changed
                 history.append(Item(address, reg))
@@ -296,6 +287,7 @@ class RegistrationReport(models.Model):
     report_id = models.IntegerField(unique=True)
     report_date = models.DateField()
     year = models.IntegerField()
+    address = models.ForeignKey(Address)
     raw = models.TextField()
     # TODO
     # interests = models.ManyToMany(Interest)

@@ -56,7 +56,7 @@ def scrape(path, logger=logger):
             report_date = convert_date_format_YMD(row['RPT_DATE'])
             year = row['YEAR_APPL']
 
-            address, created = Address.objects.get_or_create(
+            reg_address, created = Address.objects.get_or_create(
                 address1=row['ADDRESS1'],
                 address2=row['ADDRESS2'],
                 city=row['CITY'],
@@ -71,7 +71,7 @@ def scrape(path, logger=logger):
                 name=row['LOBBYNAME'],
                 sort_name=row['SORTNAME'],  # not LOB_SORT like in coversheets
                 updated_at=report_date,
-                address=address,
+                address=reg_address,
             )
             lobbyist, created = Lobbyist.objects.update_or_create(
                 filer_id=row['FILER_ID'],
@@ -81,9 +81,9 @@ def scrape(path, logger=logger):
 
             if row['CONCERNAME']:
                 # interest/concern/client
-                interest, address, created = update_or_create_interest(row)
+                interest, interest_address, created = update_or_create_interest(row)
             else:
-                address = None
+                interest_address = None
                 interest = None
 
             # registration report
@@ -91,6 +91,7 @@ def scrape(path, logger=logger):
                 raw=json.dumps(row),
                 report_date=report_date,
                 year=year,
+                address=reg_address,
             )
             report, created = RegistrationReport.objects.update_or_create(
                 lobbyist=lobbyist,
@@ -109,7 +110,7 @@ def scrape(path, logger=logger):
                     amount_high=int(round(float(row['NHIGH'] or "0"))),  # I hate myself
                     amount_low=int(round(float(row['NLOW'] or "0"))),
                     compensation_type=row['TYPECOPM'],
-                    address=address,
+                    address=interest_address,
                     raw=json.dumps(row),
                     updated_at=report_date,
                 )
