@@ -16,35 +16,35 @@
         <tr>
           <th>Year</th>
           <th>Total</th>
-          <th>Transportation</th>
-          <th>Food</th>
-          <th>Entertainment</th>
-          <th>Gifts</th>
-          <th>Awards</th>
-          <th>Events</th>
-          <th>Mass Media</th>
-          <th># Registered</th>
-          <th># Spent</th>
-          <th>Coversheet Count</th>
-          <th>w/ details</th>
+          <th class="extrainfo">Transportation</th>
+          <th class="extrainfo">Food</th>
+          <th class="extrainfo">Entertainment</th>
+          <th class="extrainfo">Gifts</th>
+          <th class="extrainfo">Awards</th>
+          <th class="extrainfo">Events</th>
+          <th class="extrainfo">Mass Media</th>
+          <th class="extrainfo"># Registered</th>
+          <th class="extrainfo"># Spent</th>
+          <th class="extrainfo">Coversheet Count</th>
+          <th class="extrainfo">w/ details</th>
         </tr>
       </thead>
       <tbody>
         {% for year, data in covers.items %}
           <tr>
             <td><a href="{% url 'tx_lobbying:year_landing' year=year %}">{{ year }}</a></td>
-            <td>${{ data.total|floatformat:2|intcomma }}</td>
-            <td>${{ data.transportation__sum|floatformat:2|intcomma }}</td>
-            <td>${{ data.food__sum|floatformat:2|intcomma }}</td>
-            <td>${{ data.entertainment__sum|floatformat:2|intcomma }}</td>
-            <td>${{ data.gifts__sum|floatformat:2|intcomma }}</td>
-            <td>${{ data.awards__sum|floatformat:2|intcomma }}</td>
-            <td>${{ data.events__sum|floatformat:2|intcomma }}</td>
-            <td>${{ data.media__sum|floatformat:2|intcomma }}</td>
-            <td>{{ data.registered|intcomma }}</td>
-            <td>{{ data.spent_anything|intcomma }}</td>
-            <td>{{ data.count|intcomma }}</td>
-            <td>{{ data.itemized|intcomma }}</td>
+            <td class="currency">${{ data.total|floatformat:0|intcomma }}</td>
+            <td class="extrainfo currrency">${{ data.transportation__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currrency">${{ data.food__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currrency">${{ data.entertainment__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currrency">${{ data.gifts__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currrency">${{ data.awards__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currrency">${{ data.events__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currrency">${{ data.media__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo">{{ data.registered|intcomma }}</td>
+            <td class="extrainfo">{{ data.spent_anything|intcomma }}</td>
+            <td class="extrainfo">{{ data.count|intcomma }}</td>
+            <td class="extrainfo">{{ data.itemized|intcomma }}</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -58,23 +58,23 @@
         <tr>
           <th>Year</th>
           <th>Total</th>
-          <th>Food</th>
-          <th>Entertainment</th>
-          <th>Gifts</th>
-          <th>Awards</th>
-          <th>Count</th>
+          <th class="extrainfo">Food</th>
+          <th class="extrainfo">Entertainment</th>
+          <th class="extrainfo">Gifts</th>
+          <th class="extrainfo">Awards</th>
+          <th class="extrainfo">Count</th>
         </tr>
       </thead>
       <tbody>
         {% for year, data in itemized.items %}
           <tr>
             <td><a href="{% url 'tx_lobbying:year_landing' year=year %}">{{ year }}</a></td>
-            <td>${{ data.total|floatformat:2|intcomma }}</td>
-            <td>${{ data.food.sum|floatformat:2|intcomma }}</td>
-            <td>${{ data.entertainment.sum|floatformat:2|intcomma }}</td>
-            <td>${{ data.gift.sum|floatformat:2|intcomma }}</td>
-            <td>${{ data.award.sum|floatformat:2|intcomma }}</td>
-            <td>{{ data.count|intcomma }}</td>
+            <td class="currency">${{ data.total|floatformat:0|intcomma }}</td>
+            <td class="extrainfo currency">${{ data.food.sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currency">${{ data.entertainment.sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currency">${{ data.gift.sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currency">${{ data.award.sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo">{{ data.count|intcomma }}</td>
           </tr>
         {% endfor %}
       </tbody>
