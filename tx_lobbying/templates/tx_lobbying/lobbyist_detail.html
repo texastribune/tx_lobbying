@@ -62,27 +62,27 @@
   </section>
   <section>
     <h2>Stats</h2>
-    <table>
+    <table class="table">
       <thead>
         <tr>
           <th>Year</th>
           <th>Total</th>
-          <th>Transportation</th>
-          <th>Food</th>
-          <th>Entertainment</th>
-          <th>Gifts</th>
-          <th>Awards</th>
-          <th>Events</th>
-          <th>Media</th>
-          <th>Senators</th>
-          <th>Representatives</th>
-          <th>Other</th>
-          <th>Legislative</th>
-          <th>Executive</th>
-          <th>Family</th>
-          <th>Events</th>
-          <th>Guests</th>
-          <th>Details</th>
+          <th class="extrainfo">Transportation</th>
+          <th class="extrainfo">Food</th>
+          <th class="extrainfo">Entertainment</th>
+          <th class="extrainfo">Gifts</th>
+          <th class="extrainfo">Awards</th>
+          <th class="extrainfo">Events</th>
+          <th class="extrainfo">Media</th>
+          <th class="extrainfo">Senators</th>
+          <th class="extrainfo">Representatives</th>
+          <th class="extrainfo">Other</th>
+          <th class="extrainfo">Legislative</th>
+          <th class="extrainfo">Executive</th>
+          <th class="extrainfo">Family</th>
+          <th class="extrainfo">Events</th>
+          <th class="extrainfo">Guests</th>
+          <th class="extrainfo">Details</th>
         </tr>
       </thead>
       <tbody>
@@ -91,30 +91,32 @@
             <td>
               {{ stat.year }}
             </td>
-            <td>
-              ${{ stat.spent_guess|intcomma }}
+            <td class="currency">
+              {% if stat.spent_guess %}
+                ${{ stat.spent_guess|intcomma }}
+              {% endif %}
             </td>
-            <td>{% if stat.transportation %}${{ stat.transportation|intcomma }}{% endif %}</td>
-            <td>{% if stat.food %}${{ stat.food|intcomma }}{% endif %}</td>
-            <td>{% if stat.entertainment %}${{ stat.entertainment|intcomma }}{% endif %}</td>
-            <td>{% if stat.gifts %}${{ stat.gifts|intcomma }}{% endif %}</td>
-            <td>{% if stat.awards %}${{ stat.awards|intcomma }}{% endif %}</td>
-            <td>{% if stat.events %}${{ stat.events|intcomma }}{% endif %}</td>
-            <td>{% if stat.media %}${{ stat.media|intcomma }}{% endif %}</td>
-            <td>{% if stat.ben_senators %}${{ stat.ben_senators|intcomma }}{% endif %}</td>
-            <td>{% if stat.ben_representatives %}${{ stat.ben_representatives|intcomma }}{% endif %}</td>
-            <td>{% if stat.ben_other %}${{ stat.ben_other|intcomma }}{% endif %}</td>
-            <td>{% if stat.ben_legislative %}${{ stat.ben_legislative|intcomma }}{% endif %}</td>
-            <td>{% if stat.ben_executive %}${{ stat.ben_executive|intcomma }}{% endif %}</td>
-            <td>{% if stat.ben_family %}${{ stat.ben_family|intcomma }}{% endif %}</td>
-            <td>{% if stat.ben_events %}${{ stat.ben_events|intcomma }}{% endif %}</td>
-            <td>{% if stat.ben_guests %}${{ stat.ben_guests|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.transportation %}${{ stat.transportation|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.food %}${{ stat.food|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.entertainment %}${{ stat.entertainment|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.gifts %}${{ stat.gifts|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.awards %}${{ stat.awards|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.events %}${{ stat.events|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.media %}${{ stat.media|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.ben_senators %}${{ stat.ben_senators|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.ben_representatives %}${{ stat.ben_representatives|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.ben_other %}${{ stat.ben_other|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.ben_legislative %}${{ stat.ben_legislative|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.ben_executive %}${{ stat.ben_executive|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.ben_family %}${{ stat.ben_family|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.ben_events %}${{ stat.ben_events|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{% if stat.ben_guests %}${{ stat.ben_guests|intcomma }}{% endif %}</td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
   </section>
-  <section>
+  <section class="extrainfo">
     <h2>Cover Sheets</h2>
     <table>
       <thead>
