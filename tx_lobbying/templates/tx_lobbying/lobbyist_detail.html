@@ -4,12 +4,17 @@
 {% block main %}
 
   <h1>{{ object }}</h1>
+  <a href="{{ object.address.get_absolute_url }}">
+    {{ object.address }}
+  </a>
 
   <section>
     <h2>Name history</h2>
     <ul>
       {% for name, cover in object.get_name_history %}
         <li>{{ name }} ({{ cover.report_date }})</li>
+      {% empty %}
+        <li><em>None</em></li>
       {% endfor %}
     </ul>
   </section>

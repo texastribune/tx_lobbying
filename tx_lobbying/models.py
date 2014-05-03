@@ -177,6 +177,11 @@ class Lobbyist(models.Model):
                 history.append((name, report))
         return history
 
+    def get_address_history(self):
+        """Get a list of all the different addresses used."""
+        # TODO get data off `RegistrationReport`, .registrations.all()
+        return []
+
     def make_stats(self):
         values = self.coversheets.values('year').annotate(
             Sum('transportation'),

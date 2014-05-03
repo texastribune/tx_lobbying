@@ -1,7 +1,18 @@
 {% extends "tx_lobbying/base.html" %}
+{# WISHLIST show all addresses in database near this address #}
 
 {% block main %}
   {{ object }}
+  <h2>Lobbyists at this address</h2>
+  <ul>
+    {% for lobbyist in object.lobbyist_set.all %}
+      <li>
+        <a href="{{ lobbyist.get_absolute_url }}">{{ lobbyist }}</a>
+      </li>
+    {% empty %}
+      <li><em>None</em></li>
+    {% endfor %}
+  </ul>
   <h2>Interests at this address</h2>
   {% include "tx_lobbying/includes/interest_list.html" with object_list=object.interest_set.all %}
 {% endblock %}
