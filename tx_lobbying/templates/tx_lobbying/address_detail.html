@@ -15,4 +15,28 @@
   </ul>
   <h2>Interests at this address</h2>
   {% include "tx_lobbying/includes/interest_list.html" with object_list=object.interest_set.all %}
+  <h2>Lobbyists that have recorded themselves at this address</h2>
+  <ul>
+    {% for report in object.registrationreport_set.all %}
+      <li>
+        <a href="{{ report.lobbyist.get_absolute_url }}">{{ report.lobbyist }}</a>
+        in {{ report.year }}
+      </li>
+    {% empty %}
+      <li><em>None</em></li>
+    {% endfor %}
+  </ul>
+  <h2>Interests that have been reported at this address</h2>
+  <ul>
+    {% for report in object.compensation_set.all %}
+      <li>
+        <a href="{{ report.interest.get_absolute_url }}">{{ report.interest }}</a>
+        by
+        <a href="{{ report.annum.lobbyist.get_absolute_url }}">{{ report.annum.lobbyist }}</a>
+        in {{ report.annum.year }}
+      </li>
+    {% empty %}
+      <li><em>None</em></li>
+    {% endfor %}
+  </ul>
 {% endblock %}

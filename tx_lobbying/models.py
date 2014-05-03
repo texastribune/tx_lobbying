@@ -295,6 +295,9 @@ class RegistrationReport(models.Model):
     # TODO
     # interests = models.ManyToMany(Interest)
 
+    class Meta:
+        ordering = ('year', )
+
     def __unicode__(self):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
 
@@ -442,8 +445,8 @@ class Compensation(models.Model):
 
     def __unicode__(self):
         # TODO, thousands separator... requires python 2.7
-        return u"{1.interest} pays {0} ~${1.amount_guess} ({1.year})".format(
-            self.year.lobbyist, self)
+        return u"{1.interest} pays {0} ~${1.amount_guess} ({1.annum})".format(
+            self.annum.lobbyist, self)
 
     # CUSTOM PROPERTIES
 
