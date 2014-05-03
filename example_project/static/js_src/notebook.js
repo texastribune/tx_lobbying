@@ -11,9 +11,10 @@
       // callback
     });
     // TODO use title instead of url
-    $nav.append('<span class="page">' + url + '</span>');
+    var $index = $('<span class="page">' + url + '</span>').appendTo($nav);
     $page.data('notebook', {
       url: url,
+      $index: $index,
       retrievedAt: Date.now()
     });
     $(window).scrollLeft(1e6);
@@ -22,9 +23,15 @@
   $paper.on('click', 'a', function (e) {
     e.preventDefault();
     var $el = $(this);
+    var $page = $el.closest('article.page');
+
+    // clear notebook to the right
+    $page.nextAll().remove();
+    var $index = $page.data('notebook').$index;
+    $index.nextAll().remove();
+
     $nav.append('<span class="link">' + $el.text() + '</span>');
     retrieve($el.attr('href'));
-    var $page = $el.closest('article.page');
 
     $page.find('a.clicked').removeClass('clicked');
     $el.addClass('clicked');
