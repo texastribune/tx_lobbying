@@ -6,7 +6,7 @@
   var retrieve = function (url) {
     var $page = $('<article class="page"/>').appendTo($paper);
     // TODO don't use load, just do ajax and manually parse to get TITLE and
-    var $index = $('<span class="page"/>').appendTo($nav);
+    var $index = $('<span class="page"><em>loading...</em></span>').appendTo($nav);
     $.ajax(url, {
       dataType: 'html',
       success: function (data) {
