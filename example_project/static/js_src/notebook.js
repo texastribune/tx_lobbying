@@ -6,12 +6,16 @@
   var retrieve = function (url) {
     var $page = $('<article class="page"/>').appendTo($paper);
     // TODO don't use load, just do ajax and manually parse to get TITLE and
-    // get rid of #main hack
-    $page.load(url + ' #main', function () {
-      // callback
+    var $index = $('<span class="page"/>').appendTo($nav);
+    $.ajax(url, {
+      dataType: 'html',
+      success: function (data) {
+        var $document = $('<div>' + data + '</div>');
+        $page.append($document.find('div.page-content'));
+        var title = $document.find('title').html() || 'TODO';
+        $index.text(title);
+      }
     });
-    // TODO use title instead of url
-    var $index = $('<span class="page">' + url + '</span>').appendTo($nav);
     $page.data('notebook', {
       url: url,
       $index: $index,

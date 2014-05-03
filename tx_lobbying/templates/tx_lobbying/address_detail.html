@@ -1,6 +1,8 @@
 {% extends "tx_lobbying/base.html" %}
 {# WISHLIST show all addresses in database near this address #}
 
+{% block head_title %}{{ object }}{% endblock %}
+
 {% block main %}
   {{ object }}
   <h2>Lobbyists at this address</h2>
