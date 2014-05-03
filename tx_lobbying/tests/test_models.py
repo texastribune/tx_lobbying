@@ -8,11 +8,12 @@ from tx_lobbying.factories import (
     InterestFactory,
     LobbyistFactory,
     LobbyistAnnumFactory,
+    RegistrationReportFactory,
     CoversheetFactory,
     CompensationFactory,
 )
-from tx_lobbying.models import (Interest, InterestStats, Lobbyist,
-    LobbyistAnnum, )
+from tx_lobbying.models import (Address, Interest, InterestStats, Lobbyist,
+    LobbyistAnnum, RegistrationReport, )
 
 
 class InterestTest(TestCase):
@@ -185,10 +186,35 @@ class LobbyistTest(TestCase):
     def setUp(self):
         self.lobbyist = LobbyistFactory()
 
-    def test_address_history(self):
-        # TODO, i'm too lazy to make a new factory and fake csv data
+    def test_address_history_trivial_case_starts_is_empty(self):
         history = self.lobbyist.get_address_history()
         self.assertEqual(len(history), 0)
+
+    def test_address_history_works_simple(self):
+        RegistrationReportFactory(lobbyist=self.lobbyist)
+        history = self.lobbyist.get_address_history()
+        self.assertEqual(len(history), 1)
+        entry = history[0]
+        self.assertIsInstance(entry.address, Address)
+        self.assertIsInstance(entry[0], Address)
+        self.assertIsInstance(entry.registration, RegistrationReport)
+        self.assertIsInstance(entry[1], RegistrationReport)
+
+    def test_address_history_works_advanced(self):
+        a1 = AddressFactory()
+        a2 = AddressFactory()
+        a3 = AddressFactory()
+        RegistrationReportFactory(lobbyist=self.lobbyist, address=a1, year=2000)
+        RegistrationReportFactory(lobbyist=self.lobbyist, address=a3, year=2002)
+        RegistrationReportFactory(lobbyist=self.lobbyist, address=a3, year=2001)
+        RegistrationReportFactory(lobbyist=self.lobbyist, address=a2, year=2003)
+        history = self.lobbyist.get_address_history()
+        # assert handles repeated address by collapsing it
+        self.assertEqual(len(history), 3)
+        # assert pulls address in chronological order
+        self.assertEqual(history[0].address, a1)
+        self.assertEqual(history[1].address, a3)
+        self.assertEqual(history[2].address, a2)
 
     def test_make_stats_does_nothing_with_no_coversheets(self):
         self.assertEqual(self.lobbyist.coversheets.count(), 0)
