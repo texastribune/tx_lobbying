@@ -1,0 +1,58 @@
+// design for the "notebooks" page
+
+$breadcrumbs-height: 20px
+$gutter: 14px  // should be an even number so it's divisible by 2
+
+body
+  background: #aaa
+  margin: 0
+  padding-top: $breadcrumbs-height
+
+#breadcrumbs
+  background: #aaa
+  font-family: sans-serif
+  font-size: 0.8rem
+  min-height: $breadcrumbs-height
+  position: fixed
+  top: 0
+  white-space: nowrap
+  width: 100%
+  z-index: 1
+  > *
+    margin-right: 0.3em
+  > .page
+    background: #ddd
+    border: 1px solid gray
+    border-radius: 0.25em
+    color: #666
+    font-weight: bold
+    padding: 0 0.4em
+  > .link
+    font-size: 0.8em
+    text-decoration: underline
+
+#notebook
+  clear: both
+  white-space: nowrap
+
+article.page
+  background: white
+  border: 1px solid gray
+  display: inline-block
+  min-height: 100px
+  margin: 0 $gutter / 2
+  vertical-align: top
+  width: 320px
+
+.page-content
+  max-height: 94vh
+  position: relative  // offset parent for .placeholder
+  overflow-x: auto
+
+.clicked
+  background: yellow
+
+.placeholder
+  border-bottom: 2px solid red
+  position: absolute
+  width: 100%
