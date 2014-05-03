@@ -79,9 +79,10 @@ class YearLanding(TemplateView):
 
 
 class LobbyistList(ListView):
-    queryset = Lobbyist.objects.all().order_by('sort_name').\
-        annotate(spent=Sum('coversheets__spent_guess')).\
-        filter(spent__gt=0)
+    queryset = (Lobbyist.objects.all().order_by('sort_name')
+        .annotate(spent=Sum('coversheets__spent_guess'))
+        # .filter(spent__gt=0)
+    )
 
 
 class LobbyistDetail(DetailView):
