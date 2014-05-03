@@ -26,7 +26,10 @@ class Address(models.Model):
         if self.address2:
             bits.append(self.address2)
         bits.append(u'{0.city}, {0.state} {0.zipcode}'.format(self))
-        return u' \n'.join(bits)
+        output = u' \n'.join(bits)
+        if output.strip() == u',':
+            return 'none'
+        return output
 
     def get_absolute_url(self):
         return reverse('tx_lobbying:address_detail', kwargs={'pk': self.pk})
