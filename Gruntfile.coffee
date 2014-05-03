@@ -17,6 +17,9 @@ module.exports = (grunt) ->
       app:
         src: [
           'example_project/static/js_src/**/*.js'
+          # trick grunt into adding main.js last
+          '!example_project/static/js_src/main.js'
+          'example_project/static/js_src/main.js'
         ]
         dest: 'example_project/static/js/tx_lobbying.js'
     uglify:
