@@ -8,6 +8,12 @@ static_root
 data/*/*
 
 
+# Node and Grunt generated files
+node_modules/
+example_project/static/css/
+example_project/static/js/
+
+
 # Randomly generated files
 *.log
 *.pot

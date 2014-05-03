@@ -36,6 +36,12 @@ export DATABASE_URL=postgres:///tx_lobbying
 
 and then using autoenv or `source .env` to activate it.
 
+Install deps:
+
+    pip install -r requirements-dev.txt
+    npm install
+    bundle install
+
 Get your database up and running with (Postgres instructions):
 
     createdb tx_lobbying
