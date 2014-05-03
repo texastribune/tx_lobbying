@@ -4,12 +4,18 @@
 {% block head_title %}Landing{% endblock %}
 
 {% block main %}
+  <nav>
+    <a href="{% url 'tx_lobbying:lobbyist_list' %}">All Lobbyists</a>
+    <a href="{% url 'tx_lobbying:interest_list' %}">All Interests</a>
+  </nav>
+  <p>To find big spenders, pick a year:</p>
   <section>
     <h2>Total Spent</h2>
     <table>
       <thead>
         <tr>
           <th>Year</th>
+          <th>Total</th>
           <th>Transportation</th>
           <th>Food</th>
           <th>Entertainment</th>
@@ -17,7 +23,6 @@
           <th>Awards</th>
           <th>Events</th>
           <th>Mass Media</th>
-          <th>Total</th>
           <th># Registered</th>
           <th># Spent</th>
           <th>Coversheet Count</th>
@@ -28,6 +33,7 @@
         {% for year, data in covers.items %}
           <tr>
             <td><a href="{% url 'tx_lobbying:year_landing' year=year %}">{{ year }}</a></td>
+            <td>${{ data.total|floatformat:2|intcomma }}</td>
             <td>${{ data.transportation__sum|floatformat:2|intcomma }}</td>
             <td>${{ data.food__sum|floatformat:2|intcomma }}</td>
             <td>${{ data.entertainment__sum|floatformat:2|intcomma }}</td>
@@ -35,7 +41,6 @@
             <td>${{ data.awards__sum|floatformat:2|intcomma }}</td>
             <td>${{ data.events__sum|floatformat:2|intcomma }}</td>
             <td>${{ data.media__sum|floatformat:2|intcomma }}</td>
-            <td>${{ data.total|floatformat:2|intcomma }}</td>
             <td>{{ data.registered|intcomma }}</td>
             <td>{{ data.spent_anything|intcomma }}</td>
             <td>{{ data.count|intcomma }}</td>
@@ -52,11 +57,11 @@
       <thead>
         <tr>
           <th>Year</th>
+          <th>Total</th>
           <th>Food</th>
           <th>Entertainment</th>
           <th>Gifts</th>
           <th>Awards</th>
-          <th>Total</th>
           <th>Count</th>
         </tr>
       </thead>
@@ -64,11 +69,11 @@
         {% for year, data in itemized.items %}
           <tr>
             <td><a href="{% url 'tx_lobbying:year_landing' year=year %}">{{ year }}</a></td>
+            <td>${{ data.total|floatformat:2|intcomma }}</td>
             <td>${{ data.food.sum|floatformat:2|intcomma }}</td>
             <td>${{ data.entertainment.sum|floatformat:2|intcomma }}</td>
             <td>${{ data.gift.sum|floatformat:2|intcomma }}</td>
             <td>${{ data.award.sum|floatformat:2|intcomma }}</td>
-            <td>${{ data.total|floatformat:2|intcomma }}</td>
             <td>{{ data.count|intcomma }}</td>
           </tr>
         {% endfor %}
