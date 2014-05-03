@@ -43,8 +43,10 @@ class Interest(models.Model):
     # USER FIELDS
     canonical = models.ForeignKey('self', related_name='aliases',
         null=True, blank=True)
-    # TODO show a list of all the addresses associated with this `Interest`
-    # addresses_used = models.ManyToMany(address, through=)
+
+    # THIRD-PARTY INTEGRATION
+    # this id should be unique, but we don't care if it isn't
+    nomenklatura_id = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ('name', )

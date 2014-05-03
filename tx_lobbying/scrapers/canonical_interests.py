@@ -29,6 +29,10 @@ def go(path):
         for row in reader:
             try:
                 interest = Interest.objects.get(name=row['name'])
+                # assert row['id']
+                if interest.nomenklatura_id != row['id']:
+                    interest.nomenklatura_id = row['id']
+                    interest.save()
                 if row['canonical']:
                     canonical = Interest.objects.get(name=row['canonical'])
                     if interest.canonical != canonical:
