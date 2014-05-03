@@ -12,7 +12,9 @@
   <ul>
     {% for address in object.address_set_massive %}
       <li>
-        {{ address }}
+        <a href="{{ address.get_absolute_url }}">
+          {{ address }}
+        </a>
       </li>
     {% empty %}
       <li><em>None</em></li>
