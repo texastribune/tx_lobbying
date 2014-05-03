@@ -16,7 +16,7 @@ import sys
 from tx_lobbying.models import (
     Address,
     Interest, Lobbyist, RegistrationReport,
-    LobbyistYear, Compensation)
+    LobbyistAnnum, Compensation)
 from tx_lobbying.scrapers.utils import (DictReader, convert_date_format_YMD)
 
 
@@ -92,7 +92,7 @@ def scrape(path, logger=logger):
 
             if interest:
                 # lobbyist M2M to `Interest` through `Compensation`
-                annum, created = LobbyistYear.objects.update_or_create(
+                annum, created = LobbyistAnnum.objects.update_or_create(
                     lobbyist=lobbyist,
                     year=year)
                 # compensation

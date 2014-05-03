@@ -7,12 +7,12 @@ from tx_lobbying.factories import (
     AddressFactory,
     InterestFactory,
     LobbyistFactory,
-    LobbyistYearFactory,
+    LobbyistAnnumFactory,
     ExpenseCoversheetFactory,
     CompensationFactory,
 )
 from tx_lobbying.models import (Interest, InterestStats, Lobbyist,
-    LobbyistYear, )
+    LobbyistAnnum, )
 
 
 class InterestTest(TestCase):
@@ -41,9 +41,9 @@ class InterestTest(TestCase):
     def test_make_stats_for_year_is_accurate(self):
         N = 10
 
-        # associate N `Lobbyist`s with it through `LobbyistYear`
+        # associate N `Lobbyist`s with it through `LobbyistAnnum`
         for i in range(N):
-            annum = LobbyistYearFactory.create(year=self.year)
+            annum = LobbyistAnnumFactory.create(year=self.year)
             CompensationFactory.create(annum=annum, interest=self.interest,
                 amount_guess=i, amount_high=i * 2, amount_low=0)
         with self.assertNumQueries(5):
@@ -61,16 +61,16 @@ class InterestTest(TestCase):
     def test_make_stats_for_year_does_not_pick_up_other_years(self):
         N = 10
 
-        # associate N `Lobbyist`s with it through `LobbyistYear`
+        # associate N `Lobbyist`s with it through `LobbyistAnnum`
         for i in range(N):
-            annum = LobbyistYearFactory.create(year=self.year)
+            annum = LobbyistAnnumFactory.create(year=self.year)
             CompensationFactory.create(annum=annum, interest=self.interest,
                 amount_guess=i, amount_high=i * 2, amount_low=0)
         self.interest.make_stats_for_year(self.year)
 
         # attempt to poison stats with extra data
         for i in range(N)[::2]:
-            annum = LobbyistYearFactory.create(year=self.year + 1)
+            annum = LobbyistAnnumFactory.create(year=self.year + 1)
             CompensationFactory.create(annum=annum, interest=self.interest)
         self.interest.make_stats_for_year(self.year + 1)
 
@@ -95,9 +95,9 @@ class InterestTest(TestCase):
         # sanity check
         self.assertEqual(self.interest.aliases.count(), num_interests)
 
-        # associate num_lobbyists `Lobbyist`s with it through `LobbyistYear`
+        # associate num_lobbyists `Lobbyist`s with it through `LobbyistAnnum`
         for i in range(num_lobbyists):
-            year = LobbyistYearFactory.create(year=self.year)
+            year = LobbyistAnnumFactory.create(year=self.year)
             interest = Interest.objects.all().order_by('?')[0]
             CompensationFactory(annum=year, interest=interest,
                 amount_guess=i, amount_high=i * 2, amount_low=0)
@@ -115,7 +115,7 @@ class InterestTest(TestCase):
 
     def test_make_stats_for_year_does_nothing_for_noncanonical_interests(self):
         interest = InterestFactory(canonical=self.interest)
-        year2000 = LobbyistYearFactory.create(year=2000)
+        year2000 = LobbyistAnnumFactory.create(year=2000)
         CompensationFactory(annum=year2000, interest=interest,
             amount_low=2000, amount_guess=2000, amount_high=2000)
         interest.make_stats_for_year(2000)
@@ -125,16 +125,16 @@ class InterestTest(TestCase):
         self.assertEqual(1, self.interest.stats.count())
 
     def test_make_stats_finds_all_years(self):
-        year2000 = LobbyistYearFactory.create(year=2000)
+        year2000 = LobbyistAnnumFactory.create(year=2000)
         CompensationFactory(annum=year2000, interest=self.interest,
             amount_low=2000, amount_guess=2000, amount_high=2000)
-        year2000b = LobbyistYearFactory.create(year=2000)
+        year2000b = LobbyistAnnumFactory.create(year=2000)
         CompensationFactory(annum=year2000b, interest=self.interest,
             amount_low=2000, amount_guess=2000, amount_high=2000)
-        year2001 = LobbyistYearFactory.create(year=2001)
+        year2001 = LobbyistAnnumFactory.create(year=2001)
         CompensationFactory(annum=year2001, interest=self.interest,
             amount_low=2001, amount_guess=2001, amount_high=2001)
-        year2004 = LobbyistYearFactory.create(year=2004)
+        year2004 = LobbyistAnnumFactory.create(year=2004)
         CompensationFactory(annum=year2004, interest=self.interest,
             amount_low=2004, amount_guess=2004, amount_high=2004)
         self.interest.make_stats()
@@ -221,7 +221,7 @@ class NamedPoorlyTestCase(TestCase):
 
         try:
             # add an `Interest` to a `Lobbyist`
-            annum = LobbyistYearFactory.create(lobbyist=lobbyist, year=YEAR)
+            annum = LobbyistAnnumFactory.create(lobbyist=lobbyist, year=YEAR)
             CompensationFactory.create(annum=annum, interest=i)
 
             # get all the `Interest`s for a `Lobbyist`
@@ -248,7 +248,7 @@ class NamedPoorlyTestCase(TestCase):
         # Make a `Lobbyist` with NUM_CLIENTS clients.
         NUM_CLIENTS = 3
         lobbyist = LobbyistFactory.create()
-        annum = LobbyistYearFactory.create(lobbyist=lobbyist)
+        annum = LobbyistAnnumFactory.create(lobbyist=lobbyist)
         for x in range(0, NUM_CLIENTS):
             CompensationFactory(annum=annum)
 
@@ -276,12 +276,12 @@ class NamedPoorlyTestCase(TestCase):
 
         for i in range(10):
             lobbyist = LobbyistFactory.create()
-            annum = LobbyistYearFactory.create(lobbyist=lobbyist, year=YEAR)
+            annum = LobbyistAnnumFactory.create(lobbyist=lobbyist, year=YEAR)
             for x in range(0, NUM_CLIENTS):
                 CompensationFactory(annum=annum)
 
         # Here's a queryset to get the best paid `Lobbyist`s in a year
-        qs = LobbyistYear.objects.filter(year=YEAR).annotate(
+        qs = LobbyistAnnum.objects.filter(year=YEAR).annotate(
             income=Sum('compensation__amount_guess')).order_by('-income')
         for year in qs:
             # print year.lobbyist, year.income
@@ -299,9 +299,9 @@ class NamedPoorlyTestCase(TestCase):
         for i in Interest.objects.all():
             lobbyist = Lobbyist.objects.all().order_by('?')[0]
             try:
-                annum = LobbyistYear.objects.get(lobbyist=lobbyist, year=YEAR)
-            except LobbyistYear.DoesNotExist:
-                annum = LobbyistYearFactory.create(lobbyist=lobbyist, year=YEAR)
+                annum = LobbyistAnnum.objects.get(lobbyist=lobbyist, year=YEAR)
+            except LobbyistAnnum.DoesNotExist:
+                annum = LobbyistAnnumFactory.create(lobbyist=lobbyist, year=YEAR)
             CompensationFactory(annum=annum, interest=i)
             # denormalize interest stats
             i.make_stats_for_year(YEAR)

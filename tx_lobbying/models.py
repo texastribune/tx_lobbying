@@ -369,13 +369,12 @@ class ExpenseDetailReport(models.Model):
 
 
 # Fun data
-class LobbyistYear(models.Model):
-    """The list of `Interest`s a `Lobbyist` has for a year."""
+class LobbyistAnnum(models.Model):
+    """A report of a `Lobbyist`'s relationship to `Interest`s for a year."""
     lobbyist = models.ForeignKey(Lobbyist, related_name='years')
     year = models.IntegerField()
     clients = models.ManyToManyField(Interest, through='Compensation',
         related_name='years_available')
-    # expenses
 
     class Meta:
         ordering = ('-year', )
@@ -408,7 +407,7 @@ class Compensation(models.Model):
     start_date = models.DateField(null=True, blank=True)
     # TERMDATE
     end_date = models.DateField(null=True, blank=True)
-    annum = models.ForeignKey(LobbyistYear)
+    annum = models.ForeignKey(LobbyistAnnum)
     interest = models.ForeignKey(Interest)
     address = models.ForeignKey(Address, null=True, blank=True,
         help_text='The address the lobbyist listed for the `Interest`')

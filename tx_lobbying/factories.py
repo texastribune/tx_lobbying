@@ -8,7 +8,7 @@ from . import models
 from .models import (
     Interest,
     Lobbyist,
-    LobbyistYear,
+    LobbyistAnnum,
     Compensation,
     ExpenseCoversheet,
 )
@@ -36,8 +36,8 @@ class LobbyistFactory(factory.DjangoModelFactory):
     updated_at = factory.LazyAttribute(lambda a: datetime.date.today())
 
 
-class LobbyistYearFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = LobbyistYear
+class LobbyistAnnumFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = LobbyistAnnum
     lobbyist = factory.SubFactory(LobbyistFactory)
     year = 2013
 
@@ -47,7 +47,7 @@ class CompensationFactory(factory.DjangoModelFactory):
     amount_high = factory.LazyAttribute(lambda a: random.randint(10000, 100000))
     amount_low = factory.LazyAttribute(lambda a: random.randint(0, a.amount_high))
     amount_guess = factory.LazyAttribute(lambda a: (a.amount_high + a.amount_low) / 2)
-    annum = factory.SubFactory(LobbyistYearFactory)
+    annum = factory.SubFactory(LobbyistAnnumFactory)
     interest = factory.SubFactory(InterestFactory)
     updated_at = factory.LazyAttribute(lambda a: datetime.date.today())
 
