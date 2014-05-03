@@ -6,3 +6,4 @@ ipython==2.0.0
 ipdb==0.8
 factory-boy==2.3.1
 names==0.3.0
+csvkit==0.7.3
