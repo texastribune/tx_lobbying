@@ -43,8 +43,8 @@ class InterestTest(TestCase):
 
         # associate N `Lobbyist`s with it through `LobbyistYear`
         for i in range(N):
-            year = LobbyistYearFactory.create(year=self.year)
-            CompensationFactory.create(annum=year, interest=self.interest,
+            annum = LobbyistYearFactory.create(year=self.year)
+            CompensationFactory.create(annum=annum, interest=self.interest,
                 amount_guess=i, amount_high=i * 2, amount_low=0)
         with self.assertNumQueries(5):
             # 1 to get the stats
@@ -127,6 +127,9 @@ class InterestTest(TestCase):
     def test_make_stats_finds_all_years(self):
         year2000 = LobbyistYearFactory.create(year=2000)
         CompensationFactory(annum=year2000, interest=self.interest,
+            amount_low=2000, amount_guess=2000, amount_high=2000)
+        year2000b = LobbyistYearFactory.create(year=2000)
+        CompensationFactory(annum=year2000b, interest=self.interest,
             amount_low=2000, amount_guess=2000, amount_high=2000)
         year2001 = LobbyistYearFactory.create(year=2001)
         CompensationFactory(annum=year2001, interest=self.interest,
