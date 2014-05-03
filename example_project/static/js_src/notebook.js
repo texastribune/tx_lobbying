@@ -48,6 +48,12 @@
 
   $paper.on('click', 'a', retrieveThis);
 
+  // XXX side effect
+  var $window = $(window);
+  $window.on('scroll', function () {
+    console.log($window.width(), $nav.width())
+  });
+
   // exports
   exports.notebook = {
     retrieve: retrieve
