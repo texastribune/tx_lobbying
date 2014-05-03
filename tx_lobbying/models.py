@@ -1,3 +1,4 @@
+from collections import namedtuple
 import json
 
 from django.core.urlresolvers import reverse
@@ -180,7 +181,24 @@ class Lobbyist(models.Model):
     def get_address_history(self):
         """Get a list of all the different addresses used."""
         # TODO get data off `RegistrationReport`, .registrations.all()
-        return []
+
+        history = []
+        Item = namedtuple('Item', ['address', 'registration'])
+        for reg in self.registrations.all().order_by('year'):
+            row = json.loads(reg.raw)
+            # allow this to blow up if Address.DoesNotExist
+            address = Address.objects.get(
+                address1=row['ADDRESS1'],
+                address2=row['ADDRESS2'],
+                city=row['CITY'],
+                state=row['STATE'],
+                zipcode=row['ZIPCODE'],
+            )
+            print address
+            if not history or address != history[-1].address:
+                # only append address if it changed
+                history.append(Item(address, reg))
+        return history
 
     def make_stats(self):
         values = self.coversheets.values('year').annotate(

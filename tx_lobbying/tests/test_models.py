@@ -185,6 +185,11 @@ class LobbyistTest(TestCase):
     def setUp(self):
         self.lobbyist = LobbyistFactory()
 
+    def test_address_history(self):
+        # TODO, i'm too lazy to make a new factory and fake csv data
+        history = self.lobbyist.get_address_history()
+        self.assertEqual(len(history), 0)
+
     def test_make_stats_does_nothing_with_no_coversheets(self):
         self.assertEqual(self.lobbyist.coversheets.count(), 0)
         self.lobbyist.make_stats()
