@@ -56,7 +56,15 @@
   // XXX side effect
   var $window = $(window);
   $window.on('scroll', function () {
-    console.log($window.width(), $nav.width())
+    var width = $window.width();  // calc every time for now
+    var navWidth = $nav[0].scrollWidth;
+    if (navWidth > width) {
+      // TODO use translate instead of left
+      // TODO handle when percentLeft > 1
+      var percentLeft = $window.scrollLeft() / width;
+      $nav.css('left', -1 * percentLeft * (navWidth - width));
+      console.log(percentLeft);
+    }
   });
 
   // exports
