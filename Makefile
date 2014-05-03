@@ -11,6 +11,7 @@ help:
 	@echo "  make data    - download everything"
 	@echo "  make import  - import everything"
 	@echo "  make scrape  - download everything, import everything"
+	@echo "  make models.png - make a graph of the app's model"
 
 
 clean:
@@ -37,18 +38,22 @@ data:
 	cd data && $(MAKE) all
 
 import:
-	DEBUG=0 python example_project/manage.py lobbying_expenses data/expenses -v 2
+	DEBUG=0 $(MANAGE) lobbying_expenses data/expenses -v 2
 # haha I suck at this
-#	DEBUG=0 python example_project/manage.py lobbying_registrations data/lobcon/LobCon09.csv
-#	DEBUG=0 python example_project/manage.py lobbying_registrations data/lobcon/LobCon10.csv
-#	DEBUG=0 python example_project/manage.py lobbying_registrations data/lobcon/LobCon11.csv
-	DEBUG=0 python example_project/manage.py lobbying_registrations data/lobcon/LobCon12.csv
-	DEBUG=0 python example_project/manage.py lobbying_registrations data/lobcon/LobCon13.csv
-	DEBUG=0 python example_project/manage.py lobbying_registrations data/lobcon/LobCon14.csv
+#	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon09.csv
+#	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon10.csv
+#	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon11.csv
+	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon12.csv
+	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon13.csv
+	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon14.csv
 	DEBUG=0 python tx_lobbying/scrapers/canonical_interests.py
-	DEBUG=0 python example_project/manage.py lobbying_stats
+	DEBUG=0 $(MANAGE) lobbying_stats
 
 scrape: data import
 
 
-.PHONY: help clean test resetdb data import scrape
+models.png:
+	$(MANAGE) graph_models -o models.png --disable-fields tx_lobbying
+
+
+.PHONY: help clean test resetdb data import scrape models.png
