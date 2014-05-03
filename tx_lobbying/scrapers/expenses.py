@@ -12,7 +12,7 @@ import re
 
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Lobbyist,
-    ExpenseCoversheet, ExpenseDetailReport)
+    Coversheet, ExpenseDetailReport)
 from tx_lobbying.scrapers.utils import (DictReader, convert_date_format,
     get_name_data, setfield)
 
@@ -51,7 +51,7 @@ def _covers_inner(row):
     if dirty:
         logger.info("LOBBYIST: %s" % lobbyist)
 
-    # ExpenseCoversheet
+    # Coversheet
     default_data = dict(
         lobbyist=lobbyist,
         raw=json.dumps(row),
@@ -79,7 +79,7 @@ def _covers_inner(row):
     default_data['total_benefited'] = total_benefited
     default_data['spent_guess'] = max(total_spent, total_benefited)
 
-    cover, dirty = ExpenseCoversheet.objects.get_or_create(
+    cover, dirty = Coversheet.objects.get_or_create(
         report_id=row['REPNO'],
         defaults=default_data, )
     if report_date > cover.report_date:
@@ -99,11 +99,11 @@ def _detail_inner(row, type):
     try:
         lobbyist = Lobbyist.objects.get(
             filer_id=row['FILER_ID'])
-        cover = ExpenseCoversheet.objects.get(report_id=row['REPNO'])
+        cover = Coversheet.objects.get(report_id=row['REPNO'])
     except Lobbyist.DoesNotExist:
         logger.error('missing lobbyist {FILER_ID}'.format(**row))
         return
-    except ExpenseCoversheet.DoesNotExist:
+    except Coversheet.DoesNotExist:
         logger.error('missing cover sheet {REPNO}'.format(**row))
         return
 

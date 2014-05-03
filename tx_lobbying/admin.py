@@ -32,7 +32,7 @@ class RegistrationReportInline(LobbyingInline):
 
 class CoverSheetInline(LobbyingInline):
     exclude = ('raw', )
-    model = models.ExpenseCoversheet
+    model = models.Coversheet
 
 
 class LobbyistAdmin(admin.ModelAdmin):

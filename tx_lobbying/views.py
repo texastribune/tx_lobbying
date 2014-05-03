@@ -1,7 +1,7 @@
 from django.db.models import Count, Sum
 from django.views.generic import DetailView, ListView, TemplateView
 
-from .models import (Lobbyist, ExpenseCoversheet, ExpenseDetailReport)
+from .models import (Lobbyist, Coversheet, ExpenseDetailReport)
 from . import models
 
 
@@ -13,7 +13,7 @@ class Landing(TemplateView):
         facets = ['transportation', 'food', 'entertainment', 'gifts', 'awards', 'events', 'media']
         data = dict()
         for year in self.years:
-            qs = ExpenseCoversheet.objects.filter(year=year)
+            qs = Coversheet.objects.filter(year=year)
             year_data = qs.aggregate(*map(Sum, facets))
             try:
                 year_data['total'] = sum(year_data.values())

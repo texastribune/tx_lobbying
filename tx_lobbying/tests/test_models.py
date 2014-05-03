@@ -8,7 +8,7 @@ from tx_lobbying.factories import (
     InterestFactory,
     LobbyistFactory,
     LobbyistAnnumFactory,
-    ExpenseCoversheetFactory,
+    CoversheetFactory,
     CompensationFactory,
 )
 from tx_lobbying.models import (Interest, InterestStats, Lobbyist,
@@ -191,19 +191,19 @@ class LobbyistTest(TestCase):
         self.assertEqual(self.lobbyist.stats.count(), 0)
 
     def test_make_stats_is_accurate(self):
-        ExpenseCoversheetFactory(
+        CoversheetFactory(
             lobbyist=self.lobbyist, year=2000, spent_guess=100)
         self.lobbyist.make_stats()
         self.assertEqual(self.lobbyist.stats.count(), 1)
         self.assertEqual(self.lobbyist.stats.get(year=2000).spent_guess, 100)
 
-        ExpenseCoversheetFactory.create(lobbyist=self.lobbyist,
+        CoversheetFactory.create(lobbyist=self.lobbyist,
             year=2000, spent_guess=200)
         self.lobbyist.make_stats()
         self.assertEqual(self.lobbyist.stats.count(), 1)
         self.assertEqual(self.lobbyist.stats.get(year=2000).spent_guess, 300)
 
-        ExpenseCoversheetFactory.create(lobbyist=self.lobbyist,
+        CoversheetFactory.create(lobbyist=self.lobbyist,
             year=2001, spent_guess=400, transportation=1)
         self.lobbyist.make_stats()
         self.assertEqual(self.lobbyist.stats.count(), 2)

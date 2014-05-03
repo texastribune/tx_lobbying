@@ -210,7 +210,7 @@ class LobbyistStat(models.Model):
     """
     lobbyist = models.ForeignKey(Lobbyist, related_name="stats")
     year = models.IntegerField()
-    # `ExpenseCoversheet` fields again
+    # `Coversheet` fields again
     # expenses
     transportation = models.DecimalField("Transportation & Lodging",
         max_digits=12, decimal_places=2, default='0.00')
@@ -280,7 +280,7 @@ class RegistrationReport(models.Model):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
 
 
-class ExpenseCoversheet(models.Model):
+class Coversheet(models.Model):
     """
     Cover sheet.
 
@@ -346,7 +346,7 @@ class ExpenseDetailReport(models.Model):
     # IDNO
     idno = models.IntegerField()
     # REPNO
-    cover = models.ForeignKey(ExpenseCoversheet, related_name="details")
+    cover = models.ForeignKey(Coversheet, related_name="details")
     # FILER_ID
     lobbyist = models.ForeignKey(Lobbyist, related_name="expensedetails")
     # YEAR_APPL

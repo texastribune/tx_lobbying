@@ -10,7 +10,7 @@ from .models import (
     Lobbyist,
     LobbyistAnnum,
     Compensation,
-    ExpenseCoversheet,
+    Coversheet,
 )
 
 
@@ -52,8 +52,8 @@ class CompensationFactory(factory.DjangoModelFactory):
     updated_at = factory.LazyAttribute(lambda a: datetime.date.today())
 
 
-class ExpenseCoversheetFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = ExpenseCoversheet
+class CoversheetFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = Coversheet
     lobbyist = factory.SubFactory(LobbyistFactory)
     report_date = '2001-04-01'
     report_id = factory.Sequence(lambda n: n)
