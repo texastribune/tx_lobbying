@@ -73,6 +73,20 @@ class Interest(models.Model):
     def address_set_massive(self):
         return self.get_all_addresses(include_aliases=True)
 
+    @property
+    def nomenklatura_url(self):
+        if self.nomenklatura_id:
+            return (u'http://opennames.org/entities/{}'
+                .format(self.nomenklatura_id))
+        return ''
+
+    @property
+    def nomenklatura_review_url(self):
+        if self.nomenklatura_id:
+            return (u'http://opennames.org/datasets/iso-countries/review/{}'
+                .format(self.nomenklatura_id))
+        return ''
+
     # CUSTOM METHODS
 
     def make_stats_for_year(self, year):

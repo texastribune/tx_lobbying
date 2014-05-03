@@ -25,6 +25,10 @@
   };
 
   var retrieveThis = function (e) {
+    if (this.target) {
+      // if a taget was set, treat as normal link
+      return;
+    }
     e.preventDefault();
     var $el = $(this);
     var $page = $el.closest('article.page');
