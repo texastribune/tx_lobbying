@@ -8,9 +8,17 @@
     {{ object }}
     <a href="{{ object.nomenklatura_review_url }}" target="_blank">&asymp;</a>
   </h1>
-  <a href="{{ object.address.get_absolute_url }}">
-    {{ object.address }}
-  </a>
+  {% if object.canonical %}
+    <p>
+      {{ object.name }} is an <a href=""></a>lias of <a href="{{ object.canonical.get_absolute_url }}">{{ object.canonical }}</a>
+    </p>
+  {% endif %}
+  <p>
+    Address:<br>
+    <a href="{{ object.address.get_absolute_url }}">
+      {{ object.address }}
+    </a>
+  </p>
   <p>
     Also listed under these addresses:
   </p>
