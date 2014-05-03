@@ -1,22 +1,39 @@
 $breadcrumbs-height: 20px
 
 body
-  padding-top: $breadcrumbs-height
+  background: #aaa
   margin: 0
+  padding-top: $breadcrumbs-height
 
 #breadcrumbs
+  background: #aaa
+  font-family: sans-serif
+  font-size: 0.8rem
   font-weight: bold
   height: $breadcrumbs-height
   position: fixed
   top: 0
-  > span
+  width: 100%
+  > *
+    margin-right: 0.3em
+  > .page
     background: #ddd
     border: 1px solid gray
     border-radius: 0.25em
     color: #666
     padding: 0 0.4em
+  > .link
+    text-decoration: underline
 
-.page
+#notebook
+  clear: both
+  white-space: nowrap
+
+article.page
+  background: white
   border: 1px solid gray
-  overflow-x: scroll
-  width: 400px
+  display: inline-block
+  margin: 0 0.5em
+  overflow-x: auto
+  vertical-align: top
+  width: 320px
