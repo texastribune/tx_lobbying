@@ -8,9 +8,9 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^frame/$',
-        TemplateView.as_view(template_name='frame.html'),
-        name='frame'),
+    url(r'^notebook/$',
+        TemplateView.as_view(template_name='notebook.html'),
+        name='notebook'),
     url(r'^', include('tx_lobbying.urls',
         namespace='tx_lobbying', app_name='tx_lobbying')),
 
