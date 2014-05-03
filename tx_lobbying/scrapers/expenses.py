@@ -10,6 +10,8 @@ import logging
 import os
 import re
 
+from project_runpy import env
+
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Lobbyist,
     Coversheet, ExpenseDetailReport)
@@ -18,7 +20,7 @@ from tx_lobbying.scrapers.utils import (DictReader, convert_date_format,
 
 
 # CONFIGURATION
-DEBUG = True
+YEAR_START = env.get('YEAR_START')
 TIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
 
 
@@ -30,7 +32,7 @@ def _covers_inner(row):
     report_date = convert_date_format(report_date)
 
     # DELETEME speed up code during debugging
-    if DEBUG and report_date.year < 2012:
+    if YEAR_START and report_date.year < YEAR_START:
         return
 
     # Lobbyist
@@ -117,7 +119,7 @@ def _detail_inner(row, type):
     )
 
     # DELETEME speed up code during debugging
-    if DEBUG and default_data['year'] < 2012:
+    if YEAR_START and default_data['year'] < YEAR_START:
         return
 
     if amount is None:
