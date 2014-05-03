@@ -1,0 +1,15 @@
+{
+  "name": "tx_lobbying",
+  "version": "0.0.0",
+  "description": "Texas Lobbying",
+  "author": "Chris Chang",
+  "license": "Apache",
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "grunt-contrib-concat": "^0.4.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-sass": "^0.7.3",
+    "grunt-contrib-uglify": "^0.4.0",
+    "grunt-contrib-watch": "^0.6.1"
+  }
+}

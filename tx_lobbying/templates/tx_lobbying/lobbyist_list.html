@@ -1,8 +1,10 @@
 {% extends "tx_lobbying/base.html" %}
 {% load humanize %}
 
-{% block main %}
+{% block head_title %}Lobbyists{% endblock %}
 
+
+{% block main %}
   <ul>
     {% for object in object_list %}
       <li>
@@ -13,5 +15,4 @@
       </li>
     {% endfor %}
   </ul>
-
 {% endblock %}

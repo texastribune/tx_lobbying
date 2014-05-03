@@ -1,6 +1,8 @@
 {% extends "tx_lobbying/base.html" %}
 {% load humanize %}
 
+{% block head_title %}{{ object }}{% endblock %}
+
 {% block main %}
   <h1>{{ object }}</h1>
   <a href="{{ object.address.get_absolute_url }}">
