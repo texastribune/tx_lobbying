@@ -20,7 +20,7 @@
     $(window).scrollLeft(1e6);
   };
 
-  $paper.on('click', 'a', function (e) {
+  var retrieveThis = function (e) {
     e.preventDefault();
     var $el = $(this);
     var $page = $el.closest('article.page');
@@ -39,7 +39,9 @@
     $page.find('div.placeholder').remove();
     $('<div class="placeholder"/>').appendTo($page)
       .css('top', $el.position().top + $el.outerHeight());
-  });
+  };
+
+  $paper.on('click', 'a', retrieveThis);
 
   // exports
   exports.notebook = {
