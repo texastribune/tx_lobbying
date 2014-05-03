@@ -56,6 +56,14 @@ def scrape(path, logger=logger):
             report_date = convert_date_format_YMD(row['RPT_DATE'])
             year = row['YEAR_APPL']
 
+            address, created = Address.objects.get_or_create(
+                address1=row['ADDRESS1'],
+                address2=row['ADDRESS2'],
+                city=row['CITY'],
+                state=row['STATE'],
+                zipcode=row['ZIPCODE'],
+            )
+
             # lobbyist
             # very basic `Lobbyist` info here, most of it actually comes
             # from the coversheets.
@@ -63,6 +71,7 @@ def scrape(path, logger=logger):
                 name=row['LOBBYNAME'],
                 sort_name=row['SORTNAME'],  # not LOB_SORT like in coversheets
                 updated_at=report_date,
+                address=address,
             )
             lobbyist, created = Lobbyist.objects.update_or_create(
                 filer_id=row['FILER_ID'],

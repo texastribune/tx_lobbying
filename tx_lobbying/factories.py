@@ -29,11 +29,12 @@ class InterestFactory(factory.DjangoModelFactory):
 class LobbyistFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Lobbyist
     filer_id = factory.Sequence(lambda n: n)
+    updated_at = factory.LazyAttribute(lambda a: datetime.date.today())
     first_name = factory.LazyAttribute(lambda a: names.get_first_name())
     last_name = factory.LazyAttribute(lambda a: names.get_last_name())
     sort_name = factory.LazyAttribute(lambda a: "%s %s" % (
         a.last_name, a.first_name))
-    updated_at = factory.LazyAttribute(lambda a: datetime.date.today())
+    address = factory.SubFactory(AddressFactory)
 
 
 class LobbyistAnnumFactory(factory.DjangoModelFactory):

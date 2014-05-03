@@ -137,6 +137,7 @@ class Lobbyist(models.Model):
     title = models.CharField(max_length=15)
     suffix = models.CharField(max_length=5)
     nick_name = models.CharField(max_length=25)
+    address = models.ForeignKey(Address, null=True, blank=True)
     # NORM_BUS
     # TODO business = models.CharField(max_length=100)
 
