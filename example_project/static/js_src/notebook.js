@@ -46,8 +46,9 @@
 
     var $pageContent = $page.children().first();
     $pageContent.find('div.placeholder').remove();
+    var newTop = $el.position().top + $el.outerHeight() + $pageContent.scrollTop();
     $('<div class="placeholder"/>').appendTo($pageContent)
-      .css('top', $el.position().top + $el.outerHeight());
+      .css('top', newTop);
   };
 
   $paper.on('click', 'a', retrieveThis);
