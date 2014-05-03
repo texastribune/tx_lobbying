@@ -60,4 +60,4 @@ module.exports = (grunt) ->
   # build the assets with sanity checks
   grunt.registerTask('default', ['sass', 'jshint', 'concat', 'uglify'])
   # build assets and automatically re-build when a file changes
-  grunt.registerTask('dev', ['default', 'watch'])
+  grunt.registerTask('dev', ['build', 'watch'])
