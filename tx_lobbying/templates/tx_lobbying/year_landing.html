@@ -7,7 +7,7 @@
 {% block main %}
   <section>
     <h2>Top Spenders</h2>
-    <table>
+    <table class="table">
       <thead>
         <tr>
           <th>Lobbyist</th>
@@ -18,24 +18,24 @@
         {% for object in top_lobbyists %}
           <tr>
             <td><a href="{{ object.lobbyist.get_absolute_url }}">{{ object.lobbyist }}</a></td>
-            <td>${{ object.spent_guess|intcomma }} </td>
+            <td class="currency">${{ object.spent_guess|intcomma }} </td>
           </tr>
         {% endfor %}
       </tbody>
-  </table>
+    </table>
   </section>
 
   <section>
     <h2>Top Interests</h2>
-    <table>
+    <table class="table">
       <thead></thead>
       <tbody>
         {% for object in top_interests %}
           <tr>
-            <td><a href="{{ object.interest.get_absolute_url }}">{{ object.interest }}</a></td>
-            <td>{{ object.lobbyist_count }}</td>
-            <td>${{ object.low|intcomma }}</td>
-            <td>${{ object.high|intcomma }}</td>
+            <td><a href="{{ object.interest.get_absolute_url }}">{{ object.interest.name }}</a></td>
+            <td class="extrainfo">{{ object.lobbyist_count }}</td>
+            <td class="extrainfo">${{ object.low|intcomma }}</td>
+            <td class="extrainfo">${{ object.high|intcomma }}</td>
           </tr>
         {% endfor %}
       </tbody>
