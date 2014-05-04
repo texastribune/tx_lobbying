@@ -14,6 +14,7 @@
         $page.append($document.find('div.page-content'));
         var title = $document.find('title').html() || 'TODO';
         $index.text(title);
+        adjustNavScroll();  // width changed so this needs to be recalcualted
       }
     });
     $page.data('notebook', {
