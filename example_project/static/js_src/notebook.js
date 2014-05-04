@@ -39,7 +39,7 @@
     var $index = $page.data('notebook').$index;
     $index.nextAll().remove();
 
-    $nav.append('<span class="link">' + $el.text() + '</span>');
+    // $nav.append('<span class="link">' + $el.text() + '</span>');
     retrieve($el.attr('href'));
 
     $page.find('a.clicked').removeClass('clicked');
