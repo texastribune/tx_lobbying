@@ -164,6 +164,20 @@ def process_csv(path, _inner_func, **kwargs):
                 continue
 
 
+def generate_test_row(path, **kwargs):
+    import random
+    from pprint import pprint
+
+    logger.info("Processing %s" % path)
+    with open(path, 'rb') as f:
+        reader = DictReader(f, encoding='latin_1')
+        for i, row in enumerate(reader):
+            if random.randint(0, 999) < 1:  # adjust this to go deeper
+                pprint(row)
+                break
+# process_csv = generate_test_row
+
+
 def get_record_count(path):
     """Really Hacky."""
     working_dir, filename = os.path.split(path)

@@ -131,7 +131,7 @@ def scrape(path, logger=logger):
             process_row(row)
 
 
-def generate_random_row(path, **kwargs):
+def generate_test_row(path, **kwargs):
     """Helper to replace `scrape` to print out a sample for testing."""
     import random
     from pprint import pprint
@@ -142,7 +142,7 @@ def generate_random_row(path, **kwargs):
             if random.randint(0, 99) < 1:  # adjust this to go deeper
                 pprint(row)
                 break
-# scrape = generate_random_row
+# scrape = generate_test_row
 
 
 if __name__ == "__main__":

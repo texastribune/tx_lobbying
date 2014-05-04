@@ -1,9 +1,10 @@
 import unittest
 
 from ..scrapers.registration import update_or_create_interest, process_row
+from ..scrapers.expenses import _covers_inner
 
 
-SAMPLE_ROW = {
+LOBCON_ROW = {
     'ADDRESS1': u'303 Vale Street',
     'ADDRESS2': u'',
     'AMOUNT': u'$50,000 - $99,999.99',
@@ -37,6 +38,74 @@ SAMPLE_ROW = {
     'TYPECOPM': u'Prospective',
     'YEAR_APPL': u'2014',
     'ZIPCODE': u'78746',
+}
+
+# LaCVR.csv
+COVER_ROW = {
+    'AWRD_MEMO': u'',
+    'CORR_EXPL': u'',
+    'CORR_NUM': u'0',
+    'COR_AFF_CB': u'',
+    'CVR_MEMO': u'',
+    'DOCK_MEMO': u'',
+    'DUE_DATE': u'1/11/1993',
+    'ENTITY_CD': u'IND',
+    'ENT_MEMO': u'',
+    'EVNT_MEMO': u'',
+    'EXBEN_EVNT': u'0',
+    'EXBEN_EXEC': u'0',
+    'EXBEN_FAM': u'0',
+    'EXBEN_GUES': u'',
+    'EXBEN_LEG': u'0',
+    'EXBEN_OTH': u'0',
+    'EXBEN_REP': u'0',
+    'EXBEN_SEN': u'0',
+    'EXTYP_AWDS': u'0',
+    'EXTYP_ENT': u'0',
+    'EXTYP_EVNT': u'0',
+    'EXTYP_FOOD': u'0',
+    'EXTYP_GIFT': u'0',
+    'EXTYP_MEDA': u'0',
+    'EXTYP_TRAN': u'0',
+    'FILED_DATE': u'1/8/1993',
+    'FILERSHORT': u'',
+    'FILER_ID': u'00012705',
+    'FILER_NAMF': u'',
+    'FILER_NAML': u'',
+    'FILER_NAMS': u'',
+    'FILER_NAMT': u'',
+    'FOOD_MEMO': u'',
+    'GIFT_MEMO': u'',
+    'HOWFILED': u'Paper',
+    'IND4ENT_YN': u'',
+    'LOBENDDT': u'12/31/1993',
+    'LOBSTARTDT': u'1/1/1993',
+    'LOB_NAME': u'Dabbs, Michael J.',
+    'LOB_SORT': u'DABBS, MICHAEL J.',
+    'RDL_APR_CB': u'',
+    'RDL_AUG_CB': u'',
+    'RDL_DEC_CB': u'',
+    'RDL_FEB_CB': u'',
+    'RDL_JAN_CB': u'',
+    'RDL_JUL_CB': u'',
+    'RDL_JUN_CB': u'',
+    'RDL_MAR_CB': u'',
+    'RDL_MAY_CB': u'',
+    'RDL_NOV_CB': u'',
+    'RDL_OCT_CB': u'',
+    'RDL_SEP_CB': u'',
+    'REPNO': u'4025',
+    'RPT_BEG_DT': u'1/1/1992',
+    'RPT_DATE': u'1/8/1993',
+    'RPT_END_DT': u'12/31/1992',
+    'RT_1K_CB': u'',
+    'RT_FIN_CB': u'',
+    'RT_MOD_CB': u'X',
+    'RT_REG_CB': u'',
+    'SIGN_PRINT': u'',
+    'SUBJ_MEMO': u'',
+    'TRAN_MEMO': u'',
+    'YEAR_APPL': u'1993',
 }
 
 
@@ -101,4 +170,9 @@ class RegistrationTest(unittest.TestCase):
         self.assertEqual(unicode(interest.address), '123 Fake \nB \nC, TX 78701')
 
     def test_process_row_works(row):
-        process_row(SAMPLE_ROW)
+        process_row(LOBCON_ROW)
+
+
+class ExpensesTest(unittest.TestCase):
+    def test__covers_inner_works(self):
+        _covers_inner(COVER_ROW)
