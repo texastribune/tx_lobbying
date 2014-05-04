@@ -308,8 +308,6 @@ class RegistrationReport(models.Model):
     year = models.IntegerField()
     address = models.ForeignKey(Address)
     raw = models.TextField()
-    # TODO
-    # interests = models.ManyToMany(Interest)
 
     class Meta:
         ordering = ('year', )

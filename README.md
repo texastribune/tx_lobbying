@@ -62,3 +62,26 @@ Then load data with:
 
 The project is configured to use sqlite by default, but if don't want to stab
 yourself, set your DATABASE_URL to real database like Postgres.
+
+
+### How the data is modelled
+
+Diagram:
+
+![Diagram of the app's models](models.png)
+
+Details:
+
+Models that correspond directly to a piece of raw data are labelled with
+**raw**.
+
+* `Lobbyist`: the main model, represents a lobbyist
+* `ExpenseDetailReport`: Not that useful yet. **raw**
+* `Coversheet`: Expense coversheets. **raw**
+* `LobbyistStats`: A summary of expenses for a year
+* `RegistrationReport`: A lobbyist's registration for a year. **raw**
+* `LobbyistAnnum`: Represent's a year of a lobbyist's existence in the database
+* `Compensation`: How a lobbyist was compensated by their client. **raw**
+* `Interest`: A lobbyist's clients, aka an interested party
+* `InterestStats`: A summary of an interest's stats for a year
+* `Address`: Any time we need to store an address
