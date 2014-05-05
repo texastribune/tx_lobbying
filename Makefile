@@ -38,7 +38,7 @@ data:
 	cd data && $(MAKE) all
 
 import:
-	DEBUG=0 YEAR_START=2005 $(MANAGE) lobbying_expenses data/expenses -v 2
+	DEBUG=0 $(MANAGE) lobbying_expenses data/expenses -v 2
 # haha I suck at this
 	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon09.csv
 	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon10.csv
