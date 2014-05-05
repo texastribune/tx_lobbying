@@ -28,26 +28,15 @@ class Landing(TemplateView):
             )
             .order_by('year')
         )
-        return data
-
-    def aggregate_covers_old(self):
-        facets = ['transportation', 'food', 'entertainment', 'gifts', 'awards', 'events', 'media']
-        data = dict()
-        for year in self.years:
+        # fill in missing data
+        for row in data:
+            year = row['year']
             qs = Coversheet.objects.filter(year=year)
-            year_data = qs.aggregate(*map(Sum, facets))
-            try:
-                year_data['total'] = sum(year_data.values())
-            except TypeError:
-                # no coversheets for that year
-                continue
-            year_data['count'] = qs.count()
-            year_data['itemized'] = qs.exclude(details__isnull=True).count()
-            year_data['registered'] = Lobbyist.objects.filter(
+            row['itemized'] = qs.exclude(details__isnull=True).count()
+            row['registered'] = Lobbyist.objects.filter(
                 registrations__year__exact=year).distinct().count()
-            year_data['spent_anything'] = Lobbyist.objects.filter(
+            row['spent_anything'] = Lobbyist.objects.filter(
                 stats__year__exact=year, stats__spent_guess__gt=0).distinct().count()
-            data[year] = year_data
         return data
 
     def aggregate_details(self):
@@ -71,7 +60,6 @@ class Landing(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Landing, self).get_context_data(**kwargs)
         context['spending_summary'] = self.aggregate_covers()
-        context['covers'] = self.aggregate_covers_old()
         context['itemized'] = self.aggregate_details()
         return context
 

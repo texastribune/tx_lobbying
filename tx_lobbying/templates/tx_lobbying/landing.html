@@ -41,28 +41,10 @@
             <td class="extrainfo currrency">${{ row.awards__sum|floatformat:2|intcomma }}</td>
             <td class="extrainfo currrency">${{ row.events__sum|floatformat:2|intcomma }}</td>
             <td class="extrainfo currrency">${{ row.media__sum|floatformat:2|intcomma }}</td>
-            <td></td>
-            <td></td>
+            <td class="extrainfo">{{ row.registered|intcomma }}</td>
+            <td class="extrainfo">{{ row.spent_anything|intcomma }}</td>
             <td class="extrainfo">{{ row.pk__count|intcomma }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-      <tbody>
-        {% for year, data in covers.items %}
-          <tr>
-            <td><a href="{% url 'tx_lobbying:year_landing' year=year %}">{{ year }}</a></td>
-            <td class="currency">${{ data.total|floatformat:0|intcomma }}</td>
-            <td class="extrainfo currrency">${{ data.transportation__sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currrency">${{ data.food__sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currrency">${{ data.entertainment__sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currrency">${{ data.gifts__sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currrency">${{ data.awards__sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currrency">${{ data.events__sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currrency">${{ data.media__sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo">{{ data.registered|intcomma }}</td>
-            <td class="extrainfo">{{ data.spent_anything|intcomma }}</td>
-            <td class="extrainfo">{{ data.count|intcomma }}</td>
-            <td class="extrainfo">{{ data.itemized|intcomma }}</td>
+            <td class="extrainfo">{{ row.itemized|intcomma }}</td>
           </tr>
         {% endfor %}
       </tbody>
