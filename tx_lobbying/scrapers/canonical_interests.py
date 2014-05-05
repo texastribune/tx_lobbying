@@ -21,32 +21,36 @@ def set_canonical(interest, canonical):
     interest.save(update_fields=('canonical', ))
 
 
+def process_row(row):
+    try:
+        interest = Interest.objects.get(name=row['name'])
+        # assert row['id']
+        if interest.nomenklatura_id != row['id']:
+            interest.nomenklatura_id = row['id']
+            interest.save()
+        if row['canonical']:
+            canonical = Interest.objects.get(name=row['canonical'])
+            if interest.canonical != canonical:
+                print "set", interest, canonical
+                set_canonical(interest, canonical)
+        elif interest.canonical:
+            print "remove", interest
+            set_canonical(interest, None)
+    except Interest.MultipleObjectsReturned as e:
+        print "skip", row['name'], row['canonical'], e
+        # TODO
+        pass
+    except Interest.DoesNotExist:
+        pass
+
+
 def go(path):
     if not os.path.isfile(path):
         exit('Make sure you ran `make nomenklatura` in the data dir.')
     with open(path, 'rb') as f:
         reader = DictReader(f)
         for row in reader:
-            try:
-                interest = Interest.objects.get(name=row['name'])
-                # assert row['id']
-                if interest.nomenklatura_id != row['id']:
-                    interest.nomenklatura_id = row['id']
-                    interest.save()
-                if row['canonical']:
-                    canonical = Interest.objects.get(name=row['canonical'])
-                    if interest.canonical != canonical:
-                        print "set", interest, canonical
-                        set_canonical(interest, canonical)
-                elif interest.canonical:
-                    print "remove", interest
-                    set_canonical(interest, None)
-            except Interest.MultipleObjectsReturned as e:
-                print "skip", row['name'], row['canonical'], e
-                # TODO
-                continue
-            except Interest.DoesNotExist:
-                continue
+            process_row(row)
 
 
 if __name__ == '__main__':
