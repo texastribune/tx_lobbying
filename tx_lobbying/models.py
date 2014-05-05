@@ -83,7 +83,7 @@ class Interest(models.Model):
     @property
     def nomenklatura_review_url(self):
         if self.nomenklatura_id:
-            return (u'http://opennames.org/datasets/iso-countries/review/{}'
+            return (u'http://opennames.org/datasets/tx-lobbying-interests/review/{}'
                 .format(self.nomenklatura_id))
         return ''
 
