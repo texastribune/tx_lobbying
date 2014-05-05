@@ -6,8 +6,29 @@ from django.db import models
 from django.db.models import Count, Sum, Q
 
 
+##########
+# MIXINS #
+##########
+
+class RawDataMixin(models.Model):
+    """For models that store raw data."""
+    raw = models.TextField()
+
+    class Meta:
+        abstract = True
+
+    @property
+    def raw_data(self):
+        # TODO handle ''
+        return json.loads(self.raw)
+
+
+##########
+# MODELS #
+##########
+
 class Address(models.Model):
-    """An address"""
+    """A US address."""
     address1 = models.CharField(max_length=200, null=True, blank=True)
     address2 = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=75, null=True, blank=True)
@@ -292,7 +313,7 @@ class LobbyistStats(models.Model):
         return u"{0.lobbyist} spent ${0.spent:,.2f} ({0.year})".format(self)
 
 
-class RegistrationReport(models.Model):
+class RegistrationReport(RawDataMixin, models.Model):
     """
     A reference to the registration report a `Lobbyist` files every year.
 
@@ -307,7 +328,6 @@ class RegistrationReport(models.Model):
     report_date = models.DateField()
     year = models.IntegerField()
     address = models.ForeignKey(Address)
-    raw = models.TextField()
 
     class Meta:
         ordering = ('year', )
@@ -316,7 +336,7 @@ class RegistrationReport(models.Model):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
 
 
-class Coversheet(models.Model):
+class Coversheet(RawDataMixin, models.Model):
     """
     Cover sheet.
 
@@ -324,7 +344,6 @@ class Coversheet(models.Model):
     (or month? or what?). This contains everything.
     """
     lobbyist = models.ForeignKey(Lobbyist, related_name="coversheets")
-    raw = models.TextField()
     report_date = models.DateField()
     report_id = models.IntegerField(unique=True)
     year = models.IntegerField()
@@ -371,7 +390,7 @@ class Coversheet(models.Model):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
 
 
-class ExpenseDetailReport(models.Model):
+class ExpenseDetailReport(RawDataMixin, models.Model):
     """
     Detailed expense report.
 
@@ -394,7 +413,6 @@ class ExpenseDetailReport(models.Model):
     type = models.CharField(max_length=20)
     amount_guess = models.DecimalField(max_digits=12, decimal_places=2,
         default="0.00")
-    raw = models.TextField()
 
     class Meta:
         ordering = ('cover__report_date', )
@@ -420,7 +438,7 @@ class LobbyistAnnum(models.Model):
         return u"%s (%s)" % (self.lobbyist, self.year)
 
 
-class Compensation(models.Model):
+class Compensation(RawDataMixin, models.Model):
     """
     Details about how a `Lobbyist` was compensated by an `Interest` for a year.
 
@@ -447,7 +465,6 @@ class Compensation(models.Model):
     interest = models.ForeignKey(Interest)
     address = models.ForeignKey(Address, null=True, blank=True,
         help_text='The address the lobbyist listed for the `Interest`')
-    raw = models.TextField()
     updated_at = models.DateField()
 
     # denormalized fields
@@ -461,9 +478,3 @@ class Compensation(models.Model):
         # TODO, thousands separator... requires python 2.7
         return u"{1.interest} pays {0} ~${1.amount_guess} ({1.annum})".format(
             self.annum.lobbyist, self)
-
-    # CUSTOM PROPERTIES
-
-    @property
-    def raw_data(self):
-        return json.loads(self.raw)

@@ -142,6 +142,7 @@
       </thead>
       <tbody>
         {% for cover in object.coversheets.all %}
+          {# {{ cover.raw_data }} #}
           <tr>
             <td>{{ cover.report_date|date:"Y-m-d" }}</td>
             <td>{% if cover.transportation %}${{ cover.transportation|intcomma }}{% endif %}</td>
