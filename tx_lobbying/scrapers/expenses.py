@@ -94,7 +94,7 @@ def _covers_inner(row):
         dirty = True
     if dirty:
         logger.info(u'COVER:    {} {} {}'
-            .format(cover.lobbyist, cover.report_id, cover.report_date))
+            .format(cover.report_date, cover.lobbyist, cover.report_id))
 
 
 def _detail_inner(row, type):
