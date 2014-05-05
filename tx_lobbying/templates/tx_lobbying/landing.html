@@ -34,13 +34,13 @@
           <tr>
             <td><a href="{% url 'tx_lobbying:year_landing' year=row.year %}">{{ row.year }}</a></td>
             <td class="currency">${{ row.spent_guess__sum|floatformat:0|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.transportation__sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.food__sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.entertainment__sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.gifts__sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.awards__sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.events__sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.media__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.transportation__sum|floatformat:0|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.food__sum|floatformat:0|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.entertainment__sum|floatformat:0|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.gifts__sum|floatformat:0|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.awards__sum|floatformat:0|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.events__sum|floatformat:0|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.media__sum|floatformat:0|intcomma }}</td>
             <td class="extrainfo">{{ row.registered|intcomma }}</td>
             <td class="extrainfo">{{ row.spent_anything|intcomma }}</td>
             <td class="extrainfo">{{ row.pk__count|intcomma }}</td>
