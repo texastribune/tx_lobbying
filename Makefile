@@ -72,7 +72,6 @@ import2:
 canon:
 	cd data && $(MAKE) nomenklatura
 	DEBUG=0 python tx_lobbying/scrapers/canonical_interests.py
-	DEBUG=0 $(MANAGE) lobbying_stats
 
 scrape: data import
 
