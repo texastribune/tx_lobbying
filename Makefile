@@ -72,7 +72,7 @@ scrape: data import
 
 
 models.png:
-	$(MANAGE) graph_models -o models.png --disable-fields tx_lobbying
+	$(MANAGE) graph_models -o models.png --disable-fields tx_lobbying -l fdp
 
 
 .PHONY: help clean test resetdb data import scrape models.png
