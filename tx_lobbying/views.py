@@ -10,6 +10,27 @@ class Landing(TemplateView):
     years = range(2005, 2015)
 
     def aggregate_covers(self):
+        data = (
+            Coversheet.objects.all().values('year')
+            .annotate(
+                Count('pk'),
+                Sum('spent_guess'),
+                Sum('transportation'),
+                Sum('food'),
+                Sum('entertainment'),
+                Sum('gifts'),
+                Sum('awards'),
+                Sum('events'),
+                Sum('media'),
+                # missing no. of registered lobbyists
+                # missing no. of lobbyists that actually spent
+                # missing no. that actually had details
+            )
+            .order_by('year')
+        )
+        return data
+
+    def aggregate_covers_old(self):
         facets = ['transportation', 'food', 'entertainment', 'gifts', 'awards', 'events', 'media']
         data = dict()
         for year in self.years:
@@ -49,7 +70,8 @@ class Landing(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(Landing, self).get_context_data(**kwargs)
-        context['covers'] = self.aggregate_covers()
+        context['spending_summary'] = self.aggregate_covers()
+        context['covers'] = self.aggregate_covers_old()
         context['itemized'] = self.aggregate_details()
         return context
 

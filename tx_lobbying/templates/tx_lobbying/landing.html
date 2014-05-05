@@ -30,6 +30,24 @@
         </tr>
       </thead>
       <tbody>
+        {% for row in spending_summary %}
+          <tr>
+            <td><a href="{% url 'tx_lobbying:year_landing' year=row.year %}">{{ row.year }}</a></td>
+            <td class="currency">${{ row.spent_guess__sum|floatformat:0|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.transportation__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.food__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.entertainment__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.gifts__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.awards__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.events__sum|floatformat:2|intcomma }}</td>
+            <td class="extrainfo currrency">${{ row.media__sum|floatformat:2|intcomma }}</td>
+            <td></td>
+            <td></td>
+            <td class="extrainfo">{{ row.pk__count|intcomma }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tbody>
         {% for year, data in covers.items %}
           <tr>
             <td><a href="{% url 'tx_lobbying:year_landing' year=year %}">{{ year }}</a></td>
