@@ -68,6 +68,12 @@ import2:
 	DEBUG=0 python tx_lobbying/scrapers/canonical_interests.py
 	DEBUG=0 $(MANAGE) lobbying_stats
 
+# shortcut for updating after I clean interest names
+canon:
+	cd data && $(MAKE) nomenklatura
+	DEBUG=0 python tx_lobbying/scrapers/canonical_interests.py
+	DEBUG=0 $(MANAGE) lobbying_stats
+
 scrape: data import
 
 
