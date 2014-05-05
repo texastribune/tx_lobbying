@@ -8,8 +8,9 @@
     {{ object }}
   </h1>
   <h2>Lobbyists at this address</h2>
+  {# TODO this should only be the most current address #}
   <ul>
-    {% for lobbyist in object.lobbyist_set.all %}
+    {% for lobbyist in object.lobbyist_set.alld %}
       <li>
         <a href="{{ lobbyist.get_absolute_url }}">{{ lobbyist }}</a>
       </li>
@@ -19,10 +20,14 @@
   </ul>
   <h2>All lobbyists that have recorded themselves at this address</h2>
   <ul>
-    {% for report in object.registrationreport_set.all %}
+    {% regroup registration_reports by lobbyist as lobbyist_reports %}
+    {% for lobbyist in lobbyist_reports %}
       <li>
-        <a href="{{ report.lobbyist.get_absolute_url }}">{{ report.lobbyist }}</a>
-        in {{ report.year }}
+        <a href="{{ lobbyist.grouper.get_absolute_url }}">{{ lobbyist.grouper }}</a>
+        in
+        {% for report in lobbyist.list %}
+          {{ report.year }}
+        {% endfor %}
       </li>
     {% empty %}
       <li><em>None</em></li>

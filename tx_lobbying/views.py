@@ -120,3 +120,12 @@ class InterestDetail(DetailView):
 
 class AddressDetail(DetailView):
     model = models.Address
+
+    def get_context_data(self, **kwargs):
+        data = super(AddressDetail, self).get_context_data(**kwargs)
+        data['registration_reports'] = (
+            models.RegistrationReport.objects.filter(address=self.object)
+            .select_related('lobbyist')
+            .order_by('lobbyist', 'year'))
+        return data
+
