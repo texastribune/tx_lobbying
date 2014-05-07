@@ -1,0 +1,17 @@
+{% extends "tx_lobbying/base.html" %}
+
+{% block head_title %}Addresses{% endblock %}
+
+
+{% block main %}
+  <h1>All Addresses</h1>
+  <ul>
+    {% for address in address_list %}
+      <li>
+        <a href="{{ address.get_absolute_url }}">
+          {{ address }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -118,6 +118,10 @@ class InterestDetail(DetailView):
         return data
 
 
+class AddressList(ListView):
+    queryset = models.Address.objects.all().order_by('address1', 'zipcode')
+
+
 class AddressDetail(DetailView):
     model = models.Address
 
