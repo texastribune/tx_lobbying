@@ -138,7 +138,8 @@ class InterestTest(TestCase):
         year2004 = LobbyistAnnumFactory.create(year=2004)
         CompensationFactory(annum=year2004, interest=self.interest,
             amount_low=2004, amount_guess=2004, amount_high=2004)
-        self.interest.make_stats()
+        with self.assertNumQueries(19):
+            self.interest.make_stats()
         # assert stats are generated
         self.assertFalse(self.interest.stats.filter(year=1999).exists())
         self.assertTrue(self.interest.stats.filter(year=2000).exists())
