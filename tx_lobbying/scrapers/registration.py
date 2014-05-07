@@ -13,6 +13,9 @@ import os
 import sys
 
 # don't use relative imports so this can also be run from the command line
+from tx_lobbying.libs.address_normalizer import (
+    clean_zipcode,
+)
 from tx_lobbying.models import (
     Address,
     Interest, Lobbyist, RegistrationReport,
@@ -35,7 +38,7 @@ def update_or_create_interest(row):
         address2=row['EC_ADR2'],
         city=row['EC_CITY'],
         state=row['EC_STCD'],
-        zipcode=row['EC_ZIP4'],
+        zipcode=clean_zipcode(row['EC_ZIP4']),
     )
     # TODO get other info from the csv
     defaults = dict(
