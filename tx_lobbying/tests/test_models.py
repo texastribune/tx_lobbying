@@ -138,7 +138,7 @@ class InterestTest(TestCase):
         year2004 = LobbyistAnnumFactory.create(year=2004)
         CompensationFactory(annum=year2004, interest=self.interest,
             amount_low=2004, amount_guess=2004, amount_high=2004)
-        with self.assertNumQueries(19):
+        with self.assertNumQueries(20):
             self.interest.make_stats()
         # assert stats are generated
         self.assertFalse(self.interest.stats.filter(year=1999).exists())
@@ -148,6 +148,23 @@ class InterestTest(TestCase):
         self.assertFalse(self.interest.stats.filter(year=2003).exists())
         self.assertTrue(self.interest.stats.filter(year=2004).exists())
         self.assertFalse(self.interest.stats.filter(year=2005).exists())
+
+    def test_make_stats_sets_latest_address(self):
+        old_address = AddressFactory(address1=u'old')
+        new_address = AddressFactory(address1=u'new')
+        interest = InterestFactory(address=old_address)
+
+        CompensationFactory(annum__year=2000, interest=interest,
+            address=old_address)
+        CompensationFactory(annum__year=2001, interest=interest,
+            address=new_address)
+
+        # sanity check
+        self.assertEqual(interest.address, old_address)
+        with self.assertNumQueries(15):
+            interest.make_stats()
+        # assert interest got new address
+        self.assertEqual(interest.address, new_address)
 
     def test_get_all_addresses_works(self):
         a1 = AddressFactory()

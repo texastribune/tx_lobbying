@@ -133,6 +133,17 @@ class Interest(models.Model):
         year_max = self.years_available.latest('year').year
         for year in range(year_min, year_max + 1):
             self.make_stats_for_year(year)
+        # grab latest address
+        try:
+            latest_address = (self.compensation_set
+                .filter(address__isnull=False)
+                .latest('annum__year').address)
+            if self.address != latest_address:
+                self.address = latest_address
+                self.save()
+        except Compensation.DoesNotExist:
+            # don't care
+            pass
 
     def get_all_addresses(self, include_aliases=False):
         if include_aliases:
