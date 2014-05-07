@@ -7,6 +7,13 @@
   <h1>
     {{ object }}
   </h1>
+  <div>
+    {{ object.address1 }}<br>
+    {% if object.address2 %}
+      {{ object.address2 }}<br>
+    {% endif %}
+    {{ object.city }}, {{ object.state }} {{ object.zipcode }}
+  </div>
   <h2>Lobbyists at this address</h2>
   {# TODO this should only be the most current address #}
   <ul>
