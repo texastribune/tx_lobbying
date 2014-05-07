@@ -26,7 +26,7 @@ from tx_lobbying.scrapers.utils import (DictReader, convert_date_format_YMD)
 logger = logging.getLogger(__name__)
 
 
-def update_or_create_interest(row):
+def get_or_create_interest(row):
     """
     Update or create an `Interest`.
 
@@ -44,7 +44,7 @@ def update_or_create_interest(row):
     defaults = dict(
         address=address,
     )
-    interest, created = Interest.objects.update_or_create(
+    interest, created = Interest.objects.get_or_create(
         name=row['CONCERNAME'],
         defaults=defaults,
     )
@@ -80,7 +80,7 @@ def process_row(row):
 
     if row['CONCERNAME']:
         # interest/concern/client
-        interest, interest_address, created = update_or_create_interest(row)
+        interest, interest_address, created = get_or_create_interest(row)
     else:
         interest_address = None
         interest = None

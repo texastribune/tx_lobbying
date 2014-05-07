@@ -1,6 +1,8 @@
 import unittest
 
-from ..scrapers.registration import update_or_create_interest, process_row
+from django.test import TestCase
+
+from ..scrapers.registration import get_or_create_interest, process_row
 from ..scrapers.expenses import _covers_inner
 
 
@@ -109,7 +111,7 @@ COVER_ROW = {
 }
 
 
-class RegistrationTest(unittest.TestCase):
+class RegistrationTest(TestCase):
     """
     Tests surrounding getting data from LobConXX.csv
 
@@ -158,7 +160,8 @@ class RegistrationTest(unittest.TestCase):
             'EC_STCD': 'TX',
             'EC_ZIP4': '78701',
         }
-        interest, address, created = update_or_create_interest(row)
+        with self.assertNumQueries(8):
+            interest, address, created = get_or_create_interest(row)
 
         self.assertEqual(interest.name, 'Megacorp')
         self.assertEqual(interest.address.address1, '123 Fake')
