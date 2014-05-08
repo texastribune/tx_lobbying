@@ -172,8 +172,9 @@ class RegistrationTest(TestCase):
         # double check formatting
         self.assertEqual(unicode(interest.address), '123 Fake \nB \nC, TX 78701')
 
-    def test_process_row_works(row):
-        process_row(LOBCON_ROW)
+    def test_process_row_works(self):
+        with self.assertNumQueries(28):
+            process_row(LOBCON_ROW)
 
 
 class ExpensesTest(unittest.TestCase):
