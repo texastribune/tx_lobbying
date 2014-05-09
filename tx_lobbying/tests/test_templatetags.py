@@ -24,3 +24,14 @@ class TemplatetagsTest(TestCase):
             '<span class="label">$</span>'
             '<span class="dollar">10</span>'
             '<span class="cents">.00</span></span>')
+
+    def test_currency_handles_zero(self):
+        t = Template('{% load currency from tx_lobbying %}'
+            '{{ 0|currency }}')
+        c = Context()
+        output = t.render(c)
+        self.assertHTMLEqual(output,
+            '<span class="currency zero" data-value="0.00">'
+            '<span class="label">$</span>'
+            '<span class="dollar">0</span>'
+            '<span class="cents">.00</span></span>')
