@@ -1,7 +1,23 @@
 {% extends "tx_lobbying/base.html" %}
-{% load humanize %}
+{% load intcomma from humanize %}
+{% load currency from tx_lobbying %}
 
 {% block head_title %}Landing{% endblock %}
+
+{% block extra_style %}{{ block.super }}
+  <style>
+    .label {
+      color: #777;
+    }
+    .dollar {
+      float: right;
+    }
+    .cents {
+      display: none;
+    }
+  </style>
+{% endblock %}
+
 
 {% block main %}
   <nav>
@@ -33,14 +49,14 @@
         {% for row in spending_summary %}
           <tr>
             <td><a href="{% url 'tx_lobbying:year_landing' year=row.year %}">{{ row.year }}</a></td>
-            <td class="currency">${{ row.spent_guess__sum|floatformat:0|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.transportation__sum|floatformat:0|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.food__sum|floatformat:0|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.entertainment__sum|floatformat:0|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.gifts__sum|floatformat:0|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.awards__sum|floatformat:0|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.events__sum|floatformat:0|intcomma }}</td>
-            <td class="extrainfo currrency">${{ row.media__sum|floatformat:0|intcomma }}</td>
+            <td class="">{{ row.spent_guess__sum|currency }}</td>
+            <td class="extrainfo">{{ row.transportation__sum|currency }}</td>
+            <td class="extrainfo">{{ row.food__sum|currency }}</td>
+            <td class="extrainfo">{{ row.entertainment__sum|currency }}</td>
+            <td class="extrainfo">{{ row.gifts__sum|currency }}</td>
+            <td class="extrainfo">{{ row.awards__sum|currency }}</td>
+            <td class="extrainfo">{{ row.events__sum|currency }}</td>
+            <td class="extrainfo">{{ row.media__sum|currency }}</td>
             <td class="extrainfo">{{ row.registered|intcomma }}</td>
             <td class="extrainfo">{{ row.spent_anything|intcomma }}</td>
             <td class="extrainfo">{{ row.pk__count|intcomma }}</td>
@@ -69,11 +85,11 @@
         {% for year, data in itemized.items %}
           <tr>
             <td><a href="{% url 'tx_lobbying:year_landing' year=year %}">{{ year }}</a></td>
-            <td class="currency">${{ data.total|floatformat:0|intcomma }}</td>
-            <td class="extrainfo currency">${{ data.food.sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currency">${{ data.entertainment.sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currency">${{ data.gift.sum|floatformat:2|intcomma }}</td>
-            <td class="extrainfo currency">${{ data.award.sum|floatformat:2|intcomma }}</td>
+            <td class="">{{ data.total|currency }}</td>
+            <td class="extrainfo">{{ data.food.sum|currency }}</td>
+            <td class="extrainfo">{{ data.entertainment.sum|currency }}</td>
+            <td class="extrainfo">{{ data.gift.sum|currency }}</td>
+            <td class="extrainfo">{{ data.award.sum|currency }}</td>
             <td class="extrainfo">{{ data.count|intcomma }}</td>
           </tr>
         {% endfor %}
