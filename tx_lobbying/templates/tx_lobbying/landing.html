@@ -6,14 +6,16 @@
 
 {% block extra_style %}{{ block.super }}
   <style>
+    .currency {
+      display: block;
+      text-align: right;
+    }
     .zero {
       visibility: hidden;
     }
     .label {
-      color: #777;
-    }
-    .dollar {
-      float: right;
+      color: #999;
+      margin-right: 0.1em;
     }
     .cents {
       display: none;
