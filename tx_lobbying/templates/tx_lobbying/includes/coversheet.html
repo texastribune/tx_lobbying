@@ -7,6 +7,30 @@
   </h1>
   Report Date: {{ cover.report_date|date:"Y-m-d" }}
   How Filed: {{ data.HOWFILED }}
+  {% if data.CVR_MEMO %}
+    <p>Cover Memo: {{ data.CVR_MEMO }}</p>
+  {% endif %}
+  {% if data.SUBJ_MEMO %}
+    <p>Subject Memo: {{ data.SUBJ_MEMO }}</p>
+  {% endif %}
+  {% if data.TRAN_MEMO %}
+    <p>Transportation &amp; Lodging Memo: {{ data.TRAN_MEMO }}</p>
+  {% endif %}
+  {% if data.FOOD_MEMO %}
+    <p>Food &amp; Beverages Memo: {{ data.FOOD_MEMO }}</p>
+  {% endif %}
+  {% if data.ENT_MEMO %}
+    <p>Entertainment Memo: {{ data.ENT_MEMO }}</p>
+  {% endif %}
+  {% if data.GIFT_MEMO %}
+    <p>Gift Memo: {{ data.GIFT_MEMO }}</p>
+  {% endif %}
+  {% if data.AWRD_MEMO %}
+    <p>Awards &amp; Mementos Memo: {{ data.AWRD_MEMO }}</p>
+  {% endif %}
+  {% if data.EVNT_MEMO %}
+    <p>Political Fundraisers &amp; Charity Events Memo: {{ data.EVNT_MEMO }}</p>
+  {% endif %}
   {# 2 Registrant Name #}
   {# 3 #}
   {# 4 #}
