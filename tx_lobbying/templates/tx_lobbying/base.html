@@ -1,8 +1,10 @@
+{% load static from staticfiles %}
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <title>{% block head_title %}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/tx_lobbying.css' %}">
   {% block extra_style %}{% endblock %}
 </head>
 <body>

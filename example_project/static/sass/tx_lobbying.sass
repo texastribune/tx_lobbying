@@ -24,8 +24,13 @@ ul ul
 .currency
   text-align: right
 
-.extrainfo
-  display: none
+// notebook or mobile
+.notebook
+  .extrainfo
+    display: none
+@media only screen and (max-device-width : 480px)
+  .extrainfo
+    display: none
 
 .table
   border-collapse: collapse
