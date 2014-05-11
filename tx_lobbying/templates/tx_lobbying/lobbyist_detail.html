@@ -1,13 +1,16 @@
 {% extends "tx_lobbying/base.html" %}
-{% load humanize %}
+{% load intcomma from humanize %}
+{% load currency from tx_lobbying %}
 
 {% block head_title %}{{ object }}{% endblock %}
 
 {% block main %}
   <h1>{{ object }}</h1>
-  <a href="{{ object.address.get_absolute_url }}">
-    {{ object.address }}
-  </a>
+  {% if object.address %}
+    <a href="{{ object.address.get_absolute_url }}">
+      {{ object.address }}
+    </a>
+  {% endif %}
 
   <section>
     <h2>Name History</h2>
@@ -91,26 +94,24 @@
             <td>
               {{ stat.year }}
             </td>
-            <td class="currency">
-              {% if stat.spent_guess %}
-                ${{ stat.spent_guess|intcomma }}
-              {% endif %}
+            <td>
+              {{ stat.spent_guess|currency }}
             </td>
-            <td class="extrainfo">{% if stat.transportation %}${{ stat.transportation|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.food %}${{ stat.food|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.entertainment %}${{ stat.entertainment|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.gifts %}${{ stat.gifts|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.awards %}${{ stat.awards|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.events %}${{ stat.events|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.media %}${{ stat.media|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.ben_senators %}${{ stat.ben_senators|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.ben_representatives %}${{ stat.ben_representatives|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.ben_other %}${{ stat.ben_other|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.ben_legislative %}${{ stat.ben_legislative|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.ben_executive %}${{ stat.ben_executive|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.ben_family %}${{ stat.ben_family|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.ben_events %}${{ stat.ben_events|intcomma }}{% endif %}</td>
-            <td class="extrainfo">{% if stat.ben_guests %}${{ stat.ben_guests|intcomma }}{% endif %}</td>
+            <td class="extrainfo">{{ stat.transportation|currency }}</td>
+            <td class="extrainfo">{{ stat.food|currency }}</td>
+            <td class="extrainfo">{{ stat.entertainment|currency }}</td>
+            <td class="extrainfo">{{ stat.gifts|currency }}</td>
+            <td class="extrainfo">{{ stat.awards|currency }}</td>
+            <td class="extrainfo">{{ stat.events|currency }}</td>
+            <td class="extrainfo">{{ stat.media|currency }}</td>
+            <td class="extrainfo">{{ stat.ben_senators|currency }}</td>
+            <td class="extrainfo">{{ stat.ben_representatives|currency }}</td>
+            <td class="extrainfo">{{ stat.ben_other|currency }}</td>
+            <td class="extrainfo">{{ stat.ben_legislative|currency }}</td>
+            <td class="extrainfo">{{ stat.ben_executive|currency }}</td>
+            <td class="extrainfo">{{ stat.ben_family|currency }}</td>
+            <td class="extrainfo">{{ stat.ben_events|currency }}</td>
+            <td class="extrainfo">{{ stat.ben_guests|currency }}</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -118,10 +119,11 @@
   </section>
   <section class="extrainfo">
     <h2>Cover Sheets</h2>
-    <table>
+    <table class="table">
       <thead>
         <tr>
           <th>Date</th>
+          <th>Total</th>
           <th>Transportation</th>
           <th>Food</th>
           <th>Entertainment</th>
@@ -145,21 +147,22 @@
           {# {{ cover.raw_data }} #}
           <tr>
             <td>{{ cover.report_date|date:"Y-m-d" }}</td>
-            <td>{% if cover.transportation %}${{ cover.transportation|intcomma }}{% endif %}</td>
-            <td>{% if cover.food %}${{ cover.food|intcomma }}{% endif %}</td>
-            <td>{% if cover.entertainment %}${{ cover.entertainment|intcomma }}{% endif %}</td>
-            <td>{% if cover.gifts %}${{ cover.gifts|intcomma }}{% endif %}</td>
-            <td>{% if cover.awards %}${{ cover.awards|intcomma }}{% endif %}</td>
-            <td>{% if cover.events %}${{ cover.events|intcomma }}{% endif %}</td>
-            <td>{% if cover.media %}${{ cover.media|intcomma }}{% endif %}</td>
-            <td>{% if cover.ben_senators %}${{ cover.ben_senators|intcomma }}{% endif %}</td>
-            <td>{% if cover.ben_representatives %}${{ cover.ben_representatives|intcomma }}{% endif %}</td>
-            <td>{% if cover.ben_other %}${{ cover.ben_other|intcomma }}{% endif %}</td>
-            <td>{% if cover.ben_legislative %}${{ cover.ben_legislative|intcomma }}{% endif %}</td>
-            <td>{% if cover.ben_executive %}${{ cover.ben_executive|intcomma }}{% endif %}</td>
-            <td>{% if cover.ben_family %}${{ cover.ben_family|intcomma }}{% endif %}</td>
-            <td>{% if cover.ben_events %}${{ cover.ben_events|intcomma }}{% endif %}</td>
-            <td>{% if cover.ben_guests %}${{ cover.ben_guests|intcomma }}{% endif %}</td>
+            <td>{{ cover.spent_guess|currency }}</td>
+            <td>{{ cover.transportation|currency }}</td>
+            <td>{{ cover.food|currency }}</td>
+            <td>{{ cover.entertainment|currency }}</td>
+            <td>{{ cover.gifts|currency }}</td>
+            <td>{{ cover.awards|currency }}</td>
+            <td>{{ cover.events|currency }}</td>
+            <td>{{ cover.media|currency }}</td>
+            <td>{{ cover.ben_senators|currency }}</td>
+            <td>{{ cover.ben_representatives|currency }}</td>
+            <td>{{ cover.ben_other|currency }}</td>
+            <td>{{ cover.ben_legislative|currency }}</td>
+            <td>{{ cover.ben_executive|currency }}</td>
+            <td>{{ cover.ben_family|currency }}</td>
+            <td>{{ cover.ben_events|currency }}</td>
+            <td>{{ cover.ben_guests|currency }}</td>
             <td>
               {% if cover.details.exists %}
                 <ul>
