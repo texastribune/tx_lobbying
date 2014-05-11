@@ -164,16 +164,16 @@ def row_LaSub(row):
         other_description=row['OTH_DESC'],
     )
     try:
-        defaults = dict(
-            cover=Coversheet.objects.get(report_id=row['REPNO']),
-            correction=row['CORR_NUM'],
-            year=row['YEAR_APPL'],
-        )
+        cover = Coversheet.objects.get(report_id=row['REPNO'])
     except Coversheet.DoesNotExist:
         logger.warn('No matching coversheet found {}'.format(row['REPNO']))
         return
+    defaults = dict(
+        correction=row['CORR_NUM'],
+        year=row['YEAR_APPL'],
+    )
     report, created = SubjectMatterReport.objects.update_or_create(
-        idno=row['IDNO'],
+        cover=cover,
         defaults=defaults,
     )
     report.set.add(subject)

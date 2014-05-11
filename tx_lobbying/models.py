@@ -525,10 +525,11 @@ class SubjectMatterReport(models.Model):
 
     Simpler data, so doesn't use `RawDataMixin`.
     """
-    # IDNO
-    idno = models.PositiveIntegerField()
+    # IDNO is ignored because we can do many-to-manys
+    # idno = models.PositiveIntegerField()
     # REPNO, should this be a one to one?
-    cover = models.ForeignKey(Coversheet, related_name='subjects')
+    cover = models.OneToOneField(Coversheet, related_name='subjects',
+        null=True, blank=True)
     # CORR_NUM
     correction = models.PositiveSmallIntegerField(default=0,
         help_text='Correction Number (0=Original)')
