@@ -101,6 +101,12 @@ class LobbyistDetail(DetailView):
     slug_field = 'filer_id'
 
 
+class CoversheetDetail(DetailView):
+    model = models.Coversheet
+    slug_field = 'report_id'
+    slug_url_kwarg = 'report_id'
+
+
 class InterestList(ListView):
     queryset = (models.Interest.objects.filter(canonical__isnull=True)
         .prefetch_related('aliases'))

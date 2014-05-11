@@ -1,7 +1,9 @@
 {% load currency from tx_lobbying %}
 <div id="cover-{{ cover.report_id }}" class="coversheet report">
   <h1>
-    Lobby Activites Report
+    <a href="{{ cover.get_absolute_url }}">
+      Lobby Activites Report
+    </a>
   </h1>
   Report Date: {{ cover.report_date|date:"Y-m-d" }}
   How Filed: {{ data.HOWFILED }}

@@ -15,11 +15,14 @@ urlpatterns = patterns('',
     url(
         r'^lobbyist/(?P<slug>\d+)/',
         include(patterns('',
-            url('^$', views.LobbyistDetail.as_view(),
-                name="lobbyist_detail"),
-            url('^covers/$', views.LobbyistDetail.as_view(
+            url(r'^$', views.LobbyistDetail.as_view(),
+                name='lobbyist_detail'),
+            url(r'^covers/$', views.LobbyistDetail.as_view(
                 template_name='tx_lobbying/lobbyist_covers.html'),
-                name="lobbyist_covers"),
+                name='lobbyist_covers'),
+            url(r'^cover/$', RedirectView.as_view(url='../covers/')),
+            url(r'^cover/(?P<report_id>\d+)/$', views.CoversheetDetail.as_view(),
+                name='coversheet_detail'),
         ))
     ),
     url(r'^interests/$', views.InterestList.as_view(),

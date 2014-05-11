@@ -1,0 +1,8 @@
+{% extends "tx_lobbying/base.html" %}
+
+{% block page_title %}{{ object }}{% endblock %}
+
+
+{% block main %}
+  {% include "tx_lobbying/includes/coversheet.html" with cover=object data=cover.raw_data %}
+{% endblock %}
