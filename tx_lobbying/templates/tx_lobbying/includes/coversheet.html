@@ -28,40 +28,70 @@
   {# 7 #}
   <h2>Expenditure Totals by Type</h2>
   Total: {{ cover.total_spent|currency }}
-  <dl>
-    <dt>Transportation &amp; Lodging</dt>
-    <dd>{{ cover.transportation|currency }}</dd>
-    <dt>Food &amp; Beverages</dt>
-    <dd>{{ cover.food|currency }}</dd>
-    <dt>Entertainment</dt>
-    <dd>{{ cover.entertainment|currency }}</dd>
-    <dt>Gifts (other than awards & mementos)</dt>
-    <dd>{{ cover.gifts|currency }}</dd>
-    <dt>Awards &amp; Mementos</dt>
-    <dd>{{ cover.awards|currency }}</dd>
-    <dt>Political Fundraisers/Charity Events</dt>
-    <dd>{{ cover.events|currency }}</dd>
-    <dt>Mass Media Communications</dt>
-    <dd>{{ cover.media|currency }}</dd>
-  </dl>
+  <div class="totals">
+    <div class="category">
+      <span class="label">Transportation &amp; Lodging</span>
+      <span class="value">{{ cover.transportation|currency }}</span>
+    </div>
+    <div class="category">
+      <span class="label">Food &amp; Beverages</span>
+      <span class="value">{{ cover.food|currency }}</span>
+    </div>
+    <div class="category">
+      <span class="label">Entertainment</span>
+      <span class="value">{{ cover.entertainment|currency }}</span>
+    </div>
+    <div class="category">
+      <span class="label">Gifts (other than awards & mementos)</span>
+      <span class="value">{{ cover.gifts|currency }}</span>
+    </div>
+    <div class="category">
+      <span class="label">Awards &amp; Mementos</span>
+      <span class="value">{{ cover.awards|currency }}</span>
+    </div>
+    <div class="category">
+      <span class="label">Political Fundraisers/Charity Events</span>
+      <span class="value">{{ cover.events|currency }}</span>
+    </div>
+    <div class="category">
+      <span class="label">Mass Media Communications</span>
+      <span class="value">{{ cover.media|currency }}</span>
+    </div>
+  </div>
   <h2>Expenditure Totals by Persons Benefitted{# sic #}</h2>
   Total: {{ cover.total_benefited|currency }}
-  <dl>
-    <dt>State Senators</dt>
-    <dd>{{ cover.ben_senators|currency }}</dd>
-    <dt>State Representatives</dt>
-    <dd>{{ cover.ben_representatives|currency }}</dd>
-    <dt>Other Elected/Appointed State Officers</dt>
-    <dd>{{ cover.ben_other|currency }}</dd>
-    <dt>Legislative Branch Employees</dt>
-    <dd>{{ cover.ben_legislative|currency }}</dd>
-    <dt>Executive Agency Employees</dt>
-    <dd>{{ cover.ben_executive|currency }}</dd>
-    <dt>Immediate Family of Legislative/Executive Branch Member</dt>
-    <dd>{{ cover.ben_family|currency }}</dd>
-    <dt>Events to Which All Legislators Are Invited</dt>
-    <dd>{{ cover.ben_events|currency }}</dd>
-    <dt>Guests</dt>
-    <dd>{{ cover.ben_guests|currency }}</dd>
-  </dl>
+  <div class="totals">
+    <div class="category">
+      <span class="label">State Senators</span>
+      <span class="value">{{ cover.ben_senators|currency }}</span>
+    </div>
+    <div class="category">
+      <span class="label">State Representatives</span>
+      <span class="value">{{ cover.ben_representatives|currency }}</span>
+    </div>
+    <div class="category">
+      <span class="label">Other Elected/Appointed State Officers</span>
+      <span class="value">{{ cover.ben_other|currency }}</span>
+    </div>
+    <div class="category">
+      <span class="label">Legislative Branch Employees</span>
+      <span class="value">{{ cover.ben_legislative|currency }}</span>
+    </div>
+    <div class="category">
+      <span class="label">Executive Agency Employees</span>
+      <span class="value">{{ cover.ben_executive|currency }}</span>
+    </div>
+    <div class="category">
+      <span class="label">Immediate Family of Legislative/Executive Branch Member</span>
+      <span class="value">{{ cover.ben_family|currency }}</span>
+    </div>
+    <div class="category">
+      <span class="label">Events to Which All Legislators Are Invited</span>
+      <span class="value">{{ cover.ben_events|currency }}</span>
+    </div>
+    <div class="category">
+      <span class="label">Guests</span>
+      <span class="value">{{ cover.ben_guests|currency }}</span>
+    </div>
+  </div>
 </div>

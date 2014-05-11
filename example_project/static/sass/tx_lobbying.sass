@@ -27,11 +27,11 @@ td > .currency
   text-align: right
 .zero
   visibility: hidden
-.label
-  color: #999
-  margin-right: 0.1em
-.cents
-  display: none
+  .label
+    color: #999
+    margin-right: 0.1em
+  .cents
+    display: none
 
 // notebook or mobile
 .notebook
@@ -60,23 +60,24 @@ td > .currency
   border: 1px solid black
   margin-bottom: 0.25em
   h2
-    clear: left
+    border-top: 1px solid black
     font-size: 1em
     text-transform: uppercase
   input:disabled
     color: black  // doesn't work
-  dl
+  .totals
+    margin-left: 2em
     overflow: hidden  // XXX clearfix
-  dt
-    clear: left
+  .category
     float: left
-    font-size: 0.8em
-    margin-bottom: 0.5em
-    margin-right: 0.5em
-    width: 11em
-  dd
-    float: left
-    margin-left: 0
-
+    margin-right: 2em
+    height: 4em  // force uniform height
+    > .label
+      display: inline-block
+      font-size: 0.8em
+      width: 11em
+    > .value
+      display: inline-block
+      vertical-align: top
   .zero
     visibility: visible  // override
