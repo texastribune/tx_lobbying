@@ -2,8 +2,11 @@ import unittest
 
 from django.test import TestCase
 
+from ..factories import CoversheetFactory
+from ..models import Subject, SubjectMatterReport
 from ..scrapers.registration import get_or_create_interest, process_row
-from ..scrapers.expenses import _covers_inner
+from ..scrapers.expenses import _covers_inner, row_LaSub
+from . import sample_rows
 
 
 LOBCON_ROW = {
@@ -177,6 +180,22 @@ class RegistrationTest(TestCase):
             process_row(LOBCON_ROW)
 
 
-class ExpensesTest(unittest.TestCase):
+class ExpensesTest(TestCase):
     def test__covers_inner_works(self):
         _covers_inner(COVER_ROW)
+
+    def test_row_LaSub(self):
+        row = sample_rows.LASUB
+        # requires pre-existing coversheet
+        CoversheetFactory(report_id=row['REPNO'])
+
+        with self.assertNumQueries(11):
+            row_LaSub(row)
+        subject = Subject.objects.get(category_id=row['CATGNUM'])
+        report = SubjectMatterReport.objects.get(idno=row['IDNO'])
+        self.assertTrue(subject)
+        self.assertTrue(report)
+
+        # assert re-running uses fewer queries
+        with self.assertNumQueries(7):
+            row_LaSub(sample_rows.LASUB)

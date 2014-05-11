@@ -509,9 +509,12 @@ class Subject(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True,
         help_text=u'Human curated name')
 
+    class Model:
+        ordering = ('category_id', )
+
     def __unicode__(self):
         return (self.other_description
-            if self.category_id == 0 else self.description)
+            if self.category_id == 84 else self.description)
         # TODO
         return self.name
 
@@ -524,7 +527,7 @@ class SubjectMatterReport(models.Model):
     """
     # IDNO
     idno = models.PositiveIntegerField()
-    # REPNO
+    # REPNO, should this be a one to one?
     cover = models.ForeignKey(Coversheet, related_name='subjects')
     # CORR_NUM
     correction = models.PositiveSmallIntegerField(default=0,
@@ -535,7 +538,7 @@ class SubjectMatterReport(models.Model):
     #    RPT_END_DT
     # FORM_TYPE is always 'LA-A4'
 
-    list = models.ManyToManyField(Subject, related_name='reports')
+    set = models.ManyToManyField(Subject, related_name='reports')
 
     def __unicode__(self):
-        return self.cover
+        return unicode(self.cover)

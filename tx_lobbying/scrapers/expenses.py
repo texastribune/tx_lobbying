@@ -14,7 +14,7 @@ from project_runpy import env
 
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Lobbyist,
-    Coversheet, ExpenseDetailReport)
+    Coversheet, ExpenseDetailReport, Subject, SubjectMatterReport)
 from tx_lobbying.scrapers.utils import (DictReader, convert_date_format,
     get_name_data, setfield)
 
@@ -143,14 +143,40 @@ def _detail_inner(row, type):
         logger.info("Detail: %s" % report)
 
 
-def process_LaSub(row):
+def row_LaSub(row):
     """
-    Each Coversheet is associated with subject matter
+    Each Coversheet is associated with subject matter.
+
+    Data starts in 2000
+
+    Snippets:
 
         from tx_lobbying.scrapers.expenses import generate_test_row
         generate_test_row('data/expenses/LaSub.csv')
+
+        from tx_lobbying.scrapers.expenses import process_csv, row_LaSub
+        process_csv('data/expenses/LaSub.csv', row_LaSub)
     """
-    pass
+    subject, created = Subject.objects.get_or_create(
+        # category id is only unique if it isn't "other"
+        category_id=row['CATGNUM'],
+        description=row['CATG_TEXT'],
+        other_description=row['OTH_DESC'],
+    )
+    try:
+        defaults = dict(
+            cover=Coversheet.objects.get(report_id=row['REPNO']),
+            correction=row['CORR_NUM'],
+            year=row['YEAR_APPL'],
+        )
+    except Coversheet.DoesNotExist:
+        logger.warn('No matching coversheet found {}'.format(row['REPNO']))
+        return
+    report, created = SubjectMatterReport.objects.update_or_create(
+        idno=row['IDNO'],
+        defaults=defaults,
+    )
+    report.set.add(subject)
 
 
 def process_csv(path, _inner_func, **kwargs):
@@ -211,7 +237,7 @@ def main(working_dir, logging_level=None):
     process_csv(os.path.join(working_dir, "LaCVR.csv"),
         _inner_func=_covers_inner)
     process_csv(os.path.join(working_dir, "LaSub.csv"),
-        _inner_func=process_LaSub)
+        _inner_func=row_LaSub)
     process_csv(os.path.join(working_dir, "LaFood.csv"),
         _inner_func=_detail_inner, type="food")
     process_csv(os.path.join(working_dir, "LaAwrd.csv"),

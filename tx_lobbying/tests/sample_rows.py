@@ -1,0 +1,18 @@
+LASUB = {
+    'CATGNUM': u'28',
+    'CATG_TEXT': u'ECONOMIC & INDUSTRIAL DEVELOPMENT',
+    'CORR_NUM': u'0',
+    'DUE_DATE': u'8/12/2002',
+    'FILER_ID': u'00012879',
+    'FORM_TYPE': u'LA-A4',
+    'IDNO': u'354461',
+    'LOB_NAME': u'Tidwell, Russ',
+    'LOB_SORT': u'TIDWELL, RUSS',
+    'OTH_DESC': u'',
+    'REG_REPNO': u'184577',
+    'REPNO': u'203219',
+    'RPT_BEG_DT': u'7/1/2002',
+    'RPT_DATE': u'8/9/2002',
+    'RPT_END_DT': u'7/31/2002',
+    'YEAR_APPL': u'2002',
+}

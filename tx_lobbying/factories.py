@@ -67,7 +67,7 @@ class RegistrationReportFactory(factory.DjangoModelFactory):
 class CoversheetFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Coversheet
     lobbyist = factory.SubFactory(LobbyistFactory)
-    report_date = '2001-04-01'
+    report_date = '1970-01-01'
     report_id = factory.Sequence(lambda n: n)
-    year = '2001'
+    year = 1970
     spent_guess = factory.LazyAttribute(lambda a: random.randint(10000, 100000))
