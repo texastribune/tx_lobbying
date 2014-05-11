@@ -68,6 +68,10 @@ td > .currency
   .totals
     margin-left: 2em
     overflow: hidden  // XXX clearfix
+    .currency
+      border-bottom: 1px solid black
+      display: inline-block  // enable text-align: right
+      width: 6em
   .category
     float: left
     margin-right: 2em
@@ -79,5 +83,9 @@ td > .currency
     > .value
       display: inline-block
       vertical-align: top
+      &:before
+        content: '$'
+      .label
+        display: none
   .zero
     visibility: visible  // override
