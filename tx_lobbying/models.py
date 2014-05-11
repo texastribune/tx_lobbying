@@ -530,7 +530,7 @@ class SubjectMatterReport(models.Model):
     # REPNO, should this be a one to one?
     cover = models.OneToOneField(Coversheet, related_name='subjects',
         null=True, blank=True)
-    # CORR_NUM
+    # CORR_NUM, TODO is this the same as the cover sheet?
     correction = models.PositiveSmallIntegerField(default=0,
         help_text='Correction Number (0=Original)')
     # YEAR_APPL
@@ -543,3 +543,6 @@ class SubjectMatterReport(models.Model):
 
     def __unicode__(self):
         return unicode(self.cover)
+
+    def get_absolute_url(self):
+        return self.cover.get_absolute_url()
