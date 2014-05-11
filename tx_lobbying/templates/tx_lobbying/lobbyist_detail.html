@@ -117,65 +117,18 @@
       </tbody>
     </table>
   </section>
-  <section class="extrainfo">
+  <section id="coversheets" class="extrainfo">
     <h2>Cover Sheets</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Total</th>
-          <th>Transportation</th>
-          <th>Food</th>
-          <th>Entertainment</th>
-          <th>Gifts</th>
-          <th>Awards</th>
-          <th>Events</th>
-          <th>Media</th>
-          <th>Senators</th>
-          <th>Representatives</th>
-          <th>Other</th>
-          <th>Legislative</th>
-          <th>Executive</th>
-          <th>Family</th>
-          <th>Events</th>
-          <th>Guests</th>
-          <th>Details</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for cover in object.coversheets.all %}
-          {# {{ cover.raw_data }} #}
-          <tr>
-            <td>{{ cover.report_date|date:"Y-m-d" }}</td>
-            <td>{{ cover.spent_guess|currency }}</td>
-            <td>{{ cover.transportation|currency }}</td>
-            <td>{{ cover.food|currency }}</td>
-            <td>{{ cover.entertainment|currency }}</td>
-            <td>{{ cover.gifts|currency }}</td>
-            <td>{{ cover.awards|currency }}</td>
-            <td>{{ cover.events|currency }}</td>
-            <td>{{ cover.media|currency }}</td>
-            <td>{{ cover.ben_senators|currency }}</td>
-            <td>{{ cover.ben_representatives|currency }}</td>
-            <td>{{ cover.ben_other|currency }}</td>
-            <td>{{ cover.ben_legislative|currency }}</td>
-            <td>{{ cover.ben_executive|currency }}</td>
-            <td>{{ cover.ben_family|currency }}</td>
-            <td>{{ cover.ben_events|currency }}</td>
-            <td>{{ cover.ben_guests|currency }}</td>
-            <td>
-              {% if cover.details.exists %}
-                <ul>
-                  {% for detail in cover.details.all %}
-                    <li>{{ detail.type }} - {{ detail.amount_guess }}</li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    {% for cover in object.coversheets.all %}
+      {% include "tx_lobbying/includes/coversheet.html" with data=cover.raw_data %}
+      {% if cover.details.exists %}
+        <ul>
+          {% for detail in cover.details.all %}
+            <li>{{ detail.type }} - {{ detail.amount_guess }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endfor %}
   </section>
 
 {% endblock %}

@@ -1,0 +1,67 @@
+{% load currency from tx_lobbying %}
+<div id="cover-{{ cover.report_id }}" class="coversheet report">
+  <h1>
+    Lobby Activites Report
+  </h1>
+  Report Date: {{ cover.report_date|date:"Y-m-d" }}
+  How Filed: {{ data.HOWFILED }}
+  {# 2 Registrant Name #}
+  {# 3 #}
+  {# 4 #}
+  <h2>Report Type</h2>
+  <input type="checkbox" disabled {% if data.RT_REG_CB %}checked{% endif %}>
+  Regular (Monthy)
+  <input type="checkbox" disabled {% if data.RT_MOD_CB %}checked{% endif %}>
+  Modified (Annual)
+  <input type="checkbox" disabled {% if data.RT_1K_CB %}checked{% endif %}>
+  Exceeded $1000
+  <input type="checkbox" disabled {% if data.RT_FIN_CB %}checked{% endif %}>
+  Final
+  {# 5 #}
+  <h2>Report Deadline</h2>
+  Due Date: {{ data.DUE_DATE }}
+  {# 6 #}
+  <h2>Period Covered</h2>
+  {{ data.RPT_BEG_DT }}
+  through
+  {{ data.RPT_END_DT }}
+  {# 7 #}
+  <h2>Expenditure Totals by Type</h2>
+  Total: {{ cover.total_spent|currency }}
+  <dl>
+    <dt>Transportation &amp; Lodging</dt>
+    <dd>{{ cover.transportation|currency }}</dd>
+    <dt>Food &amp; Beverages</dt>
+    <dd>{{ cover.food|currency }}</dd>
+    <dt>Entertainment</dt>
+    <dd>{{ cover.entertainment|currency }}</dd>
+    <dt>Gifts (other than awards & mementos)</dt>
+    <dd>{{ cover.gifts|currency }}</dd>
+    <dt>Awards &amp; Mementos</dt>
+    <dd>{{ cover.awards|currency }}</dd>
+    <dt>Political Fundraisers/Charity Events</dt>
+    <dd>{{ cover.events|currency }}</dd>
+    <dt>Mass Media Communications</dt>
+    <dd>{{ cover.media|currency }}</dd>
+  </dl>
+  <h2>Expenditure Totals by Persons Benefitted{# sic #}</h2>
+  Total: {{ cover.total_benefited|currency }}
+  <dl>
+    <dt>State Senators</dt>
+    <dd>{{ cover.ben_senators|currency }}</dd>
+    <dt>State Representatives</dt>
+    <dd>{{ cover.ben_representatives|currency }}</dd>
+    <dt>Other Elected/Appointed State Officers</dt>
+    <dd>{{ cover.ben_other|currency }}</dd>
+    <dt>Legislative Branch Employees</dt>
+    <dd>{{ cover.ben_legislative|currency }}</dd>
+    <dt>Executive Agency Employees</dt>
+    <dd>{{ cover.ben_executive|currency }}</dd>
+    <dt>Immediate Family of Legislative/Executive Branch Member</dt>
+    <dd>{{ cover.ben_family|currency }}</dd>
+    <dt>Events to Which All Legislators Are Invited</dt>
+    <dd>{{ cover.ben_events|currency }}</dd>
+    <dt>Guests</dt>
+    <dd>{{ cover.ben_guests|currency }}</dd>
+  </dl>
+</div>

@@ -21,8 +21,9 @@ ul
 ul ul
   font-size: 0.9em
 
-.currency
+td > .currency
   display: block
+.currency
   text-align: right
 .zero
   visibility: hidden
@@ -53,3 +54,29 @@ ul ul
   td
     // border: 1px solid #ccc
     padding: 0.2em
+
+
+.coversheet
+  border: 1px solid black
+  margin-bottom: 0.25em
+  h2
+    clear: left
+    font-size: 1em
+    text-transform: uppercase
+  input:disabled
+    color: black  // doesn't work
+  dl
+    overflow: hidden  // XXX clearfix
+  dt
+    clear: left
+    float: left
+    font-size: 0.8em
+    margin-bottom: 0.5em
+    margin-right: 0.5em
+    width: 11em
+  dd
+    float: left
+    margin-left: 0
+
+  .zero
+    visibility: visible  // override
