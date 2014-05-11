@@ -356,7 +356,8 @@ class Coversheet(RawDataMixin, models.Model):
     """
     lobbyist = models.ForeignKey(Lobbyist, related_name="coversheets")
     report_date = models.DateField()
-    report_id = models.IntegerField(unique=True)
+    # REPNO
+    report_id = models.PositiveIntegerField(unique=True)
     year = models.IntegerField()
     # expenses
     transportation = models.DecimalField("Transportation & Lodging",
@@ -416,7 +417,7 @@ class ExpenseDetailReport(RawDataMixin, models.Model):
     lobbyists can get around having to file a detailed expense report.
     """
     # IDNO
-    idno = models.IntegerField()
+    idno = models.PositiveIntegerField()
     # REPNO
     cover = models.ForeignKey(Coversheet, related_name="details")
     # FILER_ID
@@ -495,3 +496,46 @@ class Compensation(RawDataMixin, models.Model):
         # TODO, thousands separator... requires python 2.7
         return u"{1.interest} pays {0} ~${1.amount_guess} ({1.annum})".format(
             self.annum.lobbyist, self)
+
+
+class Subject(models.Model):
+    # CATGNUM
+    category_id = models.PositiveIntegerField()
+    # CATG_TEXT (aka CATG_DESC)
+    description = models.CharField(max_length=50)
+    # OTH_DESC
+    other_description = models.CharField(max_length=50)
+
+    name = models.CharField(max_length=50, null=True, blank=True,
+        help_text=u'Human curated name')
+
+    def __unicode__(self):
+        return (self.other_description
+            if self.category_id == 0 else self.description)
+        # TODO
+        return self.name
+
+
+class SubjectMatterReport(models.Model):
+    """
+    Form LA Schedule A
+
+    Simpler data, so doesn't use `RawDataMixin`.
+    """
+    # IDNO
+    idno = models.PositiveIntegerField()
+    # REPNO
+    cover = models.ForeignKey(Coversheet, related_name='subjects')
+    # CORR_NUM
+    correction = models.PositiveSmallIntegerField(default=0,
+        help_text='Correction Number (0=Original)')
+    # YEAR_APPL
+    year = models.PositiveSmallIntegerField()
+    # Also on `cover`: FILER_ID LOB_NAME LOB_SORT DUE_DATE RPT_DATE RPT_BEG_DT
+    #    RPT_END_DT
+    # FORM_TYPE is always 'LA-A4'
+
+    list = models.ManyToManyField(Subject, related_name='reports')
+
+    def __unicode__(self):
+        return self.cover

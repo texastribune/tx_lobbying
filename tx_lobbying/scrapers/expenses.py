@@ -143,6 +143,16 @@ def _detail_inner(row, type):
         logger.info("Detail: %s" % report)
 
 
+def process_LaSub(row):
+    """
+    Each Coversheet is associated with subject matter
+
+        from tx_lobbying.scrapers.expenses import generate_test_row
+        generate_test_row('data/expenses/LaSub.csv')
+    """
+    pass
+
+
 def process_csv(path, _inner_func, **kwargs):
     logger.info("Processing %s" % path)
     total = get_record_count(path)
@@ -175,7 +185,6 @@ def generate_test_row(path, **kwargs):
             if random.randint(0, 999) < 1:  # adjust this to go deeper
                 pprint(row)
                 break
-# process_csv = generate_test_row
 
 
 def get_record_count(path):
@@ -201,6 +210,8 @@ def main(working_dir, logging_level=None):
         logger.setLevel(logging_level)
     process_csv(os.path.join(working_dir, "LaCVR.csv"),
         _inner_func=_covers_inner)
+    process_csv(os.path.join(working_dir, "LaSub.csv"),
+        _inner_func=process_LaSub)
     process_csv(os.path.join(working_dir, "LaFood.csv"),
         _inner_func=_detail_inner, type="food")
     process_csv(os.path.join(working_dir, "LaAwrd.csv"),
