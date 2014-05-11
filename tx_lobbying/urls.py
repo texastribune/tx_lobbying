@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, url, include
 from django.views.generic import RedirectView
 
 from . import views
@@ -12,8 +12,16 @@ urlpatterns = patterns('',
     url(r'^lobbyists/$', views.LobbyistList.as_view(),
         name="lobbyist_list"),
     url(r'^lobbyist/$', RedirectView.as_view(url='../lobbyists/')),
-    url(r'^lobbyist/(?P<slug>\d+)/$', views.LobbyistDetail.as_view(),
-        name="lobbyist_detail"),
+    url(
+        r'^lobbyist/(?P<slug>\d+)/',
+        include(patterns('',
+            url('^$', views.LobbyistDetail.as_view(),
+                name="lobbyist_detail"),
+            url('^covers/$', views.LobbyistDetail.as_view(
+                template_name='tx_lobbying/lobbyist_covers.html'),
+                name="lobbyist_covers"),
+        ))
+    ),
     url(r'^interests/$', views.InterestList.as_view(),
         name='interest_list'),
     url(r'^interest/$', RedirectView.as_view(url='../interests/')),

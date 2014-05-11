@@ -119,16 +119,7 @@
   </section>
   <section id="coversheets" class="extrainfo">
     <h2>Cover Sheets</h2>
-    {% for cover in object.coversheets.all %}
-      {% include "tx_lobbying/includes/coversheet.html" with data=cover.raw_data %}
-      {% if cover.details.exists %}
-        <ul>
-          {% for detail in cover.details.all %}
-            <li>{{ detail.type }} - {{ detail.amount_guess }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endfor %}
+    <a href="./covers/">{{ object.coversheets.count }} Cover sheets</a>
   </section>
 
 {% endblock %}
