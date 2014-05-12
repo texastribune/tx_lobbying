@@ -10,8 +10,6 @@ import logging
 import os
 import re
 
-from project_runpy import env
-
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Lobbyist,
     Coversheet, ExpenseDetailReport, Subject, SubjectMatterReport)
@@ -20,7 +18,7 @@ from tx_lobbying.scrapers.utils import (DictReader, convert_date_format,
 
 
 # CONFIGURATION
-YEAR_START = env.get('YEAR_START')
+YEAR_START = int(os.environ.get('YEAR_START') or 0)
 TIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
 
 
@@ -30,10 +28,6 @@ logger = logging.getLogger(__name__)
 def _covers_inner(row):
     report_date = row['FILED_DATE'] or row['RPT_DATE']
     report_date = convert_date_format(report_date)
-
-    # DELETEME speed up code during debugging
-    if YEAR_START and report_date.year < YEAR_START:
-        return
 
     # Lobbyist
     default_data = dict(
@@ -119,10 +113,6 @@ def _detail_inner(row, type):
         raw=json.dumps(row),
     )
 
-    # DELETEME speed up code during debugging
-    if YEAR_START and default_data['year'] < YEAR_START:
-        return
-
     if amount is None:
         default_data['amount'] = None  # force this to null
         default_data['amount_guess'] = Decimal((Decimal(row['nLow']) +
@@ -193,6 +183,8 @@ def process_csv(path, _inner_func, **kwargs):
                         row.get('FILED_DATE'),
                         row.get('RPT_DATE')
                     ))
+            if YEAR_START and int(row['YEAR_APPL']) < YEAR_START:
+                continue
             try:
                 _inner_func(row, **kwargs)
             except ValueError as e:

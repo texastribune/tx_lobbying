@@ -122,9 +122,8 @@
   </div>
   <div>
     <h2>Subject Matter Categories</h2>
-    {% if cover.subjects.correction %}
-      {{ data.CORR_NUM }} -
-      {{ cover.subjects.correction }} -
+    {% if cover.correction %}
+      {{ cover.correction }} -
       {{ data.CORR_EXPL }}
     {% endif %}
     <ul>
