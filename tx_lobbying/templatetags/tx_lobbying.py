@@ -5,6 +5,8 @@ register = template.Library()
 
 @register.filter()
 def currency(amount):
+    if amount is None:
+        return mark_safe(u'<span class="currency" data-value=""></span>')
     value = u'{:.2f}'.format(float(amount))
     dollar = u'{:,}'.format(int(amount))
     cents = value.split('.')[1]

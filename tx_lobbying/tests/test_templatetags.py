@@ -3,6 +3,14 @@ from django.test import TestCase
 
 
 class TemplatetagsTest(TestCase):
+    def test_currency_handles_none(self):
+        t = Template('{% load currency from tx_lobbying %}'
+            '{{ amount|currency }}')
+        c = Context({'amount': None})
+        output = t.render(c)
+        self.assertHTMLEqual(output,
+            '<span class="currency" data-value=""></span>')
+
     def test_currency_rounds_right(self):
         t = Template('{% load currency from tx_lobbying %}'
             '{{ 1000.955|currency }}')
