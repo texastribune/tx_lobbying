@@ -352,46 +352,54 @@ class Coversheet(RawDataMixin, models.Model):
     Cover sheet.
 
     Lobbyists have to file a cover sheet with all their expenses for the year
-    (or month? or what?). This contains everything.
+    (or month? or what?). This contains everything and is the root model for
+    all expense reports.
     """
     lobbyist = models.ForeignKey(Lobbyist, related_name="coversheets")
     report_date = models.DateField()
     # REPNO
     report_id = models.PositiveIntegerField(unique=True)
-    year = models.IntegerField()
+    # CORR_NUM
+    correction = models.PositiveSmallIntegerField(default=0,
+        help_text='Correction Number (0=Original)')
+    # YEAR_APPL
+    year = models.PositiveSmallIntegerField()
     # expenses
     transportation = models.DecimalField("Transportation & Lodging",
-        max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
     food = models.DecimalField("Food & Beverages",
-        max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
     entertainment = models.DecimalField("Entertainment",
-        max_digits=12, decimal_places=2, default="0.00")
-    gifts = models.DecimalField("Gifts", max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
+    gifts = models.DecimalField("Gifts",
+        max_digits=12, decimal_places=2, default=0)
     awards = models.DecimalField("Awards & Memementos",
-        max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
     events = models.DecimalField("Political Fundraiers / Charity Events",
-        max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
     media = models.DecimalField("Mass Media Communications",
-        max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
     ben_senators = models.DecimalField("State Senators",
-        max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
     ben_representatives = models.DecimalField("State Representatives",
-        max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
     ben_other = models.DecimalField("Other Elected/Appointed Officials",
-        max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
     ben_legislative = models.DecimalField("Legislative Branch Employees",
-        max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
     ben_executive = models.DecimalField("Executive Agency Employees",
-        max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
     ben_family = models.DecimalField("Family of Legis/Exec Branch",
-        max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
     ben_events = models.DecimalField("Events - All Legis Invited",
-        max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
     ben_guests = models.DecimalField("Guests",
-        max_digits=12, decimal_places=2, default="0.00")
+        max_digits=12, decimal_places=2, default=0)
     # derived fields
-    total_spent = models.DecimalField(max_digits=13, decimal_places=2, default="0.00")
-    total_benefited = models.DecimalField(max_digits=13, decimal_places=2, default="0.00")
+    total_spent = models.DecimalField(
+        max_digits=13, decimal_places=2, default=0)
+    total_benefited = models.DecimalField(
+        max_digits=13, decimal_places=2, default=0)
     spent_guess = models.DecimalField(max_digits=13, decimal_places=2,
         default='0.00', help_text='max(total_spent, total_benefited)')
 
@@ -399,7 +407,7 @@ class Coversheet(RawDataMixin, models.Model):
         ordering = ('report_date', )
 
     def __unicode__(self):
-        return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
+        return u'%s %s %s' % (self.report_id, self.report_date, self.lobbyist)
 
     def get_absolute_url(self):
         return reverse('tx_lobbying:coversheet_detail', kwargs={
@@ -426,11 +434,11 @@ class ExpenseDetailReport(RawDataMixin, models.Model):
     year = models.IntegerField()
     # EXPAMOUNT
     amount = models.DecimalField(max_digits=12, decimal_places=2,
-        default="0.00", null=True)
+        default=0, null=True)
     # other fields
     type = models.CharField(max_length=20)
     amount_guess = models.DecimalField(max_digits=12, decimal_places=2,
-        default="0.00")
+        default=0)
 
     class Meta:
         ordering = ('cover__report_date', )
@@ -530,9 +538,6 @@ class SubjectMatterReport(models.Model):
     # REPNO, should this be a one to one?
     cover = models.OneToOneField(Coversheet, related_name='subjects',
         null=True, blank=True)
-    # CORR_NUM, TODO is this the same as the cover sheet?
-    correction = models.PositiveSmallIntegerField(default=0,
-        help_text='Correction Number (0=Original)')
     # YEAR_APPL
     year = models.PositiveSmallIntegerField()
     # Also on `cover`: FILER_ID LOB_NAME LOB_SORT DUE_DATE RPT_DATE RPT_BEG_DT

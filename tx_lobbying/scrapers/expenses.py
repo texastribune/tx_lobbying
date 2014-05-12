@@ -55,9 +55,10 @@ def _covers_inner(row):
 
     # Coversheet
     default_data = dict(
-        lobbyist=lobbyist,
         raw=json.dumps(row),
+        lobbyist=lobbyist,
         report_date=report_date,
+        correction=row['CORR_NUM'],
         year=row['YEAR_APPL'],
         transportation=row['EXTYP_TRAN'] or "0.00",
         food=row['EXTYP_FOOD'] or "0.00",
@@ -169,7 +170,6 @@ def row_LaSub(row):
         logger.warn('No matching coversheet found {}'.format(row['REPNO']))
         return
     defaults = dict(
-        correction=row['CORR_NUM'],
         year=row['YEAR_APPL'],
     )
     report, created = SubjectMatterReport.objects.update_or_create(
