@@ -93,7 +93,7 @@ def row_CVR(row, **kwargs):
     return (lobbyist, cover)
 
 
-def row_Detail(row, type):
+def row_Detail(row, type, **kwargs):
     try:
         lobbyist = Lobbyist.objects.get(
             filer_id=row['FILER_ID'])
