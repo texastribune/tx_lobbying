@@ -102,7 +102,7 @@ class LobbyistDetail(DetailView):
 
 
 class CoversheetDetail(DetailView):
-    model = models.Coversheet
+    queryset = models.Coversheet.objects.select_related('subjects')
     slug_field = 'report_id'
     slug_url_kwarg = 'report_id'
 
@@ -138,4 +138,3 @@ class AddressDetail(DetailView):
             .select_related('lobbyist')
             .order_by('lobbyist', 'year'))
         return data
-

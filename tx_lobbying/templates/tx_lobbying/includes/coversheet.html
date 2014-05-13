@@ -120,4 +120,18 @@
       <span class="value">{{ cover.ben_guests|currency }}</span>
     </div>
   </div>
+  <div>
+    <h2>Subject Matter Categories</h2>
+    {% if cover.correction %}
+      {{ cover.correction }} -
+      {{ data.CORR_EXPL }}
+    {% endif %}
+    <ul>
+      {% for subject in cover.subjects.all %}
+        <li>
+          {{ subject }}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
 </div>

@@ -53,7 +53,6 @@ import:
 import1:
 	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon14.csv
 	DEBUG=0 YEAR_START=2013 $(MANAGE) lobbying_expenses data/expenses -v 2
-# haha I suck at this
 	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon12.csv
 	DEBUG=0 python tx_lobbying/scrapers/canonical_interests.py
 	DEBUG=0 $(MANAGE) lobbying_stats
