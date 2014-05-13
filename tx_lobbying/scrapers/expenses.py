@@ -92,7 +92,7 @@ def _covers_inner(row):
             .format(cover.report_date, cover.lobbyist, cover.report_id))
 
 
-def _detail_inner(row, type):
+def row_Detail(row, type):
     try:
         lobbyist = Lobbyist.objects.get(
             filer_id=row['FILER_ID'])
@@ -230,11 +230,14 @@ def main(working_dir, logging_level=None):
         _inner_func=_covers_inner)
     process_csv(os.path.join(working_dir, "LaSub.csv"),
         _inner_func=row_LaSub)
+    if YEAR_START:
+        # skip detailed reports when doing an abbreviated import
+        return
     process_csv(os.path.join(working_dir, "LaFood.csv"),
-        _inner_func=_detail_inner, type="food")
+        _inner_func=row_Detail, type="food")
     process_csv(os.path.join(working_dir, "LaAwrd.csv"),
-        _inner_func=_detail_inner, type="award")
+        _inner_func=row_Detail, type="award")
     process_csv(os.path.join(working_dir, "LaEnt.csv"),
-        _inner_func=_detail_inner, type="entertainment")
+        _inner_func=row_Detail, type="entertainment")
     process_csv(os.path.join(working_dir, "LaGift.csv"),
-        _inner_func=_detail_inner, type="gift")
+        _inner_func=row_Detail, type="gift")
