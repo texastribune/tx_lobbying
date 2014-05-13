@@ -73,6 +73,12 @@ class RegistrationTest(TestCase):
     def test_process_row_works(self):
         with self.assertNumQueries(28):
             process_row(sample_rows.LOBCON)
+        # assert re-running uses fewer queries
+        with self.assertNumQueries(19):
+            last_pass = process_row(sample_rows.LOBCON)
+        # assert re-running uses even fewer queries with last_pass
+        with self.assertNumQueries(10):
+            process_row(sample_rows.LOBCON, last_pass=last_pass)
 
 
 class ExpensesTest(TestCase):

@@ -51,32 +51,43 @@ def get_or_create_interest(row):
     return interest, address, created
 
 
-def process_row(row):
+def process_row(row, last_pass=None):
     report_date = convert_date_format_YMD(row['RPT_DATE'])
     year = row['YEAR_APPL']
 
-    reg_address, created = Address.objects.get_or_create(
+    data = dict(
         address1=row['ADDRESS1'],
         address2=row['ADDRESS2'],
         city=row['CITY'],
         state=row['STATE'],
         zipcode=row['ZIPCODE'],
     )
+    # HAHAHAHAHAHA
+    if (last_pass and last_pass[0].address1 == data['address1']
+            and last_pass[0].address2 == data['address2']
+            and last_pass[0].city == data['city']
+            and last_pass[0].state == data['state']
+            and last_pass[0].zipcode == data['zipcode']):
+        reg_address = last_pass[0]
+    else:
+        reg_address, created = Address.objects.get_or_create(**data)
 
-    # lobbyist
-    # very basic `Lobbyist` info here, most of it actually comes
-    # from the coversheets.
-    default_data = dict(
-        name=row['LOBBYNAME'],
-        sort_name=row['SORTNAME'],  # not LOB_SORT like in coversheets
-        updated_at=report_date,
-        address=reg_address,
-    )
-    lobbyist, created = Lobbyist.objects.update_or_create(
-        filer_id=row['FILER_ID'],
-        defaults=default_data)
-    if created:
-        logger.info("LOBBYIST: %s" % lobbyist)
+    # Very basic `Lobbyist` info here, most of it actually comes from the
+    # coversheets.
+    if last_pass and last_pass[1].filer_id == int(row['FILER_ID']):
+        lobbyist = last_pass[1]
+    else:
+        default_data = dict(
+            name=row['LOBBYNAME'],
+            sort_name=row['SORTNAME'],  # not LOB_SORT like in coversheets
+            updated_at=report_date,
+            address=reg_address,
+        )
+        lobbyist, created = Lobbyist.objects.update_or_create(
+            filer_id=row['FILER_ID'],
+            defaults=default_data)
+        if created:
+            logger.info("LOBBYIST: %s" % lobbyist)
 
     if row['CONCERNAME']:
         # interest/concern/client
@@ -86,18 +97,21 @@ def process_row(row):
         interest = None
 
     # registration report
-    default_data = dict(
-        raw=json.dumps(row),
-        report_date=report_date,
-        year=year,
-        address=reg_address,
-    )
-    report, created = RegistrationReport.objects.update_or_create(
-        lobbyist=lobbyist,
-        report_id=row['REPNO'],
-        defaults=default_data)
-    if created:
-        logger.info("REPORT: %s" % report)
+    if last_pass and last_pass[2].report_id == int(row['REPNO']):
+        report = last_pass[2]
+    else:
+        default_data = dict(
+            raw=json.dumps(row),
+            report_date=report_date,
+            year=year,
+            address=reg_address,
+        )
+        report, created = RegistrationReport.objects.update_or_create(
+            lobbyist=lobbyist,
+            report_id=row['REPNO'],
+            defaults=default_data)
+        if created:
+            logger.info("REPORT: %s" % report)
 
     if interest:
         # lobbyist M2M to `Interest` through `Compensation`
@@ -124,14 +138,16 @@ def process_row(row):
             annum=annum,
             interest=interest,
             defaults=default_data)
+    return (reg_address, lobbyist, report)
 
 
 def scrape(path, logger=logger):
     logger.info("Processing %s" % path)
     with open(path, 'rb') as f:
         reader = DictReader(f)
+        last_pass = None
         for row in reader:
-            process_row(row)
+            last_pass = process_row(row, last_pass=last_pass)
 
 
 def generate_test_row(path, **kwargs):
