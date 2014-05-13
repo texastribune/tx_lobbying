@@ -5,7 +5,7 @@ from django.test import TestCase
 from ..factories import CoversheetFactory
 from ..models import Subject
 from ..scrapers.registration import get_or_create_interest, process_row
-from ..scrapers.expenses import _covers_inner, row_LaSub
+from ..scrapers.expenses import row_CVR, row_LaSub
 from . import sample_rows
 
 
@@ -76,8 +76,13 @@ class RegistrationTest(TestCase):
 
 
 class ExpensesTest(TestCase):
-    def test__covers_inner_works(self):
-        _covers_inner(sample_rows.COVER)
+    def test_row_CVR_works(self):
+        with self.assertNumQueries(8):
+            row_CVR(sample_rows.COVER)
+
+        # assert re-running uses fewer queries
+        with self.assertNumQueries(2):
+            row_CVR(sample_rows.COVER)
 
     def test_row_LaSub(self):
         row = sample_rows.LASUB

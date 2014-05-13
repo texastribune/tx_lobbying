@@ -25,7 +25,7 @@ TIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
 logger = logging.getLogger(__name__)
 
 
-def _covers_inner(row):
+def row_CVR(row, **kwargs):
     report_date = row['FILED_DATE'] or row['RPT_DATE']
     report_date = convert_date_format(report_date)
 
@@ -90,6 +90,7 @@ def _covers_inner(row):
     if dirty:
         logger.info(u'COVER:    {} {} {}'
             .format(cover.report_date, cover.lobbyist, cover.report_id))
+    return (lobbyist, cover)
 
 
 def row_Detail(row, type):
@@ -227,7 +228,7 @@ def main(working_dir, logging_level=None):
     if logging_level:
         logger.setLevel(logging_level)
     process_csv(os.path.join(working_dir, "LaCVR.csv"),
-        _inner_func=_covers_inner)
+        _inner_func=row_CVR)
     process_csv(os.path.join(working_dir, "LaSub.csv"),
         _inner_func=row_LaSub)
     if YEAR_START:
