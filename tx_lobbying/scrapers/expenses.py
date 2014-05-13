@@ -134,7 +134,7 @@ def _detail_inner(row, type):
         logger.info("Detail: %s" % report)
 
 
-def row_LaSub(row):
+def row_LaSub(row, last_pass=None):
     """
     Each Coversheet is associated with subject matter.
 
@@ -154,12 +154,16 @@ def row_LaSub(row):
         description=row['CATG_TEXT'],
         other_description=row['OTH_DESC'],
     )
-    try:
-        cover = Coversheet.objects.get(report_id=row['REPNO'])
-    except Coversheet.DoesNotExist:
-        logger.warn('No matching coversheet found {}'.format(row['REPNO']))
-        return
+    if last_pass and last_pass[0].report_id == int(row['REPNO']):
+        cover = last_pass[0]
+    else:
+        try:
+            cover = Coversheet.objects.get(report_id=row['REPNO'])
+        except Coversheet.DoesNotExist:
+            logger.warn('No matching coversheet found {}'.format(row['REPNO']))
+            return
     cover.subjects.add(subject)
+    return (cover, subject)
 
 
 def process_csv(path, _inner_func, **kwargs):
@@ -167,6 +171,9 @@ def process_csv(path, _inner_func, **kwargs):
     total = get_record_count(path)
     with open(path, 'rb') as f:
         reader = DictReader(f, encoding='latin_1')
+        # store output from the last pass since coversheet and lobbyist don't
+        # really change row to row to save some queries.
+        last_pass = None
         for i, row in enumerate(reader):
             if not i % 1000:
                 logger.info(u'{}/{} filed date: {} report date:{}'
@@ -179,7 +186,7 @@ def process_csv(path, _inner_func, **kwargs):
             if YEAR_START and int(row['YEAR_APPL']) < YEAR_START:
                 continue
             try:
-                _inner_func(row, **kwargs)
+                last_pass = _inner_func(row, last_pass=last_pass, **kwargs)
             except ValueError as e:
                 logger.warn('Row missing data: %s, %s' % (row, e))
                 continue

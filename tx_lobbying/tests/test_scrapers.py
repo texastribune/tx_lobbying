@@ -91,7 +91,11 @@ class ExpensesTest(TestCase):
 
         # assert re-running uses fewer queries
         with self.assertNumQueries(3):
-            row_LaSub(row)
+            last_pass = row_LaSub(row)
+
+        # assert re-running uses even fewer queries with last_pass
+        with self.assertNumQueries(2):
+            row_LaSub(row, last_pass=last_pass)
 
         # assert a new report wasn't made
         self.assertEqual(1, Subject.objects.count())
