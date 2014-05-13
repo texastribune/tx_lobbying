@@ -3,7 +3,7 @@ import unittest
 from django.test import TestCase
 
 from ..factories import CoversheetFactory
-from ..models import Subject, SubjectMatterReport
+from ..models import Subject
 from ..scrapers.registration import get_or_create_interest, process_row
 from ..scrapers.expenses import _covers_inner, row_LaSub
 from . import sample_rows
@@ -84,24 +84,22 @@ class ExpensesTest(TestCase):
         # requires pre-existing coversheet
         cover = CoversheetFactory(report_id=row['REPNO'])
 
-        with self.assertNumQueries(11):
+        with self.assertNumQueries(7):
             row_LaSub(row)
         subject = Subject.objects.get(category_id=row['CATGNUM'])
-        report = SubjectMatterReport.objects.get(cover=cover)
         self.assertTrue(subject)
-        self.assertTrue(report)
 
         # assert re-running uses fewer queries
-        with self.assertNumQueries(7):
+        with self.assertNumQueries(3):
             row_LaSub(row)
 
         # assert a new report wasn't made
         self.assertEqual(1, Subject.objects.count())
-        self.assertEqual(1, SubjectMatterReport.objects.count())
+        self.assertEqual(1, cover.subjects.count())
 
         # make a new subject
         row2 = dict(row, CATGNUM=84)
-        with self.assertNumQueries(11):
+        with self.assertNumQueries(7):
             row_LaSub(row2)
         self.assertEqual(2, Subject.objects.count())
-        self.assertEqual(1, SubjectMatterReport.objects.count())
+        self.assertEqual(2, cover.subjects.count())

@@ -12,7 +12,7 @@ import re
 
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Lobbyist,
-    Coversheet, ExpenseDetailReport, Subject, SubjectMatterReport)
+    Coversheet, ExpenseDetailReport, Subject)
 from tx_lobbying.scrapers.utils import (DictReader, convert_date_format,
     get_name_data, setfield)
 
@@ -159,14 +159,7 @@ def row_LaSub(row):
     except Coversheet.DoesNotExist:
         logger.warn('No matching coversheet found {}'.format(row['REPNO']))
         return
-    defaults = dict(
-        year=row['YEAR_APPL'],
-    )
-    report, created = SubjectMatterReport.objects.update_or_create(
-        cover=cover,
-        defaults=defaults,
-    )
-    report.set.add(subject)
+    cover.subjects.add(subject)
 
 
 def process_csv(path, _inner_func, **kwargs):

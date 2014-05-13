@@ -395,6 +395,8 @@ class Coversheet(RawDataMixin, models.Model):
         max_digits=12, decimal_places=2, default=0)
     ben_guests = models.DecimalField("Guests",
         max_digits=12, decimal_places=2, default=0)
+    # Schedule A
+    subjects = models.ManyToManyField('Subject', related_name='reports')
     # derived fields
     total_spent = models.DecimalField(
         max_digits=13, decimal_places=2, default=0)
@@ -525,29 +527,3 @@ class Subject(models.Model):
             if self.category_id == 84 else self.description)
         # TODO
         return self.name
-
-
-class SubjectMatterReport(models.Model):
-    """
-    Form LA Schedule A
-
-    Simpler data, so doesn't use `RawDataMixin`.
-    """
-    # IDNO is ignored because we can do many-to-manys
-    # idno = models.PositiveIntegerField()
-    # REPNO, should this be a one to one?
-    cover = models.OneToOneField(Coversheet, related_name='subjects',
-        null=True, blank=True)
-    # YEAR_APPL
-    year = models.PositiveSmallIntegerField()
-    # Also on `cover`: FILER_ID LOB_NAME LOB_SORT DUE_DATE RPT_DATE RPT_BEG_DT
-    #    RPT_END_DT
-    # FORM_TYPE is always 'LA-A4'
-
-    set = models.ManyToManyField(Subject, related_name='reports')
-
-    def __unicode__(self):
-        return unicode(self.cover)
-
-    def get_absolute_url(self):
-        return self.cover.get_absolute_url()
