@@ -35,11 +35,9 @@ td > .currency
 
 // notebook or mobile
 .notebook
-  .extrainfo
-    display: none
-@media only screen and (max-device-width : 480px)
-  .extrainfo
-    display: none
+  @import "mobile"
+@media only screen and (max-width : 520px)
+  @import "mobile"
 
 .table
   border-collapse: collapse

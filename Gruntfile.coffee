@@ -6,7 +6,6 @@ module.exports = (grunt) ->
         options:
           bundleExec: true
           sourcemap: true
-          style: 'compressed'
         files:
           'example_project/static/css/tx_lobbying.css': 'example_project/static/sass/tx_lobbying.sass'
     jshint:
