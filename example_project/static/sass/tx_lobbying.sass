@@ -1,6 +1,7 @@
 @import 'notebooks'
 
 body
+  color: #222
   font-family: sans-serif
 
 section
@@ -85,5 +86,11 @@ td > .currency
         content: '$'
       .label
         display: none
+  // styling currency for "reports"
+  .currency
+    color: #000
+    font-family: monospace
   .zero
     visibility: visible  // override
+    .cents
+      display: inline
