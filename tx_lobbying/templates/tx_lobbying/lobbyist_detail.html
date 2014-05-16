@@ -121,6 +121,16 @@
       </tbody>
     </table>
   </section>
+  <section>
+    <h2>
+      Subjects
+    </h2>
+    <p>
+      {% for subject in subject_list %}
+        <a href="{{ subject.get_absolute_url }}">{{ subject }}</a>{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    </p>
+  </section>
   <section id="coversheets" class="extrainfo">
     <h2><i class="fa fa-file-o"></i> Cover Sheets</h2>
     <a href="./covers/">{{ object.coversheets.count }} Cover sheets</a>

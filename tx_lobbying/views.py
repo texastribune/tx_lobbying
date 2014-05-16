@@ -119,6 +119,12 @@ class LobbyistDetail(DetailView):
         'years__compensation_set__interest', 'coversheets__details')
     slug_field = 'filer_id'
 
+    def get_context_data(self, **kwargs):
+        data = super(LobbyistDetail, self).get_context_data(**kwargs)
+        data['subject_list'] = (models.Subject.objects
+            .filter(reports__lobbyist=self.object).distinct())
+        return data
+
 
 class CoversheetDetail(DetailView):
     queryset = models.Coversheet.objects.select_related('subjects')
