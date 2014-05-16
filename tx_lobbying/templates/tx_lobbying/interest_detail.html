@@ -5,6 +5,7 @@
 
 {% block main %}
   <h1>
+    <i class="fa fa-suitcase"></i>
     {{ object }}
     <a href="{{ object.nomenklatura_review_url }}" target="_blank">&asymp;</a>
   </h1>
@@ -13,7 +14,23 @@
       {{ object.name }} is an <a href=""></a>lias of <a href="{{ object.canonical.get_absolute_url }}">{{ object.canonical }}</a>
     </p>
   {% endif %}
+  {% if aliases %}
+    <h2>Aliases</h2>
+    <p>
+      Interests are entered by hand, typos and all. To give more realistic
+      numbers, these interests were combined to make this page:
+    </p>
+    <ul>
+      {% for alias in aliases %}
+        <li>
+          <a href="{{ alias.get_absolute_url }}">{{ alias.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
   <p>
+    <i class="fa fa-envelope"></i>
     Address:<br>
     <a href="{{ object.address.get_absolute_url }}">
       {{ object.address }}
@@ -34,21 +51,6 @@
     {% endfor %}
   </ul>
 
-  {% if aliases %}
-    <h2>Aliases</h2>
-    <p>
-      Interests are entered by hand, typos and all. To give more realistic
-      numbers, these interests were combined to make this page:
-    </p>
-    <ul>
-      {% for alias in aliases %}
-        <li>
-          <a href="{{ alias.get_absolute_url }}">{{ alias.name }}</a>
-        </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-
   <h2>Compensation</h2>
   <ul>
     {% for annum in object.stats.all %}
@@ -56,10 +58,12 @@
         In {{ annum.year }}, they spent between ${{ annum.low|intcomma }}
         and ${{ annum.high|intcomma }} on {{ annum.lobbyist_count }} lobbyists.
       </li>
+    {% empty %}
+      <li><em>None</em></li>
     {% endfor %}
   </ul>
 
-  <h2>Lobbyists</h2>
+  <h2><i class="fa fa-user"></i> Lobbyists</h2>
   <ul>
     {% regroup compensation_set by annum.lobbyist as comp_years %}
     {% for lobbyist in comp_years %}

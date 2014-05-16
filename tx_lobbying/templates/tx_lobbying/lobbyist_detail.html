@@ -5,15 +5,9 @@
 {% block head_title %}{{ object }}{% endblock %}
 
 {% block main %}
-  <h1>{{ object }}</h1>
-  {% if object.address %}
-    <a href="{{ object.address.get_absolute_url }}">
-      {{ object.address }}
-    </a>
-  {% endif %}
-
+  <h1><i class="fa fa-user"></i> {{ object }}</h1>
   <section>
-    <h2>Name History</h2>
+    <h3>Name History</h3>
     <ul>
       {% for name, cover in object.get_name_history %}
         <li>{{ name }} ({{ cover.report_date }})</li>
@@ -22,8 +16,15 @@
       {% endfor %}
     </ul>
   </section>
+
   <section>
-    <h2>Address History</h2>
+    <h2><i class="fa fa-envelope"></i> Address</h2>
+    {% if object.address %}
+      <a href="{{ object.address.get_absolute_url }}">
+        {{ object.address }}
+      </a>
+    {% endif %}
+    <h3>Address History</h3>
     <ul>
       {% for address, report in object.get_address_history %}
         <li>
@@ -37,7 +38,7 @@
     </ul>
   </section>
   <section>
-    <h2>Clients</h2>
+    <h2><i class="fa fa-suitcase"></i> Clients</h2>
     <ul>
       {% for yeardata in object.years.all %}
         <li>
@@ -118,7 +119,7 @@
     </table>
   </section>
   <section id="coversheets" class="extrainfo">
-    <h2>Cover Sheets</h2>
+    <h2><i class="fa fa-file-o"></i> Cover Sheets</h2>
     <a href="./covers/">{{ object.coversheets.count }} Cover sheets</a>
   </section>
 
