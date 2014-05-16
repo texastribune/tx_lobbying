@@ -67,6 +67,13 @@ td > .currency
     .cents
       display: none
 
+.h-adr
+  > .p-street-address, > .p-extended-address
+    display: block
+  > .p-locality:after
+    content: ', '
+  > .p-region:after
+    content: ' '
 
 .coversheet
   border: 1px solid black

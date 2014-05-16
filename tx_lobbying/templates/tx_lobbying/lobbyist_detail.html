@@ -24,15 +24,16 @@
     <h2><i class="fa fa-building"></i> Address</h2>
     {% if object.address %}
       <a href="{{ object.address.get_absolute_url }}">
-        {{ object.address }}
+        {{ object.address.as_adr }}
       </a>
     {% endif %}
     <h3>Address History</h3>
     <ul>
       {% for address, report in object.get_address_history %}
         <li>
+          {{ report.year }}
           <a href="{{ address.get_absolute_url }}">
-            {{ address }} ({{ report.year }})
+            {{ address.as_adr }}
           </a>
         </li>
       {% empty %}

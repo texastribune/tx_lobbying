@@ -26,7 +26,7 @@ class RawDataMixin(models.Model):
 ##########
 # MODELS #
 ##########
-
+from django.utils.safestring import mark_safe
 class Address(models.Model):
     """A US address."""
     address1 = models.CharField(max_length=200, null=True, blank=True)
@@ -54,6 +54,25 @@ class Address(models.Model):
 
     def get_absolute_url(self):
         return reverse('tx_lobbying:address_detail', kwargs={'pk': self.pk})
+
+    # CUSTOM METHODS
+
+    def as_adr(self, enclosing_tag='p'):
+        """
+        Get the address formatted in the h-adr microformat.
+
+        http://microformats.org/wiki/h-adr
+        """
+        return mark_safe(
+            '<{1} class="h-adr">'
+            '<span class="p-street-address">{0.address1}</span>'
+            '<span class="p-extended-address">{0.address2}</span>'
+            '<span class="p-locality">{0.city}</span>'
+            '<span class="p-region">{0.state}</span>'
+            '<span class="p-postal-code">{0.zipcode}</span>'
+            '</{1}>'
+            .format(self, enclosing_tag)
+        )
 
 
 class Interest(models.Model):
