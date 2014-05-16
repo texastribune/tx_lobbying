@@ -10,7 +10,10 @@
     <h3>Name History</h3>
     <ul>
       {% for name, cover in object.get_name_history %}
-        <li>{{ name }} ({{ cover.report_date }})</li>
+        <li>
+          <a href="{{ cover.get_absolute_url }}">{{ cover.report_date|date:"Y-m-d" }}</a>
+          - {{ name }}
+        </li>
       {% empty %}
         <li><em>None</em></li>
       {% endfor %}
@@ -18,7 +21,7 @@
   </section>
 
   <section>
-    <h2><i class="fa fa-envelope"></i> Address</h2>
+    <h2><i class="fa fa-building"></i> Address</h2>
     {% if object.address %}
       <a href="{{ object.address.get_absolute_url }}">
         {{ object.address }}
@@ -65,19 +68,19 @@
     </ul>
   </section>
   <section>
-    <h2>Stats</h2>
+    <h2><i class="fa fa-bar-chart-o"></i> Stats</h2>
     <table class="table">
       <thead>
         <tr>
           <th>Year</th>
           <th>Total</th>
-          <th class="extrainfo">Transportation</th>
-          <th class="extrainfo">Food</th>
-          <th class="extrainfo">Entertainment</th>
-          <th class="extrainfo">Gifts</th>
-          <th class="extrainfo">Awards</th>
-          <th class="extrainfo">Events</th>
-          <th class="extrainfo">Media</th>
+          <th class="extrainfo"><i class="fa fa-taxi" aria-label="Transportation"></i></th>
+          <th class="extrainfo"><i class="fa fa-cutlery" aria-label="Food"></i></th>
+          <th class="extrainfo"><i class="fa fa-puzzle-piece" aria-label-"Entertainment"></i></th>
+          <th class="extrainfo"><i class="fa fa-gift" aria-label-"Gifts"></i></th>
+          <th class="extrainfo"><i class="fa fa-certificate" aria-label-"Awards"></i></th>
+          <th class="extrainfo"><i class="fa fa-ticket" aria-label-"Events"></i></th>
+          <th class="extrainfo"><i class="fa fa-youtube-play" aria-label-"Media"></i></th>
           <th class="extrainfo">Senators</th>
           <th class="extrainfo">Representatives</th>
           <th class="extrainfo">Other</th>
@@ -86,7 +89,6 @@
           <th class="extrainfo">Family</th>
           <th class="extrainfo">Events</th>
           <th class="extrainfo">Guests</th>
-          <th class="extrainfo">Details</th>
         </tr>
       </thead>
       <tbody>

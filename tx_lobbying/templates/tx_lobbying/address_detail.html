@@ -4,55 +4,64 @@
 {% block head_title %}{{ object }}{% endblock %}
 
 {% block main %}
-  <h1>
-    {{ object }}
-  </h1>
-  <div>
-    {{ object.address1 }}<br>
-    {% if object.address2 %}
-      {{ object.address2 }}<br>
-    {% endif %}
-    {{ object.city }}, {{ object.state }} {{ object.zipcode }}
-  </div>
-  <h2>Lobbyists at this address</h2>
-  {# TODO this should only be the most current address #}
-  <ul>
-    {% for lobbyist in object.lobbyist_set.alld %}
-      <li>
-        <a href="{{ lobbyist.get_absolute_url }}">{{ lobbyist }}</a>
-      </li>
-    {% empty %}
-      <li><em>None</em></li>
-    {% endfor %}
+  <section>
+    <h1>
+      <i class="fa fa-building"></i>
+      {{ object }}
+    </h1>
+    <div>
+      {{ object.address1 }}<br>
+      {% if object.address2 %}
+        {{ object.address2 }}<br>
+      {% endif %}
+      {{ object.city }}, {{ object.state }} {{ object.zipcode }}
+    </div>
+  </section>
+
+  <section>
+    <h2><i class="fa fa-user"></i> Lobbyists at this address</h2>
+    {# TODO this should only be the most current address #}
+    <ul>
+      {% for lobbyist in object.lobbyist_set.alld %}
+        <li>
+          <a href="{{ lobbyist.get_absolute_url }}">{{ lobbyist }}</a>
+        </li>
+      {% empty %}
+        <li><em>None</em></li>
+      {% endfor %}
+    </ul>
+    <h3>All lobbyists that have recorded themselves at this address</h3>
+    <ul>
+      {% regroup registration_reports by lobbyist as lobbyist_reports %}
+      {% for lobbyist in lobbyist_reports %}
+        <li>
+          <a href="{{ lobbyist.grouper.get_absolute_url }}">{{ lobbyist.grouper }}</a>
+          in
+          {% for report in lobbyist.list %}
+            {{ report.year }}
+          {% endfor %}
+        </li>
+      {% empty %}
+        <li><em>None</em></li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section>
+    <h2><i class="fa fa-suitcase"></i> Interests at this address</h2>
+    {% include "tx_lobbying/includes/interest_list.html" with object_list=object.interest_set.all %}
+    <h3>All interests that have been reported at this address</h3>
+    <ul>
+      {% for report in object.compensation_set.all %}
+        <li>
+          <a href="{{ report.interest.get_absolute_url }}">{{ report.interest }}</a>
+          by
+          <a href="{{ report.annum.lobbyist.get_absolute_url }}">{{ report.annum.lobbyist }}</a>
+          in {{ report.annum.year }}
+        </li>
+      {% empty %}
+        <li><em>None</em></li>
+      {% endfor %}
   </ul>
-  <h2>All lobbyists that have recorded themselves at this address</h2>
-  <ul>
-    {% regroup registration_reports by lobbyist as lobbyist_reports %}
-    {% for lobbyist in lobbyist_reports %}
-      <li>
-        <a href="{{ lobbyist.grouper.get_absolute_url }}">{{ lobbyist.grouper }}</a>
-        in
-        {% for report in lobbyist.list %}
-          {{ report.year }}
-        {% endfor %}
-      </li>
-    {% empty %}
-      <li><em>None</em></li>
-    {% endfor %}
-  <h2>Interests at this address</h2>
-  {% include "tx_lobbying/includes/interest_list.html" with object_list=object.interest_set.all %}
-  </ul>
-  <h2>All interests that have been reported at this address</h2>
-  <ul>
-    {% for report in object.compensation_set.all %}
-      <li>
-        <a href="{{ report.interest.get_absolute_url }}">{{ report.interest }}</a>
-        by
-        <a href="{{ report.annum.lobbyist.get_absolute_url }}">{{ report.annum.lobbyist }}</a>
-        in {{ report.annum.year }}
-      </li>
-    {% empty %}
-      <li><em>None</em></li>
-    {% endfor %}
-  </ul>
+  </section>
 {% endblock %}

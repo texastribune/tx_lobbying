@@ -5,10 +5,10 @@
 {% block head_title %}{{ object }}{% endblock %}
 
 {% block main %}
-  <h1><a href="{{ object.get_absolute_url }}">{{ object }}</a></h1>
+  <h1><i class="fa fa-user"></i> <a href="{{ object.get_absolute_url }}">{{ object }}</a></h1>
   {# TODO add TOC to quickly jump to a year #}
   <section id="coversheets" class="extrainfo">
-    <h2>Cover Sheets</h2>
+    <h2><i class="fa fa-file-o"></i> Cover Sheets</h2>
     {% for cover in object.coversheets.all %}
       {% include "tx_lobbying/includes/coversheet.html" with data=cover.raw_data %}
       {% if cover.details.exists %}

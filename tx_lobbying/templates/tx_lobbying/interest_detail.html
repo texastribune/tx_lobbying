@@ -11,11 +11,11 @@
   </h1>
   {% if object.canonical %}
     <p>
-      {{ object.name }} is an <a href=""></a>lias of <a href="{{ object.canonical.get_absolute_url }}">{{ object.canonical }}</a>
+      {{ object.name }} is an alias of <a href="{{ object.canonical.get_absolute_url }}">{{ object.canonical }}</a>
     </p>
   {% endif %}
   {% if aliases %}
-    <h2>Aliases</h2>
+    <h3>Aliases</h3>
     <p>
       Interests are entered by hand, typos and all. To give more realistic
       numbers, these interests were combined to make this page:
@@ -29,9 +29,11 @@
     </ul>
   {% endif %}
 
-  <p>
-    <i class="fa fa-envelope"></i>
+  <h2>
+    <i class="fa fa-building"></i>
     Address:<br>
+  </h2>
+  <p>
     <a href="{{ object.address.get_absolute_url }}">
       {{ object.address }}
     </a>
@@ -51,7 +53,7 @@
     {% endfor %}
   </ul>
 
-  <h2>Compensation</h2>
+  <h2><i class="fa fa-money"></i> Compensation</h2>
   <ul>
     {% for annum in object.stats.all %}
       <li>

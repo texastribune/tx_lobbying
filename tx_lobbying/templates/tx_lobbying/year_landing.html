@@ -28,7 +28,14 @@
   <section>
     <h2><i class="fa fa-suitcase"></i> Top Interests</h2>
     <table class="table">
-      <thead></thead>
+      <thead>
+        <tr>
+          <th>Interest</th>
+          <th class="extrainfo">Number of Lobbyists</th>
+          <th class="extrainfo">Low</th>
+          <th class="extrainfo">High</th>
+        </tr>
+      </thead>
       <tbody>
         {% for object in top_interests %}
           <tr>
