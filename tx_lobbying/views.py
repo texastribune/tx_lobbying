@@ -1,3 +1,6 @@
+from itertools import groupby
+from operator import itemgetter
+
 from django.db.models import Count, Sum
 from django.views.generic import DetailView, ListView, TemplateView
 
@@ -40,21 +43,25 @@ class Landing(TemplateView):
         return data
 
     def aggregate_details(self):
-        facets = ['food', 'entertainment', 'gift', 'award']
-        data = dict()
-        for year in self.years:
-            qs = ExpenseDetailReport.objects.filter(year=year)
-            year_data = {}
-            total = 0
-            count = 0
-            for facet in facets:
-                year_data[facet] = qs.filter(type=facet).\
-                    aggregate(sum=Sum('amount_guess'), count=Count('amount_guess'))
-                total += year_data[facet]['sum'] or 0
-                count += year_data[facet]['count'] or 0
-            year_data['total'] = total
-            year_data['count'] = count  # same as qs.count()
-            data[year] = year_data
+        def refactor(grouper):
+            out = {
+                x['type']: x
+                for x in grouper
+            }
+            # meh on efficiency for now
+            out['total'] = {
+                'sum': sum(map(itemgetter('sum'), out.values())),
+                'count': sum(map(itemgetter('count'), out.values())),
+            }
+            return out
+
+        totals = (
+            ExpenseDetailReport.objects.all().values('year', 'type')
+            .annotate(sum=Sum('amount_guess'), count=Count('pk'))
+            .order_by('year')
+        )
+        data = groupby(totals, key=itemgetter('year'))
+        data = [(year, refactor(grouper)) for year, grouper in data]
         return data
 
     def get_context_data(self, **kwargs):

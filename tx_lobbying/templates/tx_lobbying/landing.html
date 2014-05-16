@@ -65,23 +65,31 @@
         <tr>
           <th>Year</th>
           <th>Total</th>
+          <th>Count</th>
           <th class="extrainfo">Food</th>
+          <th class="extrainfo">(count)</th>
           <th class="extrainfo">Entertainment</th>
+          <th class="extrainfo">(count)</th>
           <th class="extrainfo">Gifts</th>
+          <th class="extrainfo">(count)</th>
           <th class="extrainfo">Awards</th>
-          <th class="extrainfo">Count</th>
+          <th class="extrainfo">(count)</th>
         </tr>
       </thead>
       <tbody>
-        {% for year, data in itemized.items %}
+        {% for year, data in itemized %}
           <tr>
             <td><a href="{% url 'tx_lobbying:year_landing' year=year %}">{{ year }}</a></td>
-            <td class="">{{ data.total|currency }}</td>
+            <td class="">{{ data.total.sum|currency }}</td>
+            <td class="">{{ data.total.count|intcomma }}</td>
             <td class="extrainfo">{{ data.food.sum|currency }}</td>
+            <td class="extrainfo">{{ data.food.count|intcomma }}</td>
             <td class="extrainfo">{{ data.entertainment.sum|currency }}</td>
+            <td class="extrainfo">{{ data.entertainment.count|intcomma }}</td>
             <td class="extrainfo">{{ data.gift.sum|currency }}</td>
+            <td class="extrainfo">{{ data.gift.count|intcomma }}</td>
             <td class="extrainfo">{{ data.award.sum|currency }}</td>
-            <td class="extrainfo">{{ data.count|intcomma }}</td>
+            <td class="extrainfo">{{ data.award.count|intcomma }}</td>
           </tr>
         {% endfor %}
       </tbody>

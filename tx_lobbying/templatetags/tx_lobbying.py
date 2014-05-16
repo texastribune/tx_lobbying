@@ -5,7 +5,7 @@ register = template.Library()
 
 @register.filter()
 def currency(amount):
-    if amount is None:
+    if amount is None or amount is '':
         return mark_safe(u'<span class="currency" data-value=""></span>')
     value = u'{:.2f}'.format(float(amount))
     dollar = u'{:,}'.format(int(amount))
