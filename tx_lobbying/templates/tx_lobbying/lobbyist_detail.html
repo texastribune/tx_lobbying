@@ -124,6 +124,9 @@
   <section id="coversheets" class="extrainfo">
     <h2><i class="fa fa-file-o"></i> Cover Sheets</h2>
     <a href="./covers/">{{ object.coversheets.count }} Cover sheets</a>
+    from
+    {{ object.coversheets.earliest.year }}
+    to
+    {{ object.coversheets.latest.year }}
   </section>
-
 {% endblock %}

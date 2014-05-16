@@ -425,6 +425,7 @@ class Coversheet(RawDataMixin, models.Model):
         default='0.00', help_text='max(total_spent, total_benefited)')
 
     class Meta:
+        get_latest_by = 'year'
         ordering = ('report_date', )
 
     def __unicode__(self):
