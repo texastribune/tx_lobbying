@@ -533,12 +533,12 @@ class Subject(models.Model):
     category_id = models.PositiveIntegerField()
     # CATG_TEXT (aka CATG_DESC)
     description = models.CharField(max_length=50)
-    # OTH_DESC
+    # OTH_DESC, only used if CATGNUM == 84
     other_description = models.CharField(max_length=50, blank=True)
 
     name = models.CharField(max_length=50, null=True, blank=True,
         help_text=u'Human curated name')
-    # slug
+    # slug = models.SlugField(null=True, blank=True)
 
     class Meta:
         ordering = ('category_id', )

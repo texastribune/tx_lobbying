@@ -90,7 +90,7 @@ class ExpensesTest(TestCase):
         with self.assertNumQueries(2):
             row_CVR(sample_rows.COVER)
 
-    def test_row_LaSub(self):
+    def test_row_LaSub_works(self):
         row = sample_rows.LASUB
         # requires pre-existing coversheet
         cover = CoversheetFactory(report_id=row['REPNO'])
@@ -118,3 +118,17 @@ class ExpensesTest(TestCase):
             row_LaSub(row2)
         self.assertEqual(2, Subject.objects.count())
         self.assertEqual(2, cover.subjects.count())
+
+    def test_row_LaSub_does_not_dupe(self):
+        row = dict(sample_rows.LASUB,
+            CATGNUM=83,
+            CATG_TEXT='foo')
+        # requires pre-existing coversheet
+        CoversheetFactory(report_id=row['REPNO'])
+
+        row_LaSub(row)
+        self.assertEqual(Subject.objects.filter(category_id=83).count(), 1)
+
+        row['CATG_TEXT'] = 'bar'
+        row_LaSub(row)
+        self.assertEqual(Subject.objects.filter(category_id=83).count(), 1)

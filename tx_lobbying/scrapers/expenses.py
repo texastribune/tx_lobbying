@@ -149,13 +149,23 @@ def row_LaSub(row, last_pass=None):
         from tx_lobbying.scrapers.expenses import process_csv, row_LaSub
         process_csv('data/expenses/LaSub.csv', row_LaSub)
     """
-    # FIXME only create random categories if 'Other' category
-    subject, created = Subject.objects.get_or_create(
-        # category id is only unique if it isn't "other"
-        category_id=row['CATGNUM'],
-        description=row['CATG_TEXT'],
-        other_description=row['OTH_DESC'],
-    )
+    if int(row['CATGNUM']) == 84:
+        # category id isn't unique if it is "other"
+        subject, created = Subject.objects.get_or_create(
+            category_id=row['CATGNUM'],
+            other_description=row['OTH_DESC'],
+            defaults=dict(
+                description=row['CATG_TEXT'],
+            )
+        )
+    else:
+        subject, created = Subject.objects.get_or_create(
+            category_id=row['CATGNUM'],
+            defaults=dict(
+                description=row['CATG_TEXT'],
+                other_description=row['OTH_DESC'],
+            )
+        )
     if last_pass and last_pass[0].report_id == int(row['REPNO']):
         cover = last_pass[0]
     else:
