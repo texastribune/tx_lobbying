@@ -43,5 +43,6 @@ admin.site.register(models.Lobbyist, LobbyistAdmin)
 
 
 class SubjectAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'category_id')
+    list_display = ('category_id', 'name', 'description')
+    list_editable = ('name', )
 admin.site.register(models.Subject, SubjectAdmin)
