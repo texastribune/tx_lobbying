@@ -32,14 +32,26 @@ class Landing(TemplateView):
             .order_by('year')
         )
         # fill in missing data
+        n_itemized = {
+            x['year']: x['pk__count'] for x in
+            (Coversheet.objects.exclude(details__isnull=True)
+            .order_by('year').values('year')
+            .annotate(Count('pk')))
+        }
+        n_spent = {
+            x['stats__year']: x['pk__count'] for x in
+            (Lobbyist.objects.filter(stats__spent_guess__gt=0).distinct()
+            .order_by('stats__year')
+            .values('stats__year')
+            .annotate(Count('pk')))
+        }
         for row in data:
             year = row['year']
-            qs = Coversheet.objects.filter(year=year)
-            row['itemized'] = qs.exclude(details__isnull=True).count()
+            row['itemized'] = n_itemized.get(year)
+            # can't do the same trick because orm does an outer join
             row['registered'] = Lobbyist.objects.filter(
                 registrations__year__exact=year).distinct().count()
-            row['spent_anything'] = Lobbyist.objects.filter(
-                stats__year__exact=year, stats__spent_guess__gt=0).distinct().count()
+            row['spent_anything'] = n_spent.get(year)
         return data
 
     def aggregate_details(self):
