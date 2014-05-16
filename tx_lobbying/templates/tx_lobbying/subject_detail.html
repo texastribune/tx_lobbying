@@ -7,5 +7,15 @@
     <h1>
       {{ object }}
     </h1>
+    <h2><i class="fa fa-user"></i> Lobbyists</h2>
+    <ul>
+      {% for lobbyist in lobbyist_list %}
+        <li>
+          <a href="{{ lobbyist.get_absolute_url }}">
+            {{ lobbyist }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
   </section>
 {% endblock %}

@@ -165,3 +165,10 @@ class SubjectList(ListView):
 
 class SubjectDetail(DetailView):
     model = models.Subject
+
+    def get_context_data(self, **kwargs):
+        data = super(SubjectDetail, self).get_context_data(**kwargs)
+        data['lobbyist_list'] = (models.Lobbyist.objects
+            .filter(coversheets__subjects=self.object)
+            .distinct())
+        return data
