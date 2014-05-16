@@ -73,15 +73,15 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Year</th>
-          <th>Total</th>
+          <th class="b-r">Year</th>
+          <th class="b-r">Total</th>
           <th class="extrainfo"><i class="fa fa-taxi" aria-label="Transportation"></i></th>
           <th class="extrainfo"><i class="fa fa-cutlery" aria-label="Food"></i></th>
           <th class="extrainfo"><i class="fa fa-puzzle-piece" aria-label-"Entertainment"></i></th>
           <th class="extrainfo"><i class="fa fa-gift" aria-label-"Gifts"></i></th>
           <th class="extrainfo"><i class="fa fa-certificate" aria-label-"Awards"></i></th>
           <th class="extrainfo"><i class="fa fa-ticket" aria-label-"Events"></i></th>
-          <th class="extrainfo"><i class="fa fa-youtube-play" aria-label-"Media"></i></th>
+          <th class="extrainfo b-r"><i class="fa fa-youtube-play" aria-label-"Media"></i></th>
           <th class="extrainfo">Senators</th>
           <th class="extrainfo">Representatives</th>
           <th class="extrainfo">Other</th>
@@ -95,10 +95,10 @@
       <tbody>
         {% for stat in object.stats.all %}
           <tr>
-            <td>
+            <td class="b-r">
               {{ stat.year }}
             </td>
-            <td>
+            <td class="b-r">
               {{ stat.spent_guess|currency }}
             </td>
             <td class="extrainfo">{{ stat.transportation|currency }}</td>
@@ -107,7 +107,7 @@
             <td class="extrainfo">{{ stat.gifts|currency }}</td>
             <td class="extrainfo">{{ stat.awards|currency }}</td>
             <td class="extrainfo">{{ stat.events|currency }}</td>
-            <td class="extrainfo">{{ stat.media|currency }}</td>
+            <td class="extrainfo b-r">{{ stat.media|currency }}</td>
             <td class="extrainfo">{{ stat.ben_senators|currency }}</td>
             <td class="extrainfo">{{ stat.ben_representatives|currency }}</td>
             <td class="extrainfo">{{ stat.ben_other|currency }}</td>
