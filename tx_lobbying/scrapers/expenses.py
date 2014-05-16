@@ -149,6 +149,7 @@ def row_LaSub(row, last_pass=None):
         from tx_lobbying.scrapers.expenses import process_csv, row_LaSub
         process_csv('data/expenses/LaSub.csv', row_LaSub)
     """
+    # FIXME only create random categories if 'Other' category
     subject, created = Subject.objects.get_or_create(
         # category id is only unique if it isn't "other"
         category_id=row['CATGNUM'],
