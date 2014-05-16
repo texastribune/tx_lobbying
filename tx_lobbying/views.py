@@ -157,3 +157,11 @@ class AddressDetail(DetailView):
             .select_related('lobbyist')
             .order_by('lobbyist', 'year'))
         return data
+
+
+class SubjectList(ListView):
+    model = models.Subject
+
+
+class SubjectDetail(DetailView):
+    model = models.Subject

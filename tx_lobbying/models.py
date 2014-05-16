@@ -538,6 +538,7 @@ class Subject(models.Model):
 
     name = models.CharField(max_length=50, null=True, blank=True,
         help_text=u'Human curated name')
+    # slug
 
     class Model:
         ordering = ('category_id', )
@@ -547,3 +548,6 @@ class Subject(models.Model):
             if self.category_id == 84 else self.description)
         # TODO
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('tx_lobbying:subject_detail', kwargs={'pk': self.pk})
