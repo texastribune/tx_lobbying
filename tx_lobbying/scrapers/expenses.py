@@ -150,6 +150,13 @@ def row_LaSub(row, last_pass=None):
 
         from tx_lobbying.scrapers.expenses import process_csv, row_LaSub
         process_csv('data/expenses/LaSub.csv', row_LaSub)
+
+        import csv
+        with open('subjects.csv', 'w') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Description'])
+            for subject in Subject.objects.filter(category_id=84):
+                writer.writerow([subject.other_description])
     """
     if int(row['CATGNUM']) == 84:
         # category id isn't unique if it is "other"
