@@ -38,6 +38,6 @@ urlpatterns = patterns('',
     url(r'^subject/$', RedirectView.as_view(url='../subjects/')),
     url(r'^subjects/$', views.SubjectList.as_view(),
         name='subject_list'),
-    url(r'^subject/(?P<pk>\d+)/$', views.SubjectDetail.as_view(),
+    url(r'^subject/(?P<slug>[-\w]*)/$', views.SubjectDetail.as_view(),
         name='subject_detail'),
 )

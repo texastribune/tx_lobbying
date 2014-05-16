@@ -538,10 +538,10 @@ class Subject(models.Model):
 
     name = models.CharField(max_length=50, null=True, blank=True,
         help_text=u'Human curated name')
-    # slug = models.SlugField(null=True, blank=True)
+    slug = models.SlugField(null=True, blank=True, unique=True)
 
     class Meta:
-        ordering = ('category_id', )
+        ordering = ('category_id', 'slug')
 
     def __unicode__(self):
         if self.name:
@@ -550,4 +550,5 @@ class Subject(models.Model):
             if self.category_id == 84 else self.description)
 
     def get_absolute_url(self):
-        return reverse('tx_lobbying:subject_detail', kwargs={'pk': self.pk})
+        return reverse('tx_lobbying:subject_detail',
+            kwargs={'slug': self.slug})

@@ -10,6 +10,8 @@ import logging
 import os
 import re
 
+from django.utils.text import slugify
+
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Lobbyist,
     Coversheet, ExpenseDetailReport, Subject)
@@ -151,21 +153,27 @@ def row_LaSub(row, last_pass=None):
     """
     if int(row['CATGNUM']) == 84:
         # category id isn't unique if it is "other"
+        defaults = dict(
+            description=row['CATG_TEXT'],
+            other_description=row['OTH_DESC'],
+        )
+        defaults['name'] = defaults['other_description']
+        slug = slugify(unicode(defaults['other_description'] or 'other'))
         subject, created = Subject.objects.get_or_create(
             category_id=row['CATGNUM'],
-            other_description=row['OTH_DESC'],
-            defaults=dict(
-                description=row['CATG_TEXT'],
-            )
+            slug=slug,
+            defaults=defaults,
         )
     else:
+        defaults = dict(
+            description=row['CATG_TEXT'],
+            other_description=row['OTH_DESC'],
+        )
+        defaults['name'] = defaults['description'].title()
+        defaults['slug'] = slugify(unicode(defaults['description']))
         subject, created = Subject.objects.get_or_create(
             category_id=row['CATGNUM'],
-            defaults=dict(
-                description=row['CATG_TEXT'],
-                other_description=row['OTH_DESC'],
-            )
-        )
+            defaults=defaults)
     if last_pass and last_pass[0].report_id == int(row['REPNO']):
         cover = last_pass[0]
     else:
