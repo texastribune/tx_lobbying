@@ -29,52 +29,65 @@
     </ul>
   {% endif %}
 
-  <h2>
-    <i class="fa fa-building"></i>
-    Address:<br>
-  </h2>
-  <p>
-    <a href="{{ object.address.get_absolute_url }}">
-      {{ object.address }}
-    </a>
-  </p>
-  <p>
-    All addresses that have been listed:
-  </p>
-  <ul>
-    {% for address in object.address_set_massive %}
-      <li>
-        <a href="{{ address.get_absolute_url }}">
-          {{ address }}
-        </a>
-      </li>
-    {% empty %}
-      <li><em>None</em></li>
-    {% endfor %}
-  </ul>
+  <section>
+    <h2>
+      <i class="fa fa-building"></i>
+      Address:<br>
+    </h2>
+    <p>
+      <a href="{{ object.address.get_absolute_url }}">
+        {{ object.address }}
+      </a>
+    </p>
+    <p>
+      All addresses that have been listed:
+    </p>
+    <ul>
+      {% for address in object.address_set_massive %}
+        <li>
+          <a href="{{ address.get_absolute_url }}">
+            {{ address }}
+          </a>
+        </li>
+      {% empty %}
+        <li><em>None</em></li>
+      {% endfor %}
+    </ul>
+  </section>
 
-  <h2><i class="fa fa-money"></i> Compensation</h2>
-  <ul>
-    {% for annum in object.stats.all %}
-      <li>
-        In {{ annum.year }}, they spent between ${{ annum.low|intcomma }}
-        and ${{ annum.high|intcomma }} on {{ annum.lobbyist_count }} lobbyists.
-      </li>
-    {% empty %}
-      <li><em>None</em></li>
-    {% endfor %}
-  </ul>
-
-  <h2><i class="fa fa-user"></i> Lobbyists</h2>
-  <ul>
-    {% regroup compensation_set by annum.lobbyist as comp_years %}
-    {% for lobbyist in comp_years %}
-      <li>
-        <a href="{{ lobbyist.grouper.get_absolute_url }}">{{ lobbyist.grouper }}</a>
-        {% for comp in lobbyist.list %}
-          {{ comp.annum.year }}
+  <section>
+    <h2><i class="fa fa-money"></i> Compensation</h2>
+    {% if object.canonical %}
+      <p>
+        Please see the record for
+        <a href="{{ object.canonical.get_absolute_url }}">{{ object.canonical }}</a>
+      </p>
+    {% else %}
+      <ul>
+        {% for annum in object.stats.all %}
+          <li>
+            In {{ annum.year }}, they spent between ${{ annum.low|intcomma }}
+            and ${{ annum.high|intcomma }} on {{ annum.lobbyist_count }} lobbyists.
+          </li>
+        {% empty %}
+          <li><em>None</em></li>
         {% endfor %}
-      </li>
-    {% endfor %}
-  </ul>
+      </ul>
+    {% endif %}
+  </section>
+
+  <section>
+    <h2><i class="fa fa-user"></i> Lobbyists</h2>
+    <ul>
+      {% regroup compensation_set by annum.lobbyist as comp_years %}
+      {% for lobbyist in comp_years %}
+        <li>
+          <a href="{{ lobbyist.grouper.get_absolute_url }}">{{ lobbyist.grouper }}</a>
+          {% for comp in lobbyist.list %}
+            {{ comp.annum.year }}
+          {% endfor %}
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
 {% endblock %}
