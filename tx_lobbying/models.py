@@ -534,20 +534,20 @@ class Subject(models.Model):
     # CATG_TEXT (aka CATG_DESC)
     description = models.CharField(max_length=50)
     # OTH_DESC
-    other_description = models.CharField(max_length=50)
+    other_description = models.CharField(max_length=50, blank=True)
 
     name = models.CharField(max_length=50, null=True, blank=True,
         help_text=u'Human curated name')
     # slug
 
-    class Model:
+    class Meta:
         ordering = ('category_id', )
 
     def __unicode__(self):
+        if self.name:
+            return self.name
         return (self.other_description
             if self.category_id == 84 else self.description)
-        # TODO
-        return self.name
 
     def get_absolute_url(self):
         return reverse('tx_lobbying:subject_detail', kwargs={'pk': self.pk})

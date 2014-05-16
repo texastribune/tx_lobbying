@@ -39,5 +39,9 @@ class LobbyistAdmin(admin.ModelAdmin):
     list_display = ('name', 'updated_at')
     search_fields = ('name', )
     inlines = (RegistrationReportInline, CoverSheetInline, )
-
 admin.site.register(models.Lobbyist, LobbyistAdmin)
+
+
+class SubjectAdmin(admin.ModelAdmin):
+    list_display = ('__unicode__', 'category_id')
+admin.site.register(models.Subject, SubjectAdmin)
