@@ -33,6 +33,7 @@ expenses:
 nomenklatura:
 	mkdir -p nomenklatura
 	curl "http://opennames.org/api/2/entities?dataset=tx-lobbying-interests&format=csv" > $@/interests.csv
+	curl "http://opennames.org/api/2/entities?dataset=tx-lobbying-subjects&format=csv" > $@/subjects.csv
 
 
 all: lobcon expenses nomenklatura
