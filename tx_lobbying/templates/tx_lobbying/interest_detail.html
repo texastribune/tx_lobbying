@@ -34,10 +34,9 @@
       <i class="fa fa-building"></i>
       Address:<br>
     </h2>
+    {{ object.address.as_adr }}
     <p>
-      <a href="{{ object.address.get_absolute_url }}">
-        {{ object.address }}
-      </a>
+      <a href="{{ object.address.get_absolute_url }}">link</a>
     </p>
     <p>
       All addresses that have been listed:
@@ -47,6 +46,7 @@
         <li>
           <a href="{{ address.get_absolute_url }}">
             {{ address }}
+            {% if address.coordinate %}<i class="fa fa-crosshairs"></i>{% endif %}
           </a>
         </li>
       {% empty %}

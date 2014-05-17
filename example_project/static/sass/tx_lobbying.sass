@@ -72,12 +72,21 @@ td > .currency
       display: none
 
 .h-adr
+
   > .p-street-address, > .p-extended-address
     display: block
   > .p-locality:after
     content: ', '
   > .p-region:after
     content: ' '
+  > .h-geo
+    display: none
+
+.map
+  height: 300px
+  margin: 0 auto
+  min-width: 480px
+  width: 80%
 
 .coversheet
   border: 1px solid black

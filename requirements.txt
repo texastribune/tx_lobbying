@@ -4,3 +4,5 @@ https://www.djangoproject.com/download/1.7b3/tarball/
 dj-database-url>=0.2.1
 psycopg2==2.5.2
 project-runpy==0.3.0
+requests==2.3.0
+django-choices==1.1.12

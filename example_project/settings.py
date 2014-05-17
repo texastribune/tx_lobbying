@@ -17,11 +17,18 @@ database_url = env.get(
     'DATABASE_URL',
     'sqlite:///{}'.format(os.path.join(BASE_DIR, 'example_project.db')))
 if environment == 'test':
-    database_url = 'sqlite:///:memory:'
+    # database_url = 'sqlite:///:memory:'
     MIGRATION_MODULES = {
         'tx_lobbying': 'tx_lobbying.migraintions'
     }
 DATABASES = {'default': dj_database_url.parse(database_url)}
+
+##
+# PostGIS
+#
+# This setting prevents Django from selecting `postgis_version()` every
+# request to determine the feature level supported by PostGIS.
+POSTGIS_VERSION = (2, 1, 0)
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -109,6 +116,7 @@ WSGI_APPLICATION = 'example_project.wsgi.application'
 INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.gis',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',

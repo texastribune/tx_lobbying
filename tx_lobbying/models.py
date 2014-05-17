@@ -1,9 +1,15 @@
+# -*- coding: utf-8 -*-
 from collections import namedtuple
 import json
 
+from django.contrib.gis.db import models as geo_models
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Count, Sum, Q
+from django.template import Context
+from django.template.loader import get_template
+from django.utils.safestring import mark_safe
+from djchoices import DjangoChoices, ChoiceItem
 
 
 ##########
@@ -26,16 +32,41 @@ class RawDataMixin(models.Model):
 ##########
 # MODELS #
 ##########
-from django.utils.safestring import mark_safe
-class Address(models.Model):
+class Address(geo_models.Model):
     """A US address."""
+    class Quality(DjangoChoices):
+        # http://geoservices.tamu.edu/Services/Geocode/About/#NAACCRGISCoordinateQualityCodes
+        AddressPoint = ChoiceItem('00',
+            'Coordinates derived from local government-maintained address '
+            'points, which are based on property parcel locations, not '
+            'interpolation over a street segment’s address range')
+        GPS = ChoiceItem('01',
+            'Coordinates assigned by Global Positioning System (GPS)')
+        Parcel = ChoiceItem('02', 'Coordinates are match of house number and '
+            'street, and based on property parcel location')
+        StreetSegmentInterpolation = ChoiceItem('03', 'Coordinates are match '
+            'of house number and street, interpolated over the matching '
+            'street segment’s address range')
+        AddressZipCentroid = ChoiceItem('09',
+            'Coordinates are address 5-digit ZIP code centroid')
+        POBoxZIPCentroid = ChoiceItem('10', 'Coordinates are point ZIP code '
+            'of Post Office Box or Rural Route')
+        CityCentroid = ChoiceItem('11', 'Coordinates are centroid of address '
+            'city (when address ZIP code is unknown or invalid, and there are '
+            'multiple ZIP codes for the city)')
+
     address1 = models.CharField(max_length=200, null=True, blank=True)
     address2 = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=75, null=True, blank=True)
     state = models.CharField(max_length=2)
     zipcode = models.CharField(max_length=11, null=True, blank=True)
-    # latitude
-    # longitude
+    coordinate = geo_models.PointField(null=True, blank=True)
+    coordinate_quality = models.CharField(max_length=2, null=True, blank=True)
+    canonical = models.ForeignKey('self', related_name='aliases',
+        null=True, blank=True)
+
+    # MANAGERS
+    objects = geo_models.GeoManager()
 
     class Meta:
         ordering = ('address1', )
@@ -55,6 +86,12 @@ class Address(models.Model):
     def get_absolute_url(self):
         return reverse('tx_lobbying:address_detail', kwargs={'pk': self.pk})
 
+    # CUSTOM PROPERTIES
+
+    @property
+    def coordinate_quality_label(self):
+        return self.Quality.values.get(self.coordinate_quality)
+
     # CUSTOM METHODS
 
     def as_adr(self, enclosing_tag='p'):
@@ -63,16 +100,12 @@ class Address(models.Model):
 
         http://microformats.org/wiki/h-adr
         """
-        return mark_safe(
-            '<{1} class="h-adr">'
-            '<span class="p-street-address">{0.address1}</span>'
-            '<span class="p-extended-address">{0.address2}</span>'
-            '<span class="p-locality">{0.city}</span>'
-            '<span class="p-region">{0.state}</span>'
-            '<span class="p-postal-code">{0.zipcode}</span>'
-            '</{1}>'
-            .format(self, enclosing_tag)
-        )
+        return mark_safe(get_template('tx_lobbying/includes/address_adr.html')
+            .render(Context({'object': self})))
+
+    def geocode(self):
+        from .utils import geocode_address
+        geocode_address(self)
 
 
 class Interest(models.Model):

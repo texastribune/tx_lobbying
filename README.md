@@ -54,6 +54,13 @@ Then load data with:
 
 ## Running tests
 
+Change `template1` to be postgis enabled:
+
+    psql template1
+
+    CREATE EXTENSION postgis;
+    CREATE EXTENSION postgis_topology;
+
     make test
 
 ## Development

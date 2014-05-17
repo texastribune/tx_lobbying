@@ -1,0 +1,22 @@
+<p class="h-adr" data-pk="{{ object.pk }}">
+  {% if object.address1 %}
+    <span class="p-street-address">{{ object.address1 }}</span>
+  {% endif %}
+  {% if object.address2 %}
+    <span class="p-extended-address">{{ object.address2 }}</span>
+  {% endif %}
+  {% if object.city %}
+    <span class="p-locality">{{ object.city }}</span>
+  {% endif %}
+  <span class="p-region">{{ object.state }}</span>
+  <span class="p-postal-code">{{ object.zipcode }}</span>
+  {% if object.coordinate %}
+    <span class="h-geo">
+      <span class="p-latitude">{{ object.coordinate.y }}</span>
+      <span class="p-longitude">{{ object.coordinate.x }}</span>
+      <span class="coordinate_quality">
+        {{ object.coordinate_quality }}: {{ object.coordinate_quality_label }}
+      </span>
+    </span>
+  {% endif %}
+</p>

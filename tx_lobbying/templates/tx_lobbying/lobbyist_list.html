@@ -1,5 +1,5 @@
 {% extends "tx_lobbying/base.html" %}
-{% load humanize %}
+{% load currency from tx_lobbying %}
 
 {% block head_title %}Lobbyists{% endblock %}
 
@@ -9,9 +9,7 @@
     {% for object in object_list %}
       <li>
         <a href="{{ object.get_absolute_url }}">{{ object }}</a>
-        {% if object.spent %}
-          ${{ object.spent|intcomma }}
-        {% endif %}
+        {{ object.spent|currency }}
       </li>
     {% endfor %}
   </ul>
