@@ -1,4 +1,7 @@
-@import 'notebooks'
+@import "settings"
+@import "mixins"
+@import "layout"
+@import "notebooks"
 
 $baseColor: #222
 
@@ -79,8 +82,8 @@ td > .currency
     content: ', '
   > .p-region:after
     content: ' '
-  > .h-geo
-    display: none
+.h-geo
+  display: none
 
 .map
   height: 300px

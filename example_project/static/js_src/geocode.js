@@ -43,10 +43,36 @@
     });
   };
 
+  var mapMany = function ($container) {
+    var bounds = [];
+    var $points = $container.find('span.h-geo');
+    if ($points.length === 0) {
+      // nothing to map
+      return;
+    }
+    var map = L.map($container.find('div.map')[0], {scrollWheelZoom: false});
+    $points.each(function () {
+      var $el = $(this);
+      var lat = +$el.find('span.p-latitude').html();
+      var lng = +$el.find('span.p-longitude').html();
+      var title = $.trim($el.find('span.coordinate_quality').text());
+      bounds.push([lat, lng]);
+      var marker = L.marker([lat, lng], {title: title});
+      marker.addTo(map);
+    });
+    map.fitBounds(bounds);
+
+    // add an OpenStreetMap tile layer
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+  };
+
   // exports
   exports.geocode = {
     adr: geocodeAdr,
-    map: map
+    map: map,
+    mapMany: mapMany
   };
 
 })(this, this.jQuery, this.L);

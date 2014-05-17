@@ -15,5 +15,8 @@
         geocode.adr($el);
       }
     });
+    $('.map-many').each(function () {
+      geocode.mapMany($(this));
+    });
   });
 })(this.geocode);

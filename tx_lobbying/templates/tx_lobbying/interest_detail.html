@@ -41,18 +41,27 @@
     <p>
       All addresses that have been listed:
     </p>
-    <ul>
-      {% for address in object.address_set_massive %}
-        <li>
-          <a href="{{ address.get_absolute_url }}">
-            {{ address }}
-            {% if address.coordinate %}<i class="fa fa-crosshairs"></i>{% endif %}
-          </a>
-        </li>
-      {% empty %}
-        <li><em>None</em></li>
-      {% endfor %}
-    </ul>
+    <div class="row map-many">
+      <div class="cell w-6">
+        <ul>
+          {% for address in object.address_set_massive %}
+            <li>
+              <a href="{{ address.get_absolute_url }}">
+                {{ address }}
+                {% if address.coordinate %}<i class="fa fa-crosshairs"></i>{% endif %}
+              </a>
+              {% include "tx_lobbying/includes/address_geo.html" with object=address %}
+            </li>
+          {% empty %}
+            <li><em>None</em></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="cell w-6">
+        <h3>Map</h3>
+        <div class="map"></div>
+      </div>
+    </div>
   </section>
 
   <section>

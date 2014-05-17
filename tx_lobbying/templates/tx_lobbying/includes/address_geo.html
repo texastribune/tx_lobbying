@@ -1,0 +1,7 @@
+{% if object.coordinate %}{% spaceless %}
+  <span class="h-geo">
+    <span class="p-latitude">{{ object.coordinate.y }}</span>
+    <span class="p-longitude">{{ object.coordinate.x }}</span>
+    <span class="coordinate_quality">{{ object.coordinate_quality }}: {{ object.coordinate_quality_label }}</span>
+  </span>
+{% endspaceless %}{% endif %}
