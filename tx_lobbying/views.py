@@ -165,6 +165,16 @@ class AddressDetail(DetailView):
         return data
 
 
+class AddressGeocode(DetailView):
+    model = models.Address
+
+    def get_context_data(self, **kwargs):
+        from .utils import geocode_address
+        data = super(AddressGeocode, self).get_context_data(**kwargs)
+        data['geocode'] = geocode_address(self.object)
+        return data
+
+
 class SubjectList(ListView):
     model = models.Subject
 

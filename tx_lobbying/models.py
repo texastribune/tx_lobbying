@@ -35,7 +35,8 @@ class Address(geo_models.Model):
     city = models.CharField(max_length=75, null=True, blank=True)
     state = models.CharField(max_length=2)
     zipcode = models.CharField(max_length=11, null=True, blank=True)
-    location = geo_models.PointField(null=True, blank=True)
+    coordinate = geo_models.PointField(null=True, blank=True)
+    coordinate_quality = models.CharField(max_length=2, null=True, blank=True)
     canonical = models.ForeignKey('self', related_name='aliases',
         null=True, blank=True)
 
@@ -78,6 +79,10 @@ class Address(geo_models.Model):
             '</{1}>'
             .format(self, enclosing_tag)
         )
+
+    def geocode(self):
+        from .utils import geocode_address
+        geocode_address(self)
 
 
 class Interest(models.Model):
