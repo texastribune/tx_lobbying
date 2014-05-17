@@ -1,15 +1,6 @@
 (function (exports, $, L) {
   'use strict';
 
-  var geocode = function () {
-    // url = 'http://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx?';
-    var url = 'http://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderService_V04_01.asmx';
-    $.get(url, {
-      apiKey: '7310e8fa0b15479fb44655c9a90958ab',
-      version: '4.01',
-    });
-  };
-
   var drawMap = function ($el, options) {
     var $map = $('<div class="map"></div>');
     $map.insertAfter($el);
@@ -54,7 +45,6 @@
 
   // exports
   exports.geocode = {
-    geocode: geocode,
     adr: geocodeAdr,
     map: map
   };
