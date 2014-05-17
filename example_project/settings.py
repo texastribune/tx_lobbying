@@ -13,21 +13,21 @@ ALLOWED_HOSTS = ['*']  # XXX
 
 environment = env.get('ENVIRONMENT')
 
-database_url = env.get(
-    'DATABASE_URL',
-    'sqlite:///{}'.format(os.path.join(BASE_DIR, 'example_project.db')))
+_database_url = env.get('DATABASE_URL', 'postgis:///tx_lobbying')
 if environment == 'test':
-    # database_url = 'sqlite:///:memory:'
     MIGRATION_MODULES = {
         'tx_lobbying': 'tx_lobbying.migraintions'
     }
-DATABASES = {'default': dj_database_url.parse(database_url)}
+DATABASES = {'default': dj_database_url.parse(_database_url)}
 
 ##
 # PostGIS
 #
 # This setting prevents Django from selecting `postgis_version()` every
 # request to determine the feature level supported by PostGIS.
+#
+# Note: Travis CI currently uses 2.1.0
+# http://docs.travis-ci.com/user/using-postgresql/
 POSTGIS_VERSION = (2, 1, 0)
 
 # Local time zone for this installation. Choices can be found here:
