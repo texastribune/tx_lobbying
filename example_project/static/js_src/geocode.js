@@ -44,6 +44,7 @@
   };
 
   var mapMany = function ($container) {
+    var uniquePoints = {};
     var bounds = [];
     var $points = $container.find('span.h-geo');
     if ($points.length === 0) {
@@ -55,10 +56,18 @@
       var $el = $(this);
       var lat = +$el.find('span.p-latitude').html();
       var lng = +$el.find('span.p-longitude').html();
+      var key = lat + lng;
+      lat = +lat;
+      lng = +lng;
+      if (uniquePoints[key]) {
+        // this lat/lng has already been made into a marker
+        return;
+      }
       var title = $.trim($el.find('span.coordinate_quality').text());
       bounds.push([lat, lng]);
       var marker = L.marker([lat, lng], {title: title});
       marker.addTo(map);
+      uniquePoints[key] = marker;
     });
     map.fitBounds(bounds);
 
