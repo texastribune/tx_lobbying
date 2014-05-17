@@ -1,6 +1,6 @@
 # tx_lobbying
 
-
+[![Build Status](https://travis-ci.org/texastribune/tx_lobbying.svg?branch=master)](https://travis-ci.org/texastribune/tx_lobbying)
 Very early alpha
 
 ## About the data
