@@ -10,10 +10,17 @@
       {{ object }}
     </h1>
     {{ object.as_adr }}
+    <h3>Aliases</h3>
+    <ul>
+      {% for address in aliases %}
+        <li>
+          <a href="{{ address.get_absolute_url }}">
+            {{ address }} {{ address.coordinate_quality }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
   </section>
-
-  {# DELETEME #}
-  {{ geocode|safe }}
 
   <section>
     <h2><i class="fa fa-user"></i> Lobbyists at this address</h2>
