@@ -49,6 +49,8 @@ class Address(geo_models.Model):
             'street segment’s address range')
         AddressZipCentroid = ChoiceItem('09',
             'Coordinates are address 5-digit ZIP code centroid')
+        POBoxZIPCentroid = ChoiceItem('10', 'Coordinates are point ZIP code '
+            'of Post Office Box or Rural Route')
         CityCentroid = ChoiceItem('11', 'Coordinates are centroid of address '
             'city (when address ZIP code is unknown or invalid, and there are '
             'multiple ZIP codes for the city)')

@@ -27,6 +27,10 @@ def update_interests_stats():
         interest.make_stats()
 
 
+class GeocodeException(Exception):
+    pass
+
+
 def geocode_address(address, force=False):
     """
     Geocode an `Address`.
@@ -38,6 +42,8 @@ def geocode_address(address, force=False):
     if address.coordinate and not force:
         # address already has a location
         return
+    if not address.city and not address.zipcode:
+        raise GeocodeException("Can't look up without a city or zip")
     url = (
         'http://geoservices.tamu.edu/Services/Geocode/WebService/'
         'GeocoderWebServiceHttpNonParsed_V04_01.aspx'
@@ -55,8 +61,8 @@ def geocode_address(address, force=False):
     }
     response = requests.get(url, params=params, headers=headers)
     if response.status_code != 200:
-        # TODO raise an exception
-        return
+        raise GeocodeException('Got a non-200 response: {}'
+            .format(response.status_code))
     fields = [
         'TransactionId',
         'Version',
