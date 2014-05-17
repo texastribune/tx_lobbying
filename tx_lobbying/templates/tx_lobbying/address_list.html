@@ -6,7 +6,7 @@
 {% block main %}
   <h1><i class="fa fa-building"></i> All Addresses</h1>
   <ul>
-    {% for address in address_list %}
+    {% for address in object_list %}
       <li>
         <a href="{{ address.get_absolute_url }}">
           {{ address }}
