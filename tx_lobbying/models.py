@@ -1,9 +1,11 @@
 from collections import namedtuple
 import json
 
+from django.contrib.gis.db import models as geo_models
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Count, Sum, Q
+from django.utils.safestring import mark_safe
 
 
 ##########
@@ -26,16 +28,19 @@ class RawDataMixin(models.Model):
 ##########
 # MODELS #
 ##########
-from django.utils.safestring import mark_safe
-class Address(models.Model):
+class Address(geo_models.Model):
     """A US address."""
     address1 = models.CharField(max_length=200, null=True, blank=True)
     address2 = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=75, null=True, blank=True)
     state = models.CharField(max_length=2)
     zipcode = models.CharField(max_length=11, null=True, blank=True)
-    # latitude
-    # longitude
+    location = geo_models.PointField(null=True, blank=True)
+    canonical = models.ForeignKey('self', related_name='aliases',
+        null=True, blank=True)
+
+    # MANAGERS
+    objects = geo_models.GeoManager()
 
     class Meta:
         ordering = ('address1', )
