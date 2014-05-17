@@ -159,11 +159,14 @@ class AddressDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         data = super(AddressDetail, self).get_context_data(**kwargs)
-        data['aliases'] = (
+        if self.object.coordinate:
             # TODO only build aliases if the coordinate_quality is good enough
-            models.Address.objects
-            .filter(coordinate__equals=self.object.coordinate)
-        )
+            data['aliases'] = (
+                models.Address.objects
+                .filter(coordinate__equals=self.object.coordinate)
+            )
+        else:
+            data['aliases'] = ()
         data['registration_reports'] = (
             models.RegistrationReport.objects.filter(address=self.object)
             .select_related('lobbyist')
