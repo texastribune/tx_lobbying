@@ -10,16 +10,18 @@
       {{ object }}
     </h1>
     {{ object.as_adr }}
-    <h3>Aliases</h3>
-    <ul>
-      {% for address in aliases %}
-        <li>
-          <a href="{{ address.get_absolute_url }}">
-            {{ address }} {{ address.coordinate_quality }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
+    {% if aliases %}
+      <h3>Aliases</h3>
+      <ul>
+        {% for address in aliases %}
+          <li>
+            <a href="{{ address.get_absolute_url }}">
+              {{ address }} {{ address.coordinate_quality }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
   </section>
 
   <section>
