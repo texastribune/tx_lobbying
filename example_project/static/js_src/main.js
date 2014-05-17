@@ -2,5 +2,7 @@
 (function () {
   'use strict';
 
-  notebook.retrieve('/');
+  if (document.getElementById('notebook')) {
+    notebook.retrieve('/');
+  }
 })();
