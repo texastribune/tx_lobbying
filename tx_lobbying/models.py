@@ -6,6 +6,8 @@ from django.contrib.gis.db import models as geo_models
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Count, Sum, Q
+from django.template import Context
+from django.template.loader import get_template
 from django.utils.safestring import mark_safe
 from djchoices import DjangoChoices, ChoiceItem
 
@@ -80,10 +82,7 @@ class Address(geo_models.Model):
     # CUSTOM PROPERTIES
 
     def coordinate_quality_label(self):
-        return u'{}: {}'.format(
-            self.coordinate_quality,
-            self.Quality.values.get(self.coordinate_quality),
-        )
+        return self.Quality.values.get(self.coordinate_quality)
 
     # CUSTOM METHODS
 
@@ -93,16 +92,8 @@ class Address(geo_models.Model):
 
         http://microformats.org/wiki/h-adr
         """
-        return mark_safe(
-            '<{1} class="h-adr">'
-            '<span class="p-street-address">{0.address1}</span>'
-            '<span class="p-extended-address">{0.address2}</span>'
-            '<span class="p-locality">{0.city}</span>'
-            '<span class="p-region">{0.state}</span>'
-            '<span class="p-postal-code">{0.zipcode}</span>'
-            '</{1}>'
-            .format(self, enclosing_tag)
-        )
+        return mark_safe(get_template('tx_lobbying/includes/address_adr.html')
+            .render(Context({'object': self})))
 
     def geocode(self):
         from .utils import geocode_address
