@@ -10,6 +10,7 @@
       <li>
         <a href="{{ address.get_absolute_url }}">
           {{ address }}
+          {% if address.coordinate %}<i class="fa fa-crosshairs"></i>{% endif %}
         </a>
       </li>
     {% endfor %}
