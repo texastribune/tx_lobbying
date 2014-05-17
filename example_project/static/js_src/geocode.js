@@ -45,13 +45,15 @@
 
   var mapMany = function ($container) {
     var uniquePoints = {};
+    var markers = [];
     var bounds = [];
+    var $map = $container.find('div.map');
     var $points = $container.find('span.h-geo');
     if ($points.length === 0) {
       // nothing to map
+      $map.hide();
       return;
     }
-    var map = L.map($container.find('div.map')[0], {scrollWheelZoom: false});
     $points.each(function () {
       var $el = $(this);
       var lat = +$el.find('span.p-latitude').html();
@@ -66,10 +68,19 @@
       var title = $.trim($el.find('span.coordinate_quality').text());
       bounds.push([lat, lng]);
       var marker = L.marker([lat, lng], {title: title});
-      marker.addTo(map);
+      markers.push(marker);
       uniquePoints[key] = marker;
     });
-    map.fitBounds(bounds);
+    if (markers.length <= 1) {
+      // don't show a map if there's only 1 marker
+      $map.hide();
+      return;
+    }
+    var map = L.map($map[0], {scrollWheelZoom: false});
+    $.each(markers, function () {
+      this.addTo(map);
+    });
+    map.fitBounds(bounds, {maxZoom: 16});
 
     // add an OpenStreetMap tile layer
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
