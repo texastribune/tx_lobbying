@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from collections import namedtuple
 import json
 
@@ -6,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Count, Sum, Q
 from django.utils.safestring import mark_safe
+from djchoices import DjangoChoices, ChoiceItem
 
 
 ##########
@@ -30,6 +32,20 @@ class RawDataMixin(models.Model):
 ##########
 class Address(geo_models.Model):
     """A US address."""
+    class Quality(DjangoChoices):
+        # http://geoservices.tamu.edu/Services/Geocode/About/#NAACCRGISCoordinateQualityCodes
+        AddressPoint = ChoiceItem('00',
+            'Coordinates derived from local government-maintained address '
+            'points, which are based on property parcel locations, not '
+            'interpolation over a street segment’s address range')
+        GPS = ChoiceItem('01',
+            'Coordinates assigned by Global Positioning System (GPS)')
+        Parcel = ChoiceItem('02', 'Coordinates are match of house number and '
+            'street, and based on property parcel location')
+        StreetSegmentInterpolation = ChoiceItem('03', 'Coordinates are match '
+            'of house number and street, interpolated over the matching '
+            'street segment’s address range')
+
     address1 = models.CharField(max_length=200, null=True, blank=True)
     address2 = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=75, null=True, blank=True)
@@ -60,6 +76,14 @@ class Address(geo_models.Model):
 
     def get_absolute_url(self):
         return reverse('tx_lobbying:address_detail', kwargs={'pk': self.pk})
+
+    # CUSTOM PROPERTIES
+
+    def coordinate_quality_label(self):
+        return u'{}: {}'.format(
+            self.coordinate_quality,
+            self.Quality.values.get(self.coordinate_quality),
+        )
 
     # CUSTOM METHODS
 
