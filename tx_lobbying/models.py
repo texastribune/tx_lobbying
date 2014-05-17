@@ -47,6 +47,11 @@ class Address(geo_models.Model):
         StreetSegmentInterpolation = ChoiceItem('03', 'Coordinates are match '
             'of house number and street, interpolated over the matching '
             'street segment’s address range')
+        AddressZipCentroid = ChoiceItem('09',
+            'Coordinates are address 5-digit ZIP code centroid')
+        CityCentroid = ChoiceItem('11', 'Coordinates are centroid of address '
+            'city (when address ZIP code is unknown or invalid, and there are '
+            'multiple ZIP codes for the city)')
 
     address1 = models.CharField(max_length=200, null=True, blank=True)
     address2 = models.CharField(max_length=200, null=True, blank=True)
@@ -81,6 +86,7 @@ class Address(geo_models.Model):
 
     # CUSTOM PROPERTIES
 
+    @property
     def coordinate_quality_label(self):
         return self.Quality.values.get(self.coordinate_quality)
 

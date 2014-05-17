@@ -2,6 +2,7 @@ from itertools import groupby
 from operator import itemgetter
 
 from django.db.models import Count, Sum
+from django.http import JsonResponse
 from django.views.generic import DetailView, ListView, TemplateView
 
 from .models import (Lobbyist, Coversheet, ExpenseDetailReport)
@@ -165,14 +166,21 @@ class AddressDetail(DetailView):
         return data
 
 
-class AddressGeocode(DetailView):
+class AddressGeocode(DetailView, JsonResponse):
     model = models.Address
 
-    def get_context_data(self, **kwargs):
+    def get(self, request, *args, **kwargs):
         from .utils import geocode_address
-        data = super(AddressGeocode, self).get_context_data(**kwargs)
-        data['geocode'] = geocode_address(self.object)
-        return data
+        self.object = self.get_object()
+        geocode_address(self.object)
+        return JsonResponse({
+            'latitude': self.object.coordinate.y,
+            'longitude': self.object.coordinate.x,
+            'title': '{}: {}'.format(
+                self.object.coordinate_quality,
+                self.object.coordinate_quality_label,
+            ),
+        })
 
 
 class SubjectList(ListView):
