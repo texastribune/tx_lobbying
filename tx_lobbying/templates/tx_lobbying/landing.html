@@ -34,7 +34,7 @@
           <th class="extrainfo b-r"><i class="fa fa-youtube-play" title="Media" aria-label-"Media"></i></th>
           <th class="extrainfo"># Registered</th>
           <th class="extrainfo"># Spent</th>
-          <th class="extrainfo">Coversheet Count</th>
+          <th class="extrainfo">Coversheet<br>Count</th>
           <th class="extrainfo">w/ details</th>
         </tr>
       </thead>
@@ -50,10 +50,10 @@
             <td class="extrainfo">{{ row.awards__sum|currency }}</td>
             <td class="extrainfo">{{ row.events__sum|currency }}</td>
             <td class="extrainfo b-r">{{ row.media__sum|currency }}</td>
-            <td class="extrainfo">{{ row.registered|intcomma }}</td>
-            <td class="extrainfo">{{ row.spent_anything|intcomma }}</td>
-            <td class="extrainfo">{{ row.pk__count|intcomma }}</td>
-            <td class="extrainfo">{{ row.itemized|intcomma }}</td>
+            <td class="extrainfo align-right">{{ row.registered|intcomma }}</td>
+            <td class="extrainfo align-right">{{ row.spent_anything|intcomma }}</td>
+            <td class="extrainfo align-right">{{ row.pk__count|intcomma }}</td>
+            <td class="extrainfo align-right">{{ row.itemized|intcomma }}</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -85,13 +85,13 @@
             <td class="">{{ data.total.sum|currency }}</td>
             <td class="b-r">{{ data.total.count|intcomma }}</td>
             <td class="extrainfo">{{ data.food.sum|currency }}</td>
-            <td class="extrainfo b-r">{{ data.food.count|intcomma }}</td>
+            <td class="extrainfo align-right b-r">{{ data.food.count|intcomma }}</td>
             <td class="extrainfo">{{ data.entertainment.sum|currency }}</td>
-            <td class="extrainfo b-r">{{ data.entertainment.count|intcomma }}</td>
+            <td class="extrainfo align-right b-r">{{ data.entertainment.count|intcomma }}</td>
             <td class="extrainfo">{{ data.gift.sum|currency }}</td>
-            <td class="extrainfo b-r">{{ data.gift.count|intcomma }}</td>
+            <td class="extrainfo align-right b-r">{{ data.gift.count|intcomma }}</td>
             <td class="extrainfo">{{ data.award.sum|currency }}</td>
-            <td class="extrainfo">{{ data.award.count|intcomma }}</td>
+            <td class="extrainfo align-right">{{ data.award.count|intcomma }}</td>
           </tr>
         {% endfor %}
       </tbody>
