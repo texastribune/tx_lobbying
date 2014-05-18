@@ -170,15 +170,15 @@ class AddressDetail(DetailView):
             .order_by('lobbyist', 'year')
         )
 
-    def compensations_near(self, radius=0):
+    def interests_near(self, radius=0):
         # TODO implement radius
         return (
-            models.Compensation.objects
-            .filter(address__coordinate=self.object.coordinate)
-            .exclude(pk__in=self.object.compensation_set.all())
-            .select_related('interest')
-            .order_by('interest__name')  # need order_by to match distinct
-            .distinct('interest__name')
+            models.Interest.objects
+            .filter(compensation__address__coordinate=self.object.coordinate)
+            # .exclude(pk__in=self.object.compensation_set.all())
+            .select_related('canonical')
+            .order_by('name')  # need order_by to match distinct
+            .distinct('name')
         )
 
     def get_context_data(self, **kwargs):
@@ -191,7 +191,7 @@ class AddressDetail(DetailView):
                 .filter(coordinate__equals=self.object.coordinate)
             )
             data['registrations_near'] = self.registrations_near()
-            data['compensations_near'] = self.compensations_near()
+            data['interests_near'] = self.interests_near()
         else:
             data['aliases'] = False
         data['registration_reports'] = (

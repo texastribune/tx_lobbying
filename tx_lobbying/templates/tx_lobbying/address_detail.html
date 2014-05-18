@@ -86,14 +86,14 @@
     </ul>
     <h3>Interests in this building</h3>
     <ul>
-      {% for report in compensations_near %}
+      {% for interest in interests_near %}
         <li>
-          {% if report.interest.canonical %}
-            {{ report.interest.canonical.name }}
+          {% if interest.canonical %}
+            {{ interest.canonical.name }}
             -
-            {{ report.interest.name }}
+            {{ interest.name }}
           {% else %}
-            {{ report.interest.name }}
+            {{ interest.name }}
           {% endif %}
         </li>
       {% endfor %}
