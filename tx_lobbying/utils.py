@@ -1,9 +1,10 @@
 import logging
 import os
 
+from django.db.models import Count
 import requests
 
-from .models import Interest, Lobbyist
+from .models import Address, Interest, Lobbyist
 
 
 logger = logging.getLogger(__name__)
@@ -25,6 +26,30 @@ def update_interests_stats():
     for i, interest in enumerate(qs, 1):
         logger.info(u'{:>4} / {} - {}'.format(i, count, interest))
         interest.make_stats()
+
+
+def update_addresses():
+    """Collect addresses into canonical."""
+    qs = (
+        Address.objects
+        .filter(coordinate_quality__in=('00', '01', '02', '03'))
+        .order_by('coordinate').values('coordinate')
+        .annotate(count=Count('pk'))
+        .filter(count__gt=1)
+    )
+    for datum in qs:
+        same = list(Address.objects.filter(coordinate=datum['coordinate'])
+            # Assume the latest is the most up to date
+            .order_by('-pk'))
+        canon = same[0]
+        print(canon)
+        # ugh, must be a better way of doing this
+        if canon.canonical:
+            canon.canonical = None
+            canon.save()
+        for address in same[1:]:
+            address.canonical = canon
+            address.save()
 
 
 class GeocodeException(Exception):
