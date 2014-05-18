@@ -70,6 +70,7 @@ import2:
 
 # shortcut for updating after I clean interest names
 canon:
+	DEBUG=0 python tx_lobbying/scrapers/canonical_addresses.py
 	cd data && $(MAKE) nomenklatura
 	DEBUG=0 python tx_lobbying/scrapers/canonical_interests.py
 
