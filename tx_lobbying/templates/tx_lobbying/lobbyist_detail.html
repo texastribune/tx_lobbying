@@ -5,7 +5,10 @@
 {% block head_title %}{{ object }}{% endblock %}
 
 {% block main %}
-  <h1><i class="fa fa-user"></i> {{ object }}</h1>
+  <h1>
+    <i class="fa fa-user"></i>
+    {{ object }}
+  </h1>
   <section>
     <h3>Name History</h3>
     <ul>
@@ -94,13 +97,13 @@
         <tr>
           <th class="b-r">Year</th>
           <th class="b-r">Total</th>
-          <th class="extrainfo"><i class="fa fa-taxi" aria-label="Transportation"></i></th>
-          <th class="extrainfo"><i class="fa fa-cutlery" aria-label="Food"></i></th>
-          <th class="extrainfo"><i class="fa fa-puzzle-piece" aria-label-"Entertainment"></i></th>
-          <th class="extrainfo"><i class="fa fa-gift" aria-label-"Gifts"></i></th>
-          <th class="extrainfo"><i class="fa fa-certificate" aria-label-"Awards"></i></th>
-          <th class="extrainfo"><i class="fa fa-ticket" aria-label-"Events"></i></th>
-          <th class="extrainfo b-r"><i class="fa fa-youtube-play" aria-label-"Media"></i></th>
+          <th class="extrainfo"><i class="fa fa-taxi" title="Transportation" aria-label="Transportation"></i></th>
+          <th class="extrainfo"><i class="fa fa-cutlery" title="Food" aria-label="Food"></i></th>
+          <th class="extrainfo"><i class="fa fa-puzzle-piece" title="Entertainment" aria-label-"Entertainment"></i></th>
+          <th class="extrainfo"><i class="fa fa-gift" title="Gifts" aria-label-"Gifts"></i></th>
+          <th class="extrainfo"><i class="fa fa-certificate" title="Awards" aria-label-"Awards"></i></th>
+          <th class="extrainfo"><i class="fa fa-ticket" title="Events" aria-label-"Events"></i></th>
+          <th class="extrainfo b-r"><i class="fa fa-youtube-play" title="Media" aria-label-"Media"></i></th>
           <th class="extrainfo">Senators</th>
           <th class="extrainfo">Representatives</th>
           <th class="extrainfo">Other</th>

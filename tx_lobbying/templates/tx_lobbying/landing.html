@@ -12,10 +12,10 @@
 
 {% block main %}
   <nav>
-    <a href="{% url 'tx_lobbying:lobbyist_list' %}">All Lobbyists</a>
-    <a href="{% url 'tx_lobbying:interest_list' %}">All Interests</a>
-    <a href="{% url 'tx_lobbying:address_list' %}">All Address</a>
-    <a href="{% url 'tx_lobbying:subject_list' %}">All Subjects</a>
+    <a href="{% url 'tx_lobbying:lobbyist_list' %}"><i class="fa fa-user"></i> All Lobbyists</a>
+    <a href="{% url 'tx_lobbying:interest_list' %}"><i class="fa fa-suitcase"></i> All Interests</a>
+    <a href="{% url 'tx_lobbying:address_list' %}"><i class="fa fa-building"></i> All Address</a>
+    <a href="{% url 'tx_lobbying:subject_list' %}"><i class="fa fa-book"></i> All Subjects</a>
   </nav>
   <p>To find big spenders, pick a year:</p>
   <section>
@@ -23,15 +23,15 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Year</th>
-          <th>Total</th>
-          <th class="extrainfo">Transportation</th>
-          <th class="extrainfo">Food</th>
-          <th class="extrainfo">Entertainment</th>
-          <th class="extrainfo">Gifts</th>
-          <th class="extrainfo">Awards</th>
-          <th class="extrainfo">Events</th>
-          <th class="extrainfo">Mass Media</th>
+          <th class="b-r">Year</th>
+          <th class="b-r">Total</th>
+          <th class="extrainfo"><i class="fa fa-taxi" aria-label="Transportation"></i></th>
+          <th class="extrainfo"><i class="fa fa-cutlery" title="Food" aria-label="Food"></i></th>
+          <th class="extrainfo"><i class="fa fa-puzzle-piece" title="Entertainment" aria-label-"Entertainment"></i></th>
+          <th class="extrainfo"><i class="fa fa-gift" title="Gifts" aria-label-"Gifts"></i></th>
+          <th class="extrainfo"><i class="fa fa-certificate" title="Awards" aria-label-"Awards"></i></th>
+          <th class="extrainfo"><i class="fa fa-ticket" title="Events" aria-label-"Events"></i></th>
+          <th class="extrainfo b-r"><i class="fa fa-youtube-play" title="Media" aria-label-"Media"></i></th>
           <th class="extrainfo"># Registered</th>
           <th class="extrainfo"># Spent</th>
           <th class="extrainfo">Coversheet Count</th>
@@ -41,15 +41,15 @@
       <tbody>
         {% for row in spending_summary %}
           <tr>
-            <td><a href="{% url 'tx_lobbying:year_landing' year=row.year %}">{{ row.year }}</a></td>
-            <td class="">{{ row.spent_guess__sum|currency }}</td>
+            <td class="b-r"><a href="{% url 'tx_lobbying:year_landing' year=row.year %}">{{ row.year }}</a></td>
+            <td class="b-r">{{ row.spent_guess__sum|currency }}</td>
             <td class="extrainfo">{{ row.transportation__sum|currency }}</td>
             <td class="extrainfo">{{ row.food__sum|currency }}</td>
             <td class="extrainfo">{{ row.entertainment__sum|currency }}</td>
             <td class="extrainfo">{{ row.gifts__sum|currency }}</td>
             <td class="extrainfo">{{ row.awards__sum|currency }}</td>
             <td class="extrainfo">{{ row.events__sum|currency }}</td>
-            <td class="extrainfo">{{ row.media__sum|currency }}</td>
+            <td class="extrainfo b-r">{{ row.media__sum|currency }}</td>
             <td class="extrainfo">{{ row.registered|intcomma }}</td>
             <td class="extrainfo">{{ row.spent_anything|intcomma }}</td>
             <td class="extrainfo">{{ row.pk__count|intcomma }}</td>
@@ -68,13 +68,13 @@
           <th>Year</th>
           <th>Total</th>
           <th>Count</th>
-          <th class="extrainfo">Food</th>
-          <th class="extrainfo">(count)</th>
-          <th class="extrainfo">Entertainment</th>
-          <th class="extrainfo">(count)</th>
-          <th class="extrainfo">Gifts</th>
-          <th class="extrainfo">(count)</th>
-          <th class="extrainfo">Awards</th>
+          <th class="extrainfo"><i class="fa fa-cutlery" title="Food" aria-label="Food"></i></th>
+          <th class="extrainfo b-r">(count)</th>
+          <th class="extrainfo"><i class="fa fa-puzzle-piece" title="Entertainment" aria-label-"Entertainment"></i></th>
+          <th class="extrainfo b-r">(count)</th>
+          <th class="extrainfo"><i class="fa fa-gift" title="Gifts" aria-label-"Gifts"></i></th>
+          <th class="extrainfo b-r">(count)</th>
+          <th class="extrainfo"><i class="fa fa-certificate" title="Awards" aria-label-"Awards"></i></th>
           <th class="extrainfo">(count)</th>
         </tr>
       </thead>
@@ -83,13 +83,13 @@
           <tr>
             <td><a href="{% url 'tx_lobbying:year_landing' year=year %}">{{ year }}</a></td>
             <td class="">{{ data.total.sum|currency }}</td>
-            <td class="">{{ data.total.count|intcomma }}</td>
+            <td class="b-r">{{ data.total.count|intcomma }}</td>
             <td class="extrainfo">{{ data.food.sum|currency }}</td>
-            <td class="extrainfo">{{ data.food.count|intcomma }}</td>
+            <td class="extrainfo b-r">{{ data.food.count|intcomma }}</td>
             <td class="extrainfo">{{ data.entertainment.sum|currency }}</td>
-            <td class="extrainfo">{{ data.entertainment.count|intcomma }}</td>
+            <td class="extrainfo b-r">{{ data.entertainment.count|intcomma }}</td>
             <td class="extrainfo">{{ data.gift.sum|currency }}</td>
-            <td class="extrainfo">{{ data.gift.count|intcomma }}</td>
+            <td class="extrainfo b-r">{{ data.gift.count|intcomma }}</td>
             <td class="extrainfo">{{ data.award.sum|currency }}</td>
             <td class="extrainfo">{{ data.award.count|intcomma }}</td>
           </tr>
