@@ -1,11 +1,12 @@
 <ul>
   {% for interest in object_list %}
     <li>
-      <a href="{{ interest.get_absolute_url }}">
-        {{ interest.name|default:"(missing name)" }}
-      </a>
       {% if interest.canonical %}
-        aka {{ interest.canonical.name }}
+        <a href="{{ interest.canonical.get_absolute_url }}">{{ interest.canonical.name|default:"(missing name)" }}</a>
+        aka
+        <a href="{{ interest.get_absolute_url }}">{{ interest.name }}</a>
+      {% else %}
+        <a href="{{ interest.get_absolute_url }}">{{ interest.name|default:"(missing name)" }}</a>
       {% endif %}
     </li>
   {% empty %}
