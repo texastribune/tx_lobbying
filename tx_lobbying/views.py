@@ -160,6 +160,16 @@ class AddressList(ListView):
 class AddressDetail(DetailView):
     model = models.Address
 
+    def registration_reports_near(self, radius=0):
+        # TODO implement radius
+        return (
+            models.RegistrationReport.objects
+            .filter(address__coordinate=self.object.coordinate)
+            .exclude(address=self.object)
+            .select_related('lobbyist')
+            .order_by('lobbyist', 'year')
+        )
+
     def get_context_data(self, **kwargs):
         data = super(AddressDetail, self).get_context_data(**kwargs)
         # TODO build into the model
@@ -169,6 +179,7 @@ class AddressDetail(DetailView):
                 models.Address.objects
                 .filter(coordinate__equals=self.object.coordinate)
             )
+            data['registration_reports_massive'] = self.registration_reports_near()
         else:
             data['aliases'] = False
         data['registration_reports'] = (

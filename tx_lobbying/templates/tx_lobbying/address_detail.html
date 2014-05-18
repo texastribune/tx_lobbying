@@ -25,7 +25,7 @@
   </section>
 
   <section>
-    <h2><i class="fa fa-user"></i> Lobbyists at this address</h2>
+    <h2><i class="fa fa-user"></i> Lobbyists currently at this address</h2>
     {# TODO this should only be the most current address #}
     <ul>
       {% for lobbyist in object.lobbyist_set.alld %}
@@ -36,7 +36,7 @@
         <li><em>None</em></li>
       {% endfor %}
     </ul>
-    <h3>All lobbyists that have recorded themselves at this address</h3>
+    <h3>Lobbyists that have recorded themselves at this address in the past</h3>
     <ul>
       {% regroup registration_reports by lobbyist as lobbyist_reports %}
       {% for lobbyist in lobbyist_reports %}
@@ -45,6 +45,21 @@
           in
           {% for report in lobbyist.list %}
             {{ report.year }}
+          {% endfor %}
+        </li>
+      {% empty %}
+        <li><em>None</em></li>
+      {% endfor %}
+    </ul>
+    <h3>Other lobbyists that have recorded themselves in this building</h3>
+    <ul>
+      {% regroup registration_reports_massive by lobbyist as lobbyist_reports %}
+      {% for lobbyist in lobbyist_reports %}
+        <li>
+          <a href="{{ lobbyist.grouper.get_absolute_url }}">{{ lobbyist.grouper }}</a>
+          in
+          {% for report in lobbyist.list %}
+            <span title="{{ report.address }}">{{ report.year }}</span>
           {% endfor %}
         </li>
       {% empty %}
