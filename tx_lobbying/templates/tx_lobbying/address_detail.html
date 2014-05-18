@@ -53,7 +53,7 @@
     </ul>
     <h3>Other lobbyists that have recorded themselves in this building</h3>
     <ul>
-      {% regroup registration_reports_massive by lobbyist as lobbyist_reports %}
+      {% regroup registrations_near by lobbyist as lobbyist_reports %}
       {% for lobbyist in lobbyist_reports %}
         <li>
           <a href="{{ lobbyist.grouper.get_absolute_url }}">{{ lobbyist.grouper }}</a>
@@ -83,6 +83,20 @@
       {% empty %}
         <li><em>None</em></li>
       {% endfor %}
-  </ul>
+    </ul>
+    <h3>Interests in this building</h3>
+    <ul>
+      {% for report in compensations_near %}
+        <li>
+          {% if report.interest.canonical %}
+            {{ report.interest.canonical.name }}
+            -
+            {{ report.interest.name }}
+          {% else %}
+            {{ report.interest.name }}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
   </section>
 {% endblock %}
