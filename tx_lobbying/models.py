@@ -70,6 +70,7 @@ class Address(geo_models.Model):
 
     class Meta:
         ordering = ('address1', )
+        verbose_name_plural = 'addresses'
 
     def __unicode__(self):
         bits = []

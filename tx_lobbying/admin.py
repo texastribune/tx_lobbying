@@ -46,3 +46,9 @@ class SubjectAdmin(admin.ModelAdmin):
     list_display = ('category_id', 'name', 'description')
     list_editable = ('name', )
 admin.site.register(models.Subject, SubjectAdmin)
+
+
+class AddressAdmin(admin.ModelAdmin):
+    list_filter = ('state', )
+    raw_id_fields = ('canonical', )
+admin.site.register(models.Address, AddressAdmin)
