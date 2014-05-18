@@ -20,40 +20,43 @@
     </ul>
   </section>
 
-  <section>
-    <h2>
-      <i class="fa fa-building"></i>
-      Address
-    </h2>
-    {{ object.address.as_adr }}
-    <p>
-      <a href="{{ object.address.get_absolute_url }}">link</a>
-    </p>
-    <p>
-      All addresses that have been listed:
-    </p>
-    <div class="row map-many">
-      <div class="cell w-6">
-        <ul>
-          {% for address, report in object.get_address_history %}
-            <li>
-              {{ report.year }}
-              <a href="{{ address.get_absolute_url }}">
-                {{ address }}
-                {% if address.coordinate %}<i class="fa fa-crosshairs"></i>{% endif %}
-              </a>
-              {% include "tx_lobbying/includes/address_geo.html" with object=address %}
-            </li>
-          {% empty %}
-            <li><em>None</em></li>
-          {% endfor %}
-        </ul>
+  {% if object.address %}
+    <section>
+      <h2>
+        <i class="fa fa-building"></i>
+        Address
+      </h2>
+      {{ object.address.as_adr }}
+      <p>
+        <a href="{{ object.address.get_absolute_url }}">link</a>
+      </p>
+      <p>
+        All addresses that have been listed:
+      </p>
+      <div class="row map-many">
+        <div class="cell w-6">
+          <ul>
+            {% for address, report in object.get_address_history %}
+              <li>
+                {{ report.year }}
+                <a href="{{ address.get_absolute_url }}">
+                  {{ address }}
+                  {% if address.coordinate %}<i class="fa fa-crosshairs"></i>{% endif %}
+                </a>
+                {% include "tx_lobbying/includes/address_geo.html" with object=address %}
+              </li>
+            {% empty %}
+              <li><em>None</em></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="cell w-6">
+          <div class="map"></div>
+        </div>
       </div>
-      <div class="cell w-6">
-        <div class="map"></div>
-      </div>
-    </div>
-  </section>
+    </section>
+  {% endif %}
+
   <section>
     <h2><i class="fa fa-suitcase"></i> Clients</h2>
     <ul>
@@ -64,16 +67,14 @@
             {% for client in yeardata.compensation_set.all %}
               <li>
                 {% if client.interest.canonical %}
-                  <a href="{{ client.interest.canonical.get_absolute_url }}">
-                    {{ client.interest.canonical.name|default:"TODO" }}
-                  </a>
-                  <em>(originally: <a href="{{ client.interest.get_absolute_url }}">
-                    {{ client.interest.name|default:"TODO" }}
-                  </a>)</em>
+                  <a href="{{ client.interest.canonical.get_absolute_url }}">{{ client.interest.canonical.name|default:"TODO" }}</a>
+                  <em>
+                    (originally:
+                    <a href="{{ client.interest.get_absolute_url }}">{{ client.interest.name|default:"TODO" }}</a>
+                    )
+                  </em>
                 {% else %}
-                  <a href="{{ client.interest.get_absolute_url }}">
-                    {{ client.interest.name|default:"TODO" }}
-                  </a>
+                  <a href="{{ client.interest.get_absolute_url }}">{{ client.interest.name|default:"TODO" }}</a>
                 {% endif %}
                 ${{ client.amount_low|intcomma }} &mdash; ${{ client.amount_high|intcomma }}
               </li>
@@ -85,6 +86,7 @@
       {% endfor %}
     </ul>
   </section>
+
   <section>
     <h2><i class="fa fa-bar-chart-o"></i> Stats</h2>
     <table class="table">
@@ -138,6 +140,7 @@
       </tbody>
     </table>
   </section>
+
   <section>
     <h2>
       <i class="fa fa-book"></i>
@@ -149,6 +152,7 @@
       {% endfor %}
     </p>
   </section>
+
   <section id="coversheets" class="extrainfo">
     <h2><i class="fa fa-file-o"></i> Cover Sheets</h2>
     <a href="./covers/">{{ object.coversheets.count }} Cover sheets</a>
