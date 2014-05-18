@@ -17,7 +17,7 @@
             <br>
             <b>Aliases:</b>
             <ul>
-              {% for interest in interest.aliases.all %}
+              {% for interest in aliases %}
                 <li>
                   <a href="{{ interest.get_absolute_url }}">
                     {{ interest.name|default:"(missing name)" }}

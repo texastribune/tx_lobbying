@@ -12,6 +12,21 @@
           {{ address }}
           {% if address.coordinate %}<i class="fa fa-crosshairs"></i>{% endif %}
         </a>
+        {% with aliases=address.aliases.all %}
+          {% if aliases %}
+            <br>
+            <b>Aliases:</b>
+            <ul>
+              {% for address in aliases %}
+                <li>
+                  <a href="{{ address.get_absolute_url }}">
+                    {{ address }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
       </li>
     {% endfor %}
   </ul>

@@ -151,7 +151,10 @@ class InterestDetail(DetailView):
 
 
 class AddressList(ListView):
-    queryset = models.Address.objects.all().order_by('address1', 'zipcode')
+    queryset = (models.Address.objects
+        .filter(canonical__isnull=True)
+        .prefetch_related('aliases')
+        .order_by('address1', 'zipcode'))
 
 
 class AddressDetail(DetailView):
