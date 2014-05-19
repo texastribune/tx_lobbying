@@ -181,12 +181,20 @@ class AddressDetail(DetailView):
 
     def other_interests_here(self, radius=0):
         # TODO implement radius
+        filter_kwargs = (dict(
+            compensation__address__coordinate=self.object.coordinate
+        ) if self.object.coordinate and int(self.object.coordinate_quality) < 4
+            else dict(
+                compensation__address=self.object
+            ))
+
         return (
             models.Interest.objects
-            .filter(compensation__address__coordinate=self.object.coordinate)
+            .filter(**filter_kwargs)
             .select_related('canonical')
+            # WISHLIST cache this queryset
             .exclude(pk__in=self.interests_here())
-            .order_by('name')  # need order_by to match distinct
+            .order_by('name')  # need to match `distinct`
             .distinct('name')
         )
 
@@ -199,10 +207,10 @@ class AddressDetail(DetailView):
                 models.Address.objects
                 .filter(coordinate__equals=self.object.coordinate)
             )
-            data['interests_here'] = self.interests_here()
-            data['other_interests_here'] = self.other_interests_here()
         else:
             data['aliases'] = False
+        data['interests_here'] = self.interests_here()
+        data['other_interests_here'] = self.other_interests_here()
         data['registration_reports'] = (
             models.RegistrationReport.objects.filter(address=self.object)
             .select_related('lobbyist')
@@ -214,7 +222,6 @@ class AddressGeocode(DetailView, JsonResponse):
     model = models.Address
 
     def get(self, request, *args, **kwargs):
-        return
         from .utils import geocode_address, GeocodeException
         self.object = self.get_object()
         try:
