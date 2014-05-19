@@ -3,7 +3,7 @@ addons:
   postgresql: "9.3"
 env:
   PYTHONPATH='.'
-install: "pip install -r requirements-dev.txt"
+install: "pip install -r requirements.txt"
 before_script:
   - psql -U postgres -c 'CREATE DATABASE tx_lobbying;'
   - psql -U postgres -c "CREATE EXTENSION postgis" -d tx_lobbying
