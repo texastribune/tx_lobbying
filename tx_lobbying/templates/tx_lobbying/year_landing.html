@@ -27,25 +27,29 @@
 
   <section>
     <h2><i class="fa fa-suitcase"></i> Top Interests</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Interest</th>
-          <th class="extrainfo">Number of Lobbyists</th>
-          <th class="extrainfo">Low</th>
-          <th class="extrainfo">High</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for object in top_interests %}
+    {% if top_interests %}
+      <table class="table">
+        <thead>
           <tr>
-            <td><a href="{{ object.interest.get_absolute_url }}">{{ object.interest.name }}</a></td>
-            <td class="extrainfo">{{ object.lobbyist_count }}</td>
-            <td class="extrainfo">{{ object.low|currency }}</td>
-            <td class="extrainfo">{{ object.high|currency }}</td>
+            <th>Interest</th>
+            <th class="extrainfo">Number of Lobbyists</th>
+            <th class="extrainfo">Low</th>
+            <th class="extrainfo">High</th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for object in top_interests %}
+            <tr>
+              <td><a href="{{ object.interest.get_absolute_url }}">{{ object.interest.name }}</a></td>
+              <td class="extrainfo">{{ object.lobbyist_count }}</td>
+              <td class="extrainfo">{{ object.low|currency }}</td>
+              <td class="extrainfo">{{ object.high|currency }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+    <p>No data available for {{ year }}.</p>
+    {% endif %}
   </section>
 {% endblock %}
