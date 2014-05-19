@@ -16,7 +16,7 @@
         {% for address in aliases %}
           <li>
             <a href="{{ address.get_absolute_url }}">
-              {{ address }} {{ address.coordinate_quality }}
+              {{ address }} ({{ address.coordinate_quality }})
             </a>
           </li>
         {% endfor %}
@@ -70,33 +70,9 @@
 
   <section>
     <h2><i class="fa fa-suitcase"></i> Interests at this address</h2>
-    {% include "tx_lobbying/includes/interest_list.html" with object_list=object.interest_set.all %}
     <h3>All interests that have been reported at this address</h3>
-    <ul>
-      {% for report in object.compensation_set.all %}
-        <li>
-          <a href="{{ report.interest.get_absolute_url }}">{{ report.interest }}</a>
-          by
-          <a href="{{ report.annum.lobbyist.get_absolute_url }}">{{ report.annum.lobbyist }}</a>
-          in {{ report.annum.year }}
-        </li>
-      {% empty %}
-        <li><em>None</em></li>
-      {% endfor %}
-    </ul>
-    <h3>Interests in this building</h3>
-    <ul>
-      {% for interest in interests_near %}
-        <li>
-          {% if interest.canonical %}
-            {{ interest.canonical.name }}
-            -
-            {{ interest.name }}
-          {% else %}
-            {{ interest.name }}
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
+    {% include "tx_lobbying/includes/interest_list.html" with object_list=interests_here %}
+    <h3>Other interests in this building</h3>
+    {% include "tx_lobbying/includes/interest_list.html" with object_list=other_interests_here %}
   </section>
 {% endblock %}

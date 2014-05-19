@@ -170,13 +170,22 @@ class AddressDetail(DetailView):
             .order_by('lobbyist', 'year')
         )
 
-    def interests_near(self, radius=0):
+    def interests_here(self):
+        return (
+            models.Interest.objects
+            .filter(compensation__address=self.object)
+            .select_related('canonical')
+            .order_by('name')  # need order_by to match distinct
+            .distinct('name')
+        )
+
+    def other_interests_here(self, radius=0):
         # TODO implement radius
         return (
             models.Interest.objects
             .filter(compensation__address__coordinate=self.object.coordinate)
-            # .exclude(pk__in=self.object.compensation_set.all())
             .select_related('canonical')
+            .exclude(pk__in=self.interests_here())
             .order_by('name')  # need order_by to match distinct
             .distinct('name')
         )
@@ -190,8 +199,8 @@ class AddressDetail(DetailView):
                 models.Address.objects
                 .filter(coordinate__equals=self.object.coordinate)
             )
-            data['registrations_near'] = self.registrations_near()
-            data['interests_near'] = self.interests_near()
+            data['interests_here'] = self.interests_here()
+            data['other_interests_here'] = self.other_interests_here()
         else:
             data['aliases'] = False
         data['registration_reports'] = (
@@ -205,6 +214,7 @@ class AddressGeocode(DetailView, JsonResponse):
     model = models.Address
 
     def get(self, request, *args, **kwargs):
+        return
         from .utils import geocode_address, GeocodeException
         self.object = self.get_object()
         try:
