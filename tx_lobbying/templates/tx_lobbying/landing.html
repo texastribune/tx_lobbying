@@ -4,19 +4,18 @@
 
 {% block head_title %}Landing{% endblock %}
 
-{% block extra_style %}{{ block.super }}
-  <style>
-  </style>
-{% endblock %}
 
-
-{% block main %}
+{% block nav %}
   <nav>
     <a href="{% url 'tx_lobbying:lobbyist_list' %}"><i class="fa fa-user"></i> All Lobbyists</a>
     <a href="{% url 'tx_lobbying:interest_list' %}"><i class="fa fa-suitcase"></i> All Interests</a>
     <a href="{% url 'tx_lobbying:address_list' %}"><i class="fa fa-building"></i> All Address</a>
     <a href="{% url 'tx_lobbying:subject_list' %}"><i class="fa fa-book"></i> All Subjects</a>
   </nav>
+{% endblock %}
+
+
+{% block main %}
   <p>To find big spenders, pick a year:</p>
   <section>
     <h2>Total Spent</h2>
