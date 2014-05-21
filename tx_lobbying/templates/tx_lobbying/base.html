@@ -1,20 +1,11 @@
-{% load static from staticfiles %}
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>{% block head_title %}{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'css/tx_lobbying.css' %}">
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.2/leaflet.css">
-  {% block extra_style %}{% endblock %}
-</head>
-<body>
+{% extends "boilerplate.html" %}
+
+
+{% block head_title %}Explore the Data{% endblock %}
+
+
+{% block content %}
   <div class="page-content">
     {% block main %}{% endblock %}
   </div>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.2/leaflet.js"></script>
-  <script src="{% static 'js/tx_lobbying.js' %}"></script>
-</body>
-</html>
+{% endblock %}
