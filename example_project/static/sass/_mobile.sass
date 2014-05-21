@@ -1,3 +1,5 @@
+// mobile specific settings
+
 $baseFontSize: 15px
 
 html
@@ -9,8 +11,21 @@ h1
 h2
   font-size: 1em
 
+// utility classes
+
 .extrainfo
   display: none
 
+// general elements
+
 .map
   width: 100%
+
+// specific elements
+
+.site-nav
+  a
+    display: block
+    text-align: center
+  a + a
+    border-top: 1px solid lighten(darkslategray, 10%)
