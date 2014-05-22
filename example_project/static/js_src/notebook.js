@@ -1,4 +1,4 @@
-(function (exports, $) {
+(function (exports, $, geocode) {
   'use strict';
   var $paper = $('#notebook');
   var $nav = $('#breadcrumbs');
@@ -15,6 +15,7 @@
         var title = $document.find('title').html() || 'TODO';
         $index.text(title);
         adjustNavScroll();  // width changed so this needs to be recalcualted
+        geocode.process($page);
       }
     });
     $page.data('notebook', {
@@ -74,4 +75,4 @@
     retrieve: retrieve
   };
 
-})(this, this.jQuery);
+})(this, this.jQuery, this.geocode);
