@@ -31,10 +31,10 @@
           <th class="extrainfo"><i class="fa fa-certificate" title="Awards" aria-label-"Awards"></i></th>
           <th class="extrainfo"><i class="fa fa-ticket" title="Events" aria-label-"Events"></i></th>
           <th class="extrainfo b-r"><i class="fa fa-youtube-play" title="Media" aria-label-"Media"></i></th>
-          <th class="extrainfo"># Registered</th>
-          <th class="extrainfo"># Spent</th>
+          <th class="extrainfo">#<br>Registered</th>
+          <th class="extrainfo">#<br>Spent</th>
           <th class="extrainfo">Coversheet<br>Count</th>
-          <th class="extrainfo">w/ details</th>
+          <th class="extrainfo"># w/<br>details</th>
         </tr>
       </thead>
       <tbody>
@@ -82,7 +82,7 @@
           <tr>
             <td><a href="{% url 'tx_lobbying:year_landing' year=year %}">{{ year }}</a></td>
             <td class="">{{ data.total.sum|currency }}</td>
-            <td class="b-r">{{ data.total.count|intcomma }}</td>
+            <td class="align-right b-r">{{ data.total.count|intcomma }}</td>
             <td class="extrainfo">{{ data.food.sum|currency }}</td>
             <td class="extrainfo align-right b-r">{{ data.food.count|intcomma }}</td>
             <td class="extrainfo">{{ data.entertainment.sum|currency }}</td>
