@@ -99,3 +99,11 @@ Features not handled in this version but perhaps the next:
 
 1. Handle corporate mergers/splits/renames
 2. Link entities to campaign finance (state and federal)
+
+### Additional Data Sources
+
+In addition to the data from the TEC, these services are also used:
+
+* Name de-duplication handled by [nomenklatura](http://opennames.org/).
+* Geocoding handled by [TAMU Geoservices](http://geoservices.tamu.edu/Services/Geocode/)
+
