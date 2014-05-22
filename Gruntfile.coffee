@@ -8,6 +8,15 @@ module.exports = (grunt) ->
           sourcemap: true
         files:
           'example_project/static/css/tx_lobbying.css': 'example_project/static/sass/tx_lobbying.sass'
+    autoprefixer:
+      options:
+        browsers: ['last 3 versions', 'ie 8']
+        diff: true
+        map: true
+        single_file:
+          src: 'example_project/static/css/tx_lobbying.css'
+          # overwrite original
+          dest: 'example_project/static/css/tx_lobbying.css'
     jshint:
       all: [
         'example_project/static/js_src/**/*.js'
@@ -33,7 +42,7 @@ module.exports = (grunt) ->
         livereload: true
       sass:
         files: ['example_project/static/sass/**/*.sass']
-        tasks: ['sass']
+        tasks: ['sass', 'autoprefixer']
         options:
           livereload: false
           # spawn has to be on or else the css watch won't catch changes
@@ -49,14 +58,15 @@ module.exports = (grunt) ->
           spawn: false
 
   grunt.loadNpmTasks 'grunt-contrib-sass'
+  grunt.loadNpmTasks 'grunt-autoprefixer'
   grunt.loadNpmTasks 'grunt-contrib-jshint'
   grunt.loadNpmTasks 'grunt-contrib-concat'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-watch'
 
   # build the assets needed
-  grunt.registerTask('build', ['sass', 'concat', 'uglify'])
+  grunt.registerTask('build', ['sass', 'autoprefixer', 'concat', 'uglify'])
   # build the assets with sanity checks
-  grunt.registerTask('default', ['sass', 'jshint', 'concat', 'uglify'])
+  grunt.registerTask('default', ['sass', 'autoprefixer', 'jshint', 'concat', 'uglify'])
   # build assets and automatically re-build when a file changes
   grunt.registerTask('dev', ['build', 'watch'])
