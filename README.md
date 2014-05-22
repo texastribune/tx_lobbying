@@ -71,7 +71,7 @@ The project is configured to use sqlite by default, but if don't want to stab
 yourself, set your DATABASE_URL to real database like Postgres.
 
 
-### How the data is modelled
+### How the data is modeled
 
 Diagram:
 
@@ -92,3 +92,10 @@ Models that correspond directly to a piece of raw data are labelled with
 * `Interest`: A lobbyist's clients, aka an interested party
 * `InterestStats`: A summary of an interest's stats for a year
 * `Address`: Any time we need to store an address
+
+### The Future
+
+Features not handled in this version but perhaps the next:
+
+1. Handle corporate mergers/splits/renames
+2. Link entities to campaign finance (state and federal)
