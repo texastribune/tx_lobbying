@@ -88,11 +88,27 @@
     }).addTo(map);
   };
 
+  var process = function ($container) {
+    $container = $container || $(document.body);
+    $container.find('p.h-adr').each(function () {
+      var $el = $(this);
+      if ($el.find('span.h-geo').length) {
+        map($el);
+      } else {
+        geocodeAdr($el);
+      }
+    });
+    $container.find('.map-many').each(function () {
+      mapMany($(this));
+    });
+  };
+
   // exports
   exports.geocode = {
     adr: geocodeAdr,
     map: map,
-    mapMany: mapMany
+    mapMany: mapMany,
+    process: process
   };
 
 })(this, this.jQuery, this.L);

@@ -7,16 +7,6 @@
   }
 
   $(function () {
-    $('p.h-adr').each(function () {
-      var $el = $(this);
-      if ($el.find('span.h-geo').length) {
-        geocode.map($el);
-      } else {
-        geocode.adr($el);
-      }
-    });
-    $('.map-many').each(function () {
-      geocode.mapMany($(this));
-    });
+    geocode.process();
   });
 })(this.geocode);
