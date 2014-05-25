@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models import Count, Sum, Q
 from django.template import Context
 from django.template.loader import get_template
+from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from djchoices import DjangoChoices, ChoiceItem
 
@@ -23,7 +24,7 @@ class RawDataMixin(models.Model):
     class Meta:
         abstract = True
 
-    @property
+    @cached_property
     def raw_data(self):
         # TODO handle ''
         return json.loads(self.raw)
