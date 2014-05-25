@@ -156,6 +156,14 @@ class AddressList(ListView):
         .prefetch_related('aliases')
         .order_by('address1', 'zipcode'))
 
+    def coordinate_quality(self):
+        return (
+            models.Address.objects.filter(coordinate_quality__isnull=False)
+            .values('coordinate_quality')
+            .order_by('coordinate_quality')
+            .annotate(Count('pk'))
+        )
+
 
 class AddressDetail(DetailView):
     model = models.Address

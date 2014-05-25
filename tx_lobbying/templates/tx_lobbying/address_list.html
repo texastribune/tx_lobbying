@@ -1,4 +1,5 @@
 {% extends "tx_lobbying/base.html" %}
+{% load intcomma from humanize %}
 
 {% block head_title %}Addresses{% endblock %}
 
@@ -30,4 +31,23 @@
       </li>
     {% endfor %}
   </ul>
+  <aside>
+    <h2>Coordinates Geocoded</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Quality Code</th>
+          <th>Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in view.coordinate_quality %}
+          <tr>
+            <td class="align-center">{{ row.coordinate_quality }}</td>
+            <td class="align-right">{{ row.pk__count|intcomma }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </aside>
 {% endblock %}
