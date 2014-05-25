@@ -1,52 +1,13 @@
-@import "normalize"
 @import "settings"
+@import "normalize"
 @import "mixins"
 @import "layout"
+@import "tables"
 @import "notebooks"
 
-$baseColor: #222
-
-
-body
-  color: $baseColor
-  font-family: sans-serif
-
-section
-  margin-bottom: 1em
-
-h1
-  font-size: 1.4rem
-  margin: 0 0 0.25em
-
-h2
-  font-size: 1.2rem
-  margin: 0 0 0.25em
-
-h3
-  font-size: 1.1rem
-  margin: 0 0 0.25em
-
-ul
-  margin: 0 0 0.25em
-  padding-left: 2em
 
 ul ul
   font-size: 0.9em
-
-td > .currency
-  display: block
-.currency
-  text-align: right
-.zero
-  visibility: hidden
-  .label
-    margin-right: 0.1em
-  .cents
-    display: none
-
-.parenthetical
-  // small text that provides extra context, extra info
-  font-style: italic
 
 
 // notebook or mobile
@@ -55,7 +16,6 @@ td > .currency
 @media only screen and (max-width: $mobileBreakpoint)
   @import "mobile"
 
-@import "tables"
 
 
 .site-nav
