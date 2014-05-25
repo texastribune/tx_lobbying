@@ -67,19 +67,23 @@
         <li>
           {{ yeardata.year }}
           <ul>
-            {% for client in yeardata.compensation_set.all %}
+            {% for report in yeardata.compensation_set.all %}
               <li>
-                {% if client.interest.canonical %}
-                  <a href="{{ client.interest.canonical.get_absolute_url }}">{{ client.interest.canonical.name|default:"TODO" }}</a>
+                  {{ report.raw_data.STARTDT }} {{ report.raw_data.LOSTART }}
+                  -
+                  {{ report.raw_data.TERMDATE }} {{ report.raw_data.LOTERM }}
+                {% if report.interest.canonical %}
+                  <a href="{{ report.interest.canonical.get_absolute_url }}">{{ report.interest.canonical.name|default:"TODO" }}</a>
                   <em>
                     (originally:
-                    <a href="{{ client.interest.get_absolute_url }}">{{ client.interest.name|default:"TODO" }}</a>
+                    <a href="{{ report.interest.get_absolute_url }}">{{ report.interest.name|default:"TODO" }}</a>
                     )
                   </em>
                 {% else %}
-                  <a href="{{ client.interest.get_absolute_url }}">{{ client.interest.name|default:"TODO" }}</a>
+                  <a href="{{ report.interest.get_absolute_url }}">{{ report.interest.name|default:"TODO" }}</a>
                 {% endif %}
-                ${{ client.amount_low|intcomma }} &mdash; ${{ client.amount_high|intcomma }}
+                ${{ report.amount_low|intcomma }} &mdash; ${{ report.amount_high|intcomma }}
+                ({{ report.raw_data.TYPECOPM }})
               </li>
             {% endfor %}
           </ul>
