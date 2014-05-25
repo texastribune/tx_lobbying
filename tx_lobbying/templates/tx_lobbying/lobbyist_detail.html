@@ -69,21 +69,24 @@
           <ul>
             {% for report in yeardata.compensation_set.all %}
               <li>
+                {% comment %}
                   {{ report.raw_data.STARTDT }} {{ report.raw_data.LOSTART }}
                   -
                   {{ report.raw_data.TERMDATE }} {{ report.raw_data.LOTERM }}
+                {% endcomment %}
                 {% if report.interest.canonical %}
-                  <a href="{{ report.interest.canonical.get_absolute_url }}">{{ report.interest.canonical.name|default:"TODO" }}</a>
-                  <em>
-                    (originally:
-                    <a href="{{ report.interest.get_absolute_url }}">{{ report.interest.name|default:"TODO" }}</a>
-                    )
-                  </em>
+                    <a href="{{ report.interest.canonical.get_absolute_url }}">{{ report.interest.canonical.name|default:"TODO" }}</a>
+                    <small class="parenthetical">
+                      (originally:
+                      <a href="{{ report.interest.get_absolute_url }}">{{ report.interest.name|default:"TODO" }}</a>)
+                    </small>
                 {% else %}
                   <a href="{{ report.interest.get_absolute_url }}">{{ report.interest.name|default:"TODO" }}</a>
                 {% endif %}
                 ${{ report.amount_low|intcomma }} &mdash; ${{ report.amount_high|intcomma }}
-                ({{ report.raw_data.TYPECOPM }})
+                <small class="parenthetical">
+                  ({{ report.raw_data.TYPECOPM }})
+                </small>
               </li>
             {% endfor %}
           </ul>
