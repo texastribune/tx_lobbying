@@ -34,7 +34,12 @@ class RawDataMixin(models.Model):
 # MODELS #
 ##########
 class Address(geo_models.Model):
-    """A US address."""
+    """
+    A US address.
+
+    You'll see some places where `coordinate_quality` is '99', those are
+    addresses outside the US.
+    """
     class Quality(DjangoChoices):
         # http://geoservices.tamu.edu/Services/Geocode/About/#NAACCRGISCoordinateQualityCodes
         AddressPoint = ChoiceItem('00',
@@ -55,6 +60,9 @@ class Address(geo_models.Model):
         CityCentroid = ChoiceItem('11', 'Coordinates are centroid of address '
             'city (when address ZIP code is unknown or invalid, and there are '
             'multiple ZIP codes for the city)')
+        Unmatchable = ChoiceItem('99', 'Latitude and longitude are not '
+            'assigned, but geocoding was attempted; unable to assign '
+            'coordinates based on available information')
 
     address1 = models.CharField(max_length=200, null=True, blank=True)
     address2 = models.CharField(max_length=200, null=True, blank=True)
