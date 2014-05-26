@@ -1,7 +1,13 @@
 from django.conf.urls import patterns, url, include
 from django.views.generic import RedirectView
 
-from . import views
+from . import api, views
+
+
+apipatterns = patterns('',
+    url(r'^lobbyist/(?P<filer_id>\d+)/$', api.GetLobbyistData.as_view(),
+        name='lobbyist_detail'),
+)
 
 
 urlpatterns = patterns('',
@@ -42,4 +48,5 @@ urlpatterns = patterns('',
         name='subject_list'),
     url(r'^subject/(?P<slug>[-\w]*)/$', views.SubjectDetail.as_view(),
         name='subject_detail'),
+    url(r'^api/', include(apipatterns, namespace='api')),
 )
