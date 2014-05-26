@@ -3,8 +3,10 @@
     <li>
       {% if interest.canonical %}
         <a href="{{ interest.canonical.get_absolute_url }}">{{ interest.canonical.name|default:"(missing name)" }}</a>
-        aka
-        <a href="{{ interest.get_absolute_url }}">{{ interest.name }}</a>
+        <small class="parenthetical">
+          aka
+          <a href="{{ interest.get_absolute_url }}">{{ interest.name }}</a>
+        </small>
       {% else %}
         <a href="{{ interest.get_absolute_url }}">{{ interest.name|default:"(missing name)" }}</a>
       {% endif %}

@@ -11,8 +11,7 @@
       <li>
         <a href="{{ address.get_absolute_url }}">
           {{ address }}
-          {% if address.coordinate %}<i class="fa fa-crosshairs"></i>{% endif %}
-        </a>
+          {% if address.coordinate %}<i class="fa fa-crosshairs"></i>{% endif %}</a>
         {% with aliases=address.aliases.all %}
           {% if aliases %}
             <br>
