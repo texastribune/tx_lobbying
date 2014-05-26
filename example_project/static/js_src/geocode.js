@@ -27,13 +27,16 @@
   var geocodeAdr = function ($el) {
     var url = '/address/' + $el.attr('data-pk') + '/geocode/';  // XXX magic constant
     // insert map dom now to prevent flash while map is loading
-    $('<div class="map loading"></div>').insertAfter($el);  // XXX copied from above
+    var $map = $('<div class="map loading"></div>').insertAfter($el);  // XXX copied from above
     $.getJSON(url, function (data) {
       drawMap($el, {
         lat: data.latitude,
         lng: data.longitude,
         title: data.title
       });
+    })
+    .error(function () {
+      $map.hide();
     });
   };
 

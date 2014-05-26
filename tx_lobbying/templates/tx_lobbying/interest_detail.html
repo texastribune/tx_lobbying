@@ -6,8 +6,8 @@
 {% block main %}
   <h1>
     <i class="fa fa-suitcase"></i>
-    {{ object }}
-    <a href="{{ object.nomenklatura_review_url }}" target="_blank">&asymp;</a>
+    {{ object.name }}{% if object.address.state %}(object.address.state){% endif %}
+    <a href="{{ object.nomenklatura_review_url }}" target="_blank"><i class="fa fa-cube"></i></a>
   </h1>
   {% if object.canonical %}
     <p>

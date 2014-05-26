@@ -8,8 +8,12 @@
   {% if object.city %}
     <span class="p-locality">{{ object.city }}</span>
   {% endif %}
-  <span class="p-region">{{ object.state }}</span>
-  <span class="p-postal-code">{{ object.zipcode }}</span>
+  {% if object.state %}
+    <span class="p-region">{{ object.state }}</span>
+  {% endif %}
+  {% if object.zipcode %}
+    <span class="p-postal-code">{{ object.zipcode }}</span>
+  {% endif %}
   {% if object.coordinate %}
     <span class="h-geo">
       <span class="p-latitude">{{ object.coordinate.y }}</span>
