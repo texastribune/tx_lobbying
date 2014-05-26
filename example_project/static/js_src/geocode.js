@@ -2,8 +2,12 @@
   'use strict';
 
   var drawMap = function ($el, options) {
-    var $map = $('<div class="map"></div>');
-    $map.insertAfter($el);
+    var $map = $el.next('.map');
+    if (!$map.length) {
+      $map = $('<div class="map"></div>');
+      $map.insertAfter($el);
+    }
+    $map.removeClass('loading');
 
     // create a map in the "map" div, set the view to a given place and zoom
     var map = L.map($map[0], {
@@ -22,6 +26,8 @@
 
   var geocodeAdr = function ($el) {
     var url = '/address/' + $el.attr('data-pk') + '/geocode/';  // XXX magic constant
+    // insert map dom now to prevent flash while map is loading
+    $('<div class="map loading"></div>').insertAfter($el);  // XXX copied from above
     $.getJSON(url, function (data) {
       drawMap($el, {
         lat: data.latitude,
