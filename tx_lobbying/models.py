@@ -60,6 +60,8 @@ class Address(geo_models.Model):
         CityCentroid = ChoiceItem('11', 'Coordinates are centroid of address '
             'city (when address ZIP code is unknown or invalid, and there are '
             'multiple ZIP codes for the city)')
+        Unknown = ChoiceItem('98', 'Latitude and longitude are assigned, but '
+            'coordinate quality is unknown')
         Unmatchable = ChoiceItem('99', 'Latitude and longitude are not '
             'assigned, but geocoding was attempted; unable to assign '
             'coordinates based on available information')
