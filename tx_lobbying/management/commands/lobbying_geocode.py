@@ -15,7 +15,10 @@ class Command(BaseCommand):
             .exclude(zipcode='')
         )
 
-        for address in queryset:
-            print address
-            print geocode_address(address)
-            sleep(10)
+        try:
+            for address in queryset:
+                print address
+                print geocode_address(address)
+                sleep(10)
+        except KeyboardInterrupt:
+            exit('bye')
