@@ -117,7 +117,10 @@ class LobbyistList(ListView):
 
 class LobbyistDetail(DetailView):
     queryset = Lobbyist.objects.all().prefetch_related(
-        'years__compensation_set__interest', 'coversheets__details')
+        'years__compensation_set__interest',
+        'coversheets__details',
+        'coversheets__subjects',
+    )
     slug_field = 'filer_id'
 
     def get_context_data(self, **kwargs):
