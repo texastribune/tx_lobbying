@@ -159,6 +159,8 @@
     <p>
       {% for subject in subject_list %}
         <a href="{{ subject.get_absolute_url }}">{{ subject }}</a>{% if not forloop.last %},{% endif %}
+      {% empty %}
+        <em>None reported</em>
       {% endfor %}
     </p>
   </section>
