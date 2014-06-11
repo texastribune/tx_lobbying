@@ -70,6 +70,10 @@ Change `template1` to be postgis enabled:
 The project is configured to use sqlite by default, but if don't want to stab
 yourself, set your DATABASE_URL to real database like Postgres.
 
+Start the development server:
+
+    python example_project/manage.py runserver
+
 
 ### How the data is modeled
 
