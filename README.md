@@ -38,14 +38,17 @@ and then using autoenv or `source .env` to activate it.
 
 Install deps:
 
-    pip install -r requirements-dev.txt
+    pip install -r requirements.txt
     npm install
     bundle install
 
 Get your database up and running with (Postgres instructions):
 
-    createdb tx_lobbying
-    python example_project/manage.py migrate
+    createdb tx_lobbying  # if you have a simple Postgres setup
+    phd createdb  # if you have a complicated DATABASE_URL, pip install postdoc
+
+    # inital migration
+    make resetdb
 
 Then load data with:
 
