@@ -1,6 +1,7 @@
 import logging
 import os
 
+from django.core.exceptions import ImproperlyConfigured
 from django.db.models import Count
 import requests
 
@@ -69,12 +70,16 @@ def geocode_address(address, force=False):
         return
     if not address.city and not address.zipcode:
         raise GeocodeException("Can't look up without a city or zip")
+    api_key = os.environ.get('TAMU_API_KEY')
+    if not api_key:
+        raise ImproperlyConfigured(
+            "Can't look up without 'TAMU_API_KEY' environment variable")
     url = (
         'http://geoservices.tamu.edu/Services/Geocode/WebService/'
         'GeocoderWebServiceHttpNonParsed_V04_01.aspx'
     )
     params = {
-        'apiKey': os.environ.get('TAMU_API_KEY'),
+        'apiKey': api_key,
         'version': '4.01',
         'streetAddress': address.address1,
         'city': address.city,
