@@ -26,6 +26,8 @@ example_project/static/js/
 
 # User's files
 .env
+# database snapshots https://github.com/fastmonkeys/stellar
+stellar.yaml
 
 
 # IDE
