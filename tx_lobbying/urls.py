@@ -5,6 +5,8 @@ from . import api, views
 
 
 apipatterns = patterns('',
+    url(r'^lobbyist/$', api.LobbyistList.as_view(),
+        name='lobbyist_list'),
     url(r'^lobbyist/(?P<filer_id>\d+)/$', api.LobbyistDetail.as_view(),
         name='lobbyist_detail'),
 )
