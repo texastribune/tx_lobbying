@@ -50,5 +50,5 @@ urlpatterns = patterns('',
         name='subject_list'),
     url(r'^subject/(?P<slug>[-\w]*)/$', views.SubjectDetail.as_view(),
         name='subject_detail'),
-    url(r'^api/', include(apipatterns, namespace='api')),
+    url(r'^api/1/', include(apipatterns, namespace='api')),
 )
