@@ -15,8 +15,19 @@ address_data = dict(
 class LobbyistList(ListEndpoint):
     model = models.Lobbyist
 
+    def get_query_set(self, request, *args, **kwargs):
+        # modified to add prefetch_related
+        return self.model.objects.all().prefetch_related('stats')
+
     def serialize(self, objs):
         site = self.request.META.get('HTTP_HOST', '')  # not set on test client
+
+        def collapse_stats_fixup(obj, data):
+            """Condense total_spent stats into a simpler dict."""
+            stats = data.pop('stats')
+            data['total_spent'] = {x['year']: x['total_spent'] for x in stats}
+            return data
+
         return serialize(
             objs,
             fields=(
@@ -26,8 +37,16 @@ class LobbyistList(ListEndpoint):
                     'tx_lobbying:api:lobbyist_detail',
                     kwargs={'filer_id': x.filer_id}
                 )),
-                # TODO years this lobbyist was active and how much was spent
-            )
+            ),
+            include=(
+                ('stats', dict(
+                    fields=(
+                        'year',
+                        'total_spent',
+                    ),
+                )),
+            ),
+            fixup=collapse_stats_fixup,
         )
 
 
