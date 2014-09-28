@@ -1,5 +1,5 @@
-from restless.views import Endpoint
 from restless.models import serialize
+from restless.modelviews import DetailEndpoint
 
 from . import models
 
@@ -11,9 +11,11 @@ address_data = dict(
 )
 
 
-class GetLobbyistData(Endpoint):
-    def get(self, request, filer_id):
-        obj = models.Lobbyist.objects.get(filer_id=filer_id)
+class LobbyistDetail(DetailEndpoint):
+    lookup_field = 'filer_id'
+    model = models.Lobbyist
+
+    def serialize(self, obj):
         return serialize(
             obj,
             fields=[
