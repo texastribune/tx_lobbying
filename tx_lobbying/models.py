@@ -385,7 +385,7 @@ class LobbyistStats(models.Model):
         unique_together = ('lobbyist', 'year')
 
     def __unicode__(self):
-        return u"{0.lobbyist} spent ${0.spent:,.2f} ({0.year})".format(self)
+        return u'{0.lobbyist} spent ${0.total_spent} ({0.year})'.format(self)
 
 
 class RegistrationReport(RawDataMixin, models.Model):

@@ -5,7 +5,9 @@ from . import api, views
 
 
 apipatterns = patterns('',
-    url(r'^lobbyist/(?P<filer_id>\d+)/$', api.GetLobbyistData.as_view(),
+    url(r'^lobbyist/$', api.LobbyistList.as_view(),
+        name='lobbyist_list'),
+    url(r'^lobbyist/(?P<filer_id>\d+)/$', api.LobbyistDetail.as_view(),
         name='lobbyist_detail'),
 )
 
@@ -48,5 +50,5 @@ urlpatterns = patterns('',
         name='subject_list'),
     url(r'^subject/(?P<slug>[-\w]*)/$', views.SubjectDetail.as_view(),
         name='subject_detail'),
-    url(r'^api/', include(apipatterns, namespace='api')),
+    url(r'^api/1/', include(apipatterns, namespace='api')),
 )
