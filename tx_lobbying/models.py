@@ -137,7 +137,10 @@ class Interest(models.Model):
         ordering = ('name', )
 
     def __unicode__(self):
-        return u"%s (%s)" % (self.name, self.address.state)
+        if self.address.state:
+            return u'%s (%s)' % (self.name, self.address.state)
+        else:
+            return self.name
 
     def get_absolute_url(self):
         return reverse('tx_lobbying:interest_detail', kwargs={'pk': self.pk})
