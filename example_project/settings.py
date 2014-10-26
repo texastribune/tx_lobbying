@@ -159,7 +159,7 @@ LOGGING = {
     },
     'loggers': {
         'django.db.backends': {
-            'level': 'DEBUG' if env.get('SQL') else 'INFO',
+            'level': 'DEBUG' if env.get('SQL', False) else 'INFO',
             'handlers': ['console'],
             'filters': ['require_debug_true', 'readable_sql'],
             'propagate': False,
@@ -167,6 +167,6 @@ LOGGING = {
         'factory': {
             'level': 'ERROR',
             'propagate': False,
-        }
+        },
     }
 }
