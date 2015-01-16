@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 import json
 
 from django.contrib.gis.db import models as geo_models
@@ -327,11 +327,16 @@ class Lobbyist(models.Model):
             Sum('total_benefited'),
             Sum('spent_guess'),
         )
+        # group coversheets by year
+        year_data = defaultdict(lambda: defaultdict(int))
         for data in values:
             year = data.pop('year')
-            defaults = {k[:-5]: v for k, v in data.items()}
+            for k, v in data.iteritems():
+                year_data[year][k[:-5]] += v
+        # update stats
+        for year, data in year_data.items():
             LobbyistStats.objects.update_or_create(lobbyist=self, year=year,
-                defaults=defaults)
+                defaults=data)
 
 
 class LobbyistStats(models.Model):
