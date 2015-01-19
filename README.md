@@ -30,8 +30,12 @@ to go back a few years.
 Set your environment variables. One way is to have a `.env` file with:
 
 ```
-export DJANGO_SETTINGS_MODULE=example_project.settings
-export DATABASE_URL=postgres:///tx_lobbying
+DJANGO_SETTINGS_MODULE=example_project.settings
+DATABASE_URL=postgres:///tx_lobbying
+
+# optional if you want to geocode
+# https://geoservices.tamu.edu/Services/Geocode/WebService/
+TAMU_API_KEY=5f4dcc3b5aa765d61d8327deb882cf99
 ```
 
 and then using autoenv or `source .env` to activate it.

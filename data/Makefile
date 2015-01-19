@@ -11,6 +11,7 @@ help:
 lobcon:
 	mkdir -p $@
 	rm -rf $@/*.xls
+	cd $@ && wget http://www.ethics.state.tx.us/tedd/LobCon15.xls
 	cd $@ && wget http://www.ethics.state.tx.us/tedd/LobCon14.xls
 	cd $@ && wget http://www.ethics.state.tx.us/tedd/LobCon13.xls
 	cd $@ && wget http://www.ethics.state.tx.us/tedd/LobCon12.xls
