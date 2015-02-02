@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 
@@ -14,18 +13,7 @@ urlpatterns = patterns('',
     url(r'^', include('tx_lobbying.urls',
         namespace='tx_lobbying', app_name='tx_lobbying')),
 
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^robots.txt$', TemplateView.as_view(
+        content_type='text/plain', template_name='robots.txt')),
 )
-
-
-# serve media
-if settings.DEBUG:
-    urlpatterns += patterns('',
-        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT,
-        }),
-   )
