@@ -6,6 +6,7 @@ static_root
 
 # raw data
 data/*/*
+data/address_geo.csv
 
 
 # Node and Grunt generated files

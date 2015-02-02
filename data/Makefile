@@ -8,6 +8,8 @@ help:
 
 
 # Download links found on: http://www.ethics.state.tx.us/dfs/loblists.htm
+# Note: wildcard expansion only works on pre-existing files, so the first
+# time you download, you need to do this step twice.
 lobcon:
 	mkdir -p $@
 	rm -rf $@/*.xls
@@ -26,7 +28,7 @@ lobcon:
 expenses:
 	mkdir -p $@
 	wget http://www.ethics.state.tx.us/tedd/TEC_LA_CSV.zip
-	unzip -u TEC_LA_CSV.zip -d $@
+	unzip -o -u TEC_LA_CSV.zip -d $@
 	rm TEC_LA_CSV.zip
 
 
