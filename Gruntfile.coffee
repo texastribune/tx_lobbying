@@ -2,10 +2,9 @@ module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json')
     sass:
+      options:
+        sourceMap: true
       dist:
-        options:
-          bundleExec: true
-          sourcemap: true
         files:
           'example_project/static/css/tx_lobbying.css': 'example_project/static/sass/tx_lobbying.sass'
     autoprefixer:
@@ -57,7 +56,7 @@ module.exports = (grunt) ->
         options:
           spawn: false
 
-  grunt.loadNpmTasks 'grunt-contrib-sass'
+  grunt.loadNpmTasks 'grunt-sass'
   grunt.loadNpmTasks 'grunt-autoprefixer'
   grunt.loadNpmTasks 'grunt-contrib-jshint'
   grunt.loadNpmTasks 'grunt-contrib-concat'

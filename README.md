@@ -44,7 +44,6 @@ Install deps:
 
     pip install -r requirements.txt
     npm install
-    bundle install
 
 Get your database up and running with (Postgres instructions):
 
