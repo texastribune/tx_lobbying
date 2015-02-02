@@ -87,3 +87,13 @@ models.png:
 
 
 .PHONY: help clean test resetdb data import scrape models.png
+
+
+IMAGE=crccheck/tx_lobbying
+
+docker/build:
+	docker build -t ${IMAGE} .
+
+docker/run:
+	docker run --rm --env-file env-docker -p 8080:8080 ${IMAGE} waitress-serve \
+	  "example_project.wsgi:application"
