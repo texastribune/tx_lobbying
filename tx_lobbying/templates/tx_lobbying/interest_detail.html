@@ -86,7 +86,7 @@
     {% endif %}
   </section>
 
-  <section>
+  <section id="lobbyists">
     <h2><i class="fa fa-user"></i> Lobbyists</h2>
     <ul>
       {% regroup compensation_set by annum.lobbyist as comp_years %}
@@ -99,5 +99,43 @@
         </li>
       {% endfor %}
     </ul>
+    {# testing a tabular layout, currently requires js #}
+    <table class="table">
+      <thead>
+        <tr>
+          <td></td>
+          {% for annum in object.stats.all %}
+            <th>{{ annum.year }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for lobbyist in comp_years %}
+          <tr>
+            <td>
+              <a href="{{ lobbyist.grouper.get_absolute_url }}">{{ lobbyist.grouper }}</a>
+            </td>
+            {% for annum in object.stats.all %}
+              <td class="year-{{ annum.year }}"></td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </section>
+{% endblock %}
+
+
+{% block extra_script %}
+  <script>
+    var $container = $('#lobbyists');
+    var $rows = $container.find('tbody > tr');
+    $container.find('li').each(function (idx, el) {
+      var $row = $rows.eq(idx);
+      var children = el.childNodes;
+      $.each(children[2].textContent.trim().split(/\s+/), function (__, year) {
+        $row.find('td.year-' + year).addClass('align-center').html('x');
+      });
+    });
+  </script>
 {% endblock %}
