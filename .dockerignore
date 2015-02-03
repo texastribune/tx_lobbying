@@ -1,5 +1,6 @@
-.git
-data/*
+.*
+data/*/*
 notebooks/*
 .env
 env-*
+# leave node_modules and static_root
