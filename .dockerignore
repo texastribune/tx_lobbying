@@ -1,6 +1,9 @@
-.*
+# let static_root get sent
+.git
+.sass-cache
 data/*/*
 notebooks/*
 .env
 env-*
-# leave node_modules and static_root
+*.pyc
+node_modules
