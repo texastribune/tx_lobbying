@@ -114,6 +114,39 @@ class InterestTest(TestCase):
         self.assertEqual(stat.high, num_lobbyists * (num_lobbyists - 1))
         self.assertEqual(stat.low, 0)
 
+    def test_make_stats_for_year_works_with_duplicate_lobbyists(self):
+        """
+        When a lobbyist lists two clients that are actually the same, they may
+        get combined. The lobbyist's compensation should be counted twice.
+        """
+        num_interests = 4
+
+        # assert we started off with 1 `Interest` (self.interest)
+        self.assertEqual(Interest.objects.count(), 1)
+        for __ in range(num_interests):
+            InterestFactory(canonical=self.interest)
+        # sanity check
+        self.assertEqual(self.interest.aliases.count(), num_interests)
+        self.assertEqual(Interest.objects.count(), num_interests + 1)
+
+        # assign the same lobbyist to all of them
+        lobbyist = LobbyistFactory()
+        annum = LobbyistAnnumFactory(lobbyist=lobbyist, year=self.year)
+        for idx, interest in enumerate(Interest.objects.all()):
+            CompensationFactory(annum=annum, interest=interest,
+                amount_guess=idx, amount_high=idx * 2, amount_low=0)
+        with self.assertNumQueries(5):
+            # 1 to get the stats
+            # 1 to GET
+            # 1 to INSERT
+            # 2 for transaction management
+            self.interest.make_stats_for_year(self.year)
+
+        stat = self.interest.stats.all().get(year=self.year)
+        self.assertEqual(stat.guess, num_interests * (num_interests + 1) / 2)
+        self.assertEqual(stat.high, num_interests * (num_interests + 1))
+        self.assertEqual(stat.low, 0)
+
     def test_make_stats_for_year_does_nothing_for_noncanonical_interests(self):
         interest = InterestFactory(canonical=self.interest)
         year2000 = LobbyistAnnumFactory.create(year=2000)
