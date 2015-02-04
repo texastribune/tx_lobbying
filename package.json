@@ -4,6 +4,10 @@
   "description": "Texas Lobbying",
   "author": "Chris Chang",
   "license": "Apache",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/texastribune/the-dp.git"
+  },
   "devDependencies": {
     "grunt": "^0.4.4",
     "grunt-autoprefixer": "^0.7.3",
