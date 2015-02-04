@@ -158,6 +158,13 @@ class InterestTest(TestCase):
         # assert canonical interest got the stats instead
         self.assertEqual(1, self.interest.stats.count())
 
+    def test_make_stats_trivial_case_works(self):
+        LobbyistAnnumFactory.create(year=self.year)
+        # making stats for an interest with no compensation
+        self.interest.make_stats()
+        # assert interest did not have stats generated
+        self.assertEqual(0, self.interest.stats.count())
+
     def test_make_stats_finds_all_years(self):
         year2000 = LobbyistAnnumFactory.create(year=2000)
         CompensationFactory(annum=year2000, interest=self.interest,

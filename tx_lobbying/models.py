@@ -194,12 +194,12 @@ class Interest(models.Model):
     def make_stats(self):
         # This could be done a lot better, but works for now
         data_set = self.compensation_set_massive.select_related('annum')
-        year_min = data_set.earliest('annum__year').annum.year
-        year_max = data_set.latest('annum__year').annum.year
-        for year in range(year_min, year_max + 1):
-            self.make_stats_for_year(year)
-        # grab latest address
         try:
+            year_min = data_set.earliest('annum__year').annum.year
+            year_max = data_set.latest('annum__year').annum.year
+            for year in range(year_min, year_max + 1):
+                self.make_stats_for_year(year)
+            # grab latest address
             latest_address = (self.compensation_set
                 .filter(address__isnull=False)
                 .latest('annum__year').address)
