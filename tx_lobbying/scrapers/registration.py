@@ -59,6 +59,11 @@ def process_row(row, prev_pass=None):
     process things faster. There is a lot of duplication in the raw data that
     can get skipped.
 
+    You'd think you could just see if the report id changes between rows to see
+    if the lobbyist changes, but it turns out that isn't always true. So do a
+    manual check of every feature to squeeze out reusing the previous pass as
+    much as possible.
+
     Compensation objects get created outside in a bulk_create for performance.
     """
     report_date = convert_date_format_YMD(row['RPT_DATE'])
