@@ -4,8 +4,7 @@ Scraper for Lobbyist Registration Forms.
 The Excel formatted files can be obtained here:
 http://www.ethics.state.tx.us/dfs/loblists.htm
 
-Open and re-save as CSV.
-
+Use csvkit's `in2csv` or open and re-save as CSV.
 """
 import json
 import logging
@@ -13,9 +12,7 @@ import os
 import sys
 
 # don't use relative imports so this can also be run from the command line
-from tx_lobbying.libs.address_normalizer import (
-    clean_zipcode,
-)
+from tx_lobbying.libs.address_normalizer import clean_zipcode
 from tx_lobbying.models import (
     Address,
     Interest, Lobbyist, RegistrationReport,
@@ -51,7 +48,14 @@ def get_or_create_interest(row):
     return interest, address, created
 
 
-def process_row(row, last_pass=None):
+def process_row(row, prev_pass=None):
+    """
+    Process a row of the CSV.
+
+    If you pass in the previous output, some optimization will take place to
+    process things faster. There is a lot of duplication in the raw data that
+    can get skipped.
+    """
     report_date = convert_date_format_YMD(row['RPT_DATE'])
     year = row['YEAR_APPL']
 
@@ -63,19 +67,19 @@ def process_row(row, last_pass=None):
         zipcode=row['ZIPCODE'],
     )
     # HAHAHAHAHAHA
-    if (last_pass and last_pass[0].address1 == data['address1']
-            and last_pass[0].address2 == data['address2']
-            and last_pass[0].city == data['city']
-            and last_pass[0].state == data['state']
-            and last_pass[0].zipcode == data['zipcode']):
-        reg_address = last_pass[0]
+    if (prev_pass and prev_pass[0].address1 == data['address1']
+            and prev_pass[0].address2 == data['address2']
+            and prev_pass[0].city == data['city']
+            and prev_pass[0].state == data['state']
+            and prev_pass[0].zipcode == data['zipcode']):
+        reg_address = prev_pass[0]
     else:
-        reg_address, created = Address.objects.get_or_create(**data)
+        reg_address, __ = Address.objects.get_or_create(**data)
 
     # Very basic `Lobbyist` info here, most of it actually comes from the
     # coversheets.
-    if last_pass and last_pass[1].filer_id == int(row['FILER_ID']):
-        lobbyist = last_pass[1]
+    if prev_pass and prev_pass[1].filer_id == int(row['FILER_ID']):
+        lobbyist = prev_pass[1]
     else:
         default_data = dict(
             name=row['LOBBYNAME'],
@@ -91,14 +95,14 @@ def process_row(row, last_pass=None):
 
     if row['CONCERNAME']:
         # interest/concern/client
-        interest, interest_address, created = get_or_create_interest(row)
+        interest, interest_address, __ = get_or_create_interest(row)
     else:
         interest_address = None
         interest = None
 
     # registration report
-    if last_pass and last_pass[2].report_id == int(row['REPNO']):
-        report = last_pass[2]
+    if prev_pass and prev_pass[2].report_id == int(row['REPNO']):
+        report = prev_pass[2]
     else:
         default_data = dict(
             raw=json.dumps(row),
@@ -115,7 +119,7 @@ def process_row(row, last_pass=None):
 
     if interest:
         # lobbyist M2M to `Interest` through `Compensation`
-        annum, created = LobbyistAnnum.objects.update_or_create(
+        annum, __ = LobbyistAnnum.objects.update_or_create(
             lobbyist=lobbyist,
             year=year)
         # compensation
@@ -145,9 +149,9 @@ def scrape(path, logger=logger):
     logger.info("Processing %s" % path)
     with open(path, 'rb') as f:
         reader = DictReader(f)
-        last_pass = None
+        prev_pass = None
         for row in reader:
-            last_pass = process_row(row, last_pass=last_pass)
+            prev_pass = process_row(row, prev_pass=prev_pass)
 
 
 def generate_test_row(path, **kwargs):
