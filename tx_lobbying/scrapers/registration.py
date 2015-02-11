@@ -6,6 +6,7 @@ http://www.ethics.state.tx.us/dfs/loblists.htm
 
 Use csvkit's `in2csv` or open and re-save as CSV.
 """
+from collections import namedtuple
 import json
 import logging
 import os
@@ -21,6 +22,7 @@ from tx_lobbying.scrapers.utils import (DictReader, convert_date_format_YMD)
 
 
 logger = logging.getLogger(__name__)
+ProcessedRow = namedtuple('ProcessedRow', ['address', 'lobbyist', 'report'])
 
 
 def get_or_create_interest(row):
@@ -67,19 +69,19 @@ def process_row(row, prev_pass=None):
         zipcode=row['ZIPCODE'],
     )
     # HAHAHAHAHAHA
-    if (prev_pass and prev_pass[0].address1 == data['address1']
-            and prev_pass[0].address2 == data['address2']
-            and prev_pass[0].city == data['city']
-            and prev_pass[0].state == data['state']
-            and prev_pass[0].zipcode == data['zipcode']):
-        reg_address = prev_pass[0]
+    if (prev_pass and prev_pass.address.address1 == data['address1']
+            and prev_pass.address.address2 == data['address2']
+            and prev_pass.address.city == data['city']
+            and prev_pass.address.state == data['state']
+            and prev_pass.address.zipcode == data['zipcode']):
+        reg_address = prev_pass.address
     else:
         reg_address, __ = Address.objects.get_or_create(**data)
 
     # Very basic `Lobbyist` info here, most of it actually comes from the
     # coversheets.
-    if prev_pass and prev_pass[1].filer_id == int(row['FILER_ID']):
-        lobbyist = prev_pass[1]
+    if prev_pass and prev_pass.lobbyist.filer_id == int(row['FILER_ID']):
+        lobbyist = prev_pass.lobbyist
     else:
         default_data = dict(
             name=row['LOBBYNAME'],
@@ -101,8 +103,8 @@ def process_row(row, prev_pass=None):
         interest = None
 
     # registration report
-    if prev_pass and prev_pass[2].report_id == int(row['REPNO']):
-        report = prev_pass[2]
+    if prev_pass and prev_pass.report.report_id == int(row['REPNO']):
+        report = prev_pass.report
     else:
         default_data = dict(
             raw=json.dumps(row),
@@ -142,7 +144,7 @@ def process_row(row, prev_pass=None):
             annum=annum,
             interest=interest,
             defaults=default_data)
-    return (reg_address, lobbyist, report)
+    return ProcessedRow(reg_address, lobbyist, report)
 
 
 def scrape(path, logger=logger):
