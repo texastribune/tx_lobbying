@@ -13,6 +13,8 @@ class Command(BaseCommand):
         if len(args) < 1 or not os.path.isfile(args[0]):
             raise CommandError('Need a file')
 
+        # WISHLIST there's got to be a better way to do logging levels without
+        # this dependency injection
         logging_levels = [
             logging.CRITICAL,
             logging.WARNING,  # default

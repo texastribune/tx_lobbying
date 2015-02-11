@@ -564,6 +564,10 @@ class Compensation(RawDataMixin, models.Model):
     interest = models.ForeignKey(Interest)
     address = models.ForeignKey(Address, null=True, blank=True,
         help_text='The address the lobbyist listed for the `Interest`')
+    # report = models.ForeignKey(Report)  maybe add this to link compensation
+    # data to the original report because sometimes a lobbyist will file
+    # multiple reports a year with the same interests so their compensation
+    # ends up double counted
     updated_at = models.DateField()
 
     # denormalized fields

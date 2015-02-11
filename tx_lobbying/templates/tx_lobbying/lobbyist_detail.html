@@ -63,11 +63,11 @@
   <section>
     <h2><i class="fa fa-suitcase"></i> Clients</h2>
     <ul>
-      {% for yeardata in object.years.all %}
+      {% for annum in object.years.all %}
         <li>
-          {{ yeardata.year }}
+          {{ annum.year }}
           <ul>
-            {% for report in yeardata.compensation_set.all %}
+            {% for report in annum.compensation_set.all %}
               <li>
                 {% comment %}
                   {{ report.raw_data.STARTDT }} {{ report.raw_data.LOSTART }}
@@ -86,6 +86,12 @@
                 ${{ report.amount_low|intcomma }} &mdash; ${{ report.amount_high|intcomma }}
                 <small class="parenthetical">
                   ({{ report.raw_data.TYPECOPM }})
+                </small>
+                <small class="source">
+                  reported
+                  {{ report.updated_at|date:"Y-m-d" }}
+                  in
+                  {{ report.raw_data.REPNO }}
                 </small>
               </li>
             {% endfor %}
