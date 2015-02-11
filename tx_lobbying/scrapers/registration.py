@@ -22,7 +22,8 @@ from tx_lobbying.scrapers.utils import (DictReader, convert_date_format_YMD)
 
 
 logger = logging.getLogger(__name__)
-ProcessedRow = namedtuple('ProcessedRow', ['address', 'lobbyist', 'report'])
+ProcessedRow = namedtuple('ProcessedRow',
+    ['address', 'lobbyist', 'report', 'compensation'])
 
 
 def get_or_create_interest(row):
@@ -57,6 +58,8 @@ def process_row(row, prev_pass=None):
     If you pass in the previous output, some optimization will take place to
     process things faster. There is a lot of duplication in the raw data that
     can get skipped.
+
+    Compensation objects get created outside in a bulk_create for performance.
     """
     report_date = convert_date_format_YMD(row['RPT_DATE'])
     year = row['YEAR_APPL']
@@ -140,11 +143,13 @@ def process_row(row, prev_pass=None):
         # WISHLIST move this amount_guess logic into the model
         default_data['amount_guess'] = (default_data['amount_high'] +
             default_data['amount_low']) / 2
-        Compensation.objects.update_or_create(
+        compensation = Compensation(
             annum=annum,
             interest=interest,
-            defaults=default_data)
-    return ProcessedRow(reg_address, lobbyist, report)
+            **default_data)
+    else:
+        compensation = None
+    return ProcessedRow(reg_address, lobbyist, report, compensation)
 
 
 def scrape(path, logger=logger):
@@ -153,6 +158,7 @@ def scrape(path, logger=logger):
         reader = DictReader(f)
         prev_pass = None
         first = True
+        new_compensations = []
         for row in reader:
             if first:
                 # wipe all `Compensation` objects for the year to avoid double
@@ -161,6 +167,10 @@ def scrape(path, logger=logger):
                 Compensation.objects.filter(annum__year=year).delete()
                 first = False
             prev_pass = process_row(row, prev_pass=prev_pass)
+            if prev_pass.compensation:
+                new_compensations.append(prev_pass.compensation)
+        logger.info('{} new compensations'.format(len(new_compensations)))
+        Compensation.objects.bulk_create(new_compensations)
 
 
 def generate_test_row(path, **kwargs):

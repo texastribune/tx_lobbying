@@ -71,13 +71,13 @@ class RegistrationTest(TestCase):
         self.assertEqual(unicode(interest.address), '123 Fake \nB \nC, TX 78701')
 
     def test_process_row_works(self):
-        with self.assertNumQueries(28):
+        with self.assertNumQueries(24):
             process_row(sample_rows.LOBCON)
         # assert re-running uses fewer queries
-        with self.assertNumQueries(19):
+        with self.assertNumQueries(15):
             prev_pass = process_row(sample_rows.LOBCON)
         # assert re-running uses even fewer queries with prev_pass
-        with self.assertNumQueries(10):
+        with self.assertNumQueries(6):
             process_row(sample_rows.LOBCON, prev_pass=prev_pass)
 
 
