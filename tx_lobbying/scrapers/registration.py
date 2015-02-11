@@ -152,7 +152,14 @@ def scrape(path, logger=logger):
     with open(path, 'rb') as f:
         reader = DictReader(f)
         prev_pass = None
+        first = True
         for row in reader:
+            if first:
+                # wipe all `Compensation` objects for the year to avoid double
+                # counting corrected compensations
+                year = row['YEAR_APPL']
+                Compensation.objects.filter(annum__year=year).delete()
+                first = False
             prev_pass = process_row(row, prev_pass=prev_pass)
 
 
