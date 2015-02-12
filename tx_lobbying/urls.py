@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url, include
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, TemplateView
 
 from . import api, views
 
@@ -15,6 +15,8 @@ apipatterns = patterns('',
 urlpatterns = patterns('',
     url(r'^$', views.Landing.as_view(),
         name="home"),
+    url(r'^about/$',
+        TemplateView.as_view(template_name='tx_lobbying/about.html'), name='about'),
     url(r'^(?P<year>\d{4})/$', views.YearLanding.as_view(),
         name='year_landing'),
     url(r'^lobbyists/$', views.LobbyistList.as_view(),
