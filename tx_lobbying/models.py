@@ -288,8 +288,18 @@ class Lobbyist(models.Model):
         from .scrapers.utils import get_name_data
         history = []
         for report in self.coversheets.exclude(raw=''):
-            data = get_name_data(json.loads(report.raw))
+            data = get_name_data(report.raw_data)
             name = Lobbyist.get_display_name(data)
+            if (not unique or not history) or (history and name != history[-1][0]):
+                history.append((name, report))
+        return history
+
+    def get_occupation_history(self, unique=True):
+        """Get a list of all the different occupations listed."""
+        history = []
+        for report in self.registrations.exclude(raw=''):
+            data = report.raw_data
+            name = data['NORM_BUS']
             if (not unique or not history) or (history and name != history[-1][0]):
                 history.append((name, report))
         return history

@@ -22,6 +22,19 @@
       {% endfor %}
     </ul>
   </section>
+  <section>
+    <h3>Occupation History</h3>
+    <ul>
+      {% for name, report in object.get_occupation_history %}
+        <li>
+          {{ report.report_date|date:"Y-m-d" }}
+          - {{ name }}
+        </li>
+      {% empty %}
+        <li><em>None</em></li>
+      {% endfor %}
+    </ul>
+  </section>
 
   {% if object.address %}
     <section>
