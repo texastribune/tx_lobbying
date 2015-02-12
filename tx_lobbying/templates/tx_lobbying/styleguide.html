@@ -3,4 +3,52 @@
 {% block head_title %}Styleguide{% endblock %}
 
 {% block main %}
+
+  <h1>Styleguide</h1>
+
+  <section>
+    <h2>normalize</h2>
+    <h3>Unordered List</h3>
+    <ul>
+      <li>item 1</li>
+      <li>
+        item 2
+        <ul>
+          <li>second level is slightly smaller</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>layout</h2>
+    <div class="row">
+      <div class="cell w-6">a cell</div>
+      <div class="cell w-6">only two to a row for now</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>table</h2>
+    <p>use <code>.table</code> class</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>A</th>
+          <th>A<br>B</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>4</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
 {% endblock %}
