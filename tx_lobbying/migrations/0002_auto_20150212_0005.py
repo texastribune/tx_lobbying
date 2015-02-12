@@ -13,6 +13,12 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='compensation',
+            name='client_num',
+            field=models.PositiveSmallIntegerField(help_text=b'Client ID for lobbyist. The client number assigned to this client on the most recently filed registration.', null=True, blank=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='compensation',
             name='report',
             field=models.ForeignKey(blank=True, to='tx_lobbying.RegistrationReport', null=True),
             preserve_default=True,

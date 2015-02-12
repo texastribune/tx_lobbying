@@ -415,7 +415,7 @@ class RegistrationReport(RawDataMixin, models.Model):
         help_text='The address the lobbyist listed for themself.')
 
     class Meta:
-        ordering = ('year', )
+        ordering = ('year', 'report_date')
 
     def __unicode__(self):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
@@ -571,7 +571,12 @@ class Compensation(RawDataMixin, models.Model):
     interest = models.ForeignKey(Interest)
     address = models.ForeignKey(Address, null=True, blank=True,
         help_text='The address the lobbyist listed for the `Interest`')
-    # temporarily make nullable
+    # temporarily make nullable during data transition
+    # CLIENT_NUM
+    client_num = models.PositiveSmallIntegerField(null=True, blank=True,
+        help_text='Client ID for lobbyist. The client number assigned to this '
+        'client on the most recently filed registration.')
+    # temporarily make nullable during data transition
     report = models.ForeignKey(RegistrationReport, null=True, blank=True)
 
     # denormalized fields
