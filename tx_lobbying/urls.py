@@ -53,4 +53,8 @@ urlpatterns = patterns('',
     url(r'^subject/(?P<slug>[-\w]*)/$', views.SubjectDetail.as_view(),
         name='subject_detail'),
     url(r'^api/1/', include(apipatterns, namespace='api')),
+
+    # for debugging
+    url(r'^_style/$',
+        TemplateView.as_view(template_name='tx_lobbying/styleguide.html')),
 )
