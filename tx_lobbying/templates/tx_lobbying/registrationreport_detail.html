@@ -1,0 +1,83 @@
+{% extends "tx_lobbying/base.html" %}
+{% load intcomma from humanize %}
+{% load currency from tx_lobbying %}
+
+{% block head_title %}{{ object.lobbyist }}, {{ object.year }}{% endblock %}
+
+{% block main %}
+  <h1>Form REG for <a href="{{ object.lobbyist.get_absolute_url }}">{{ object.lobbyist }}</a>, {{ object.year }}</h1>
+  <dl>
+    <dt>Filed</dt>
+    <dd>{{ object.report_date }}</dd>
+    <dt>Date Range</dt>
+    <dd>{{ object.raw_data.LOSTART }} - {{ object.raw_data.LOTERM }}</dd>
+    <dt>Normal Business</dt>
+    <dd>{{ object.raw_data.NORM_BUS }}</dd>
+    {% if object.raw_data.FIRM_NAME %}
+      <dt>Lobbying firm</dt>
+      <dd>{{ object.raw_data.FIRM_NAME }}</dd>
+    {% endif %}
+    {% if object.raw_data.I4E_NAML %}
+      <dt>Individual or entity</dt>
+      <dd>{{ object.raw_data.I4E_NAML }}</dd>
+    {% endif %}
+  </dl>
+
+  <section>
+    <h2>
+      <i class="fa fa-building"></i>
+      Address
+    </h2>
+    {{ object.address.as_adr }}
+  </section>
+
+  <section class="map-many">
+    <h2><i class="fa fa-suitcase"></i> Clients</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Start</th>
+          <th>End</th>
+          <th>Client Name</th>
+          <th></th>
+          <th>Low</th>
+          <th>High</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for compensation in object.compensation_set.all %}
+          <tr>
+            <td>
+              {{ compensation.raw_data.STARTDT }}
+            </td>
+            <td>
+              {{ compensation.raw_data.TERMDATE }}
+            </td>
+            <td>
+              {# Don't use canonical name, use name as lobbyist reported it #}
+              <a href="{{ compensation.interest.get_absolute_url }}">{{ compensation.interest.name|default:"TODO" }}</a>
+            </td>
+            <td>
+              <a href="{{ compensation.interest.address.get_absolute_url }}">
+                <i class="fa fa-building" title="{{ compensation.interest.address }}"></i>
+                {% if compensation.interest.address.coordinate %}<i class="fa fa-crosshairs"></i>{% endif %}
+              </a>
+              {% include "tx_lobbying/includes/address_geo.html" with object=compensation.interest.address %}
+            </td>
+            <td>
+              {{ compensation.amount_low|currency }}
+            </td>
+            <td>
+              {{ compensation.amount_high|currency }}
+            </td>
+            <td>
+              {{ compensation.raw_data.TYPECOPM }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="map"></div>
+  </section>
+{% endblock %}

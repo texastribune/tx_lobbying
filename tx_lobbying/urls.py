@@ -35,6 +35,8 @@ urlpatterns = patterns('',
                 name='coversheet_detail'),
         ))
     ),
+    url(r'^registration/(?P<repno>\d+)/$', views.RegistrationDetail.as_view(),
+        name='registration_detail'),
     url(r'^interests/$', views.InterestList.as_view(),
         name='interest_list'),
     url(r'^interest/$', RedirectView.as_view(url='../interests/')),

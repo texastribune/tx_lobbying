@@ -83,6 +83,8 @@ canon:
 scrape: data import
 
 
+# TODO instructions for installing the packages needed to make this
+# pip install pyparsing==1.5.7
 models.png:
 	$(MANAGE) graph_models -o models.png --disable-fields tx_lobbying -l fdp
 

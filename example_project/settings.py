@@ -13,12 +13,17 @@ ALLOWED_HOSTS = ['*']  # XXX
 
 environment = env.get('ENVIRONMENT')
 
-_database_url = env.get('DATABASE_URL', 'postgis:///tx_lobbying')
 if environment == 'test':
-    MIGRATION_MODULES = {
-        'tx_lobbying': 'tx_lobbying.migraintions'
-    }
-DATABASES = {'default': dj_database_url.parse(_database_url)}
+    # https://github.com/henriquebastos/django-test-without-migrations
+    class DisableMigrations(object):
+        def __contains__(self, item):
+            return True
+
+        def __getitem__(self, item):
+            return "notmigrations"
+
+    MIGRATION_MODULES = DisableMigrations()
+DATABASES = {'default': dj_database_url.config()}
 
 ##
 # PostGIS

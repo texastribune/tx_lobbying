@@ -133,25 +133,27 @@ def process_row(row, prev_pass=None):
             lobbyist=lobbyist,
             year=year)
         # compensation
-        default_data = dict(
+        data = dict(
             amount_high=int(round(float(row['NHIGH'] or "0"))),  # I hate myself
             amount_low=int(round(float(row['NLOW'] or "0"))),
             compensation_type=row['TYPECOPM'],
             address=interest_address,
             raw=json.dumps(row),
             updated_at=report_date,
+            report=report,
+            client_num=row['CLIENT_NUM'],
         )
         if row['STARTDT']:
-            default_data['start_date'] = row['STARTDT']
+            data['start_date'] = row['STARTDT']
         if row['TERMDATE']:
-            default_data['end_date'] = row['TERMDATE']
+            data['end_date'] = row['TERMDATE']
         # WISHLIST move this amount_guess logic into the model
-        default_data['amount_guess'] = (default_data['amount_high'] +
-            default_data['amount_low']) / 2
+        data['amount_guess'] = (data['amount_high'] +
+            data['amount_low']) / 2
         compensation = Compensation(
             annum=annum,
             interest=interest,
-            **default_data)
+            **data)
     else:
         compensation = None
     return ProcessedRow(reg_address, lobbyist, report, compensation)

@@ -22,6 +22,19 @@
       {% endfor %}
     </ul>
   </section>
+  <section>
+    <h3>Occupation History</h3>
+    <ul>
+      {% for name, report in object.get_occupation_history %}
+        <li>
+          {{ report.report_date|date:"Y-m-d" }}
+          - {{ name }}
+        </li>
+      {% empty %}
+        <li><em>None</em></li>
+      {% endfor %}
+    </ul>
+  </section>
 
   {% if object.address %}
     <section>
@@ -91,7 +104,10 @@
                   reported
                   {{ report.updated_at|date:"Y-m-d" }}
                   in
-                  {{ report.raw_data.REPNO }}
+                  {# avoid table join by using serialized json #}
+                  <a href="{% url 'tx_lobbying:registration_detail' repno=report.raw_data.REPNO %}">
+                    {{ report.raw_data.REPNO }}
+                  </a>
                 </small>
               </li>
             {% endfor %}

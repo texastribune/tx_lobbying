@@ -288,8 +288,18 @@ class Lobbyist(models.Model):
         from .scrapers.utils import get_name_data
         history = []
         for report in self.coversheets.exclude(raw=''):
-            data = get_name_data(json.loads(report.raw))
+            data = get_name_data(report.raw_data)
             name = Lobbyist.get_display_name(data)
+            if (not unique or not history) or (history and name != history[-1][0]):
+                history.append((name, report))
+        return history
+
+    def get_occupation_history(self, unique=True):
+        """Get a list of all the different occupations listed."""
+        history = []
+        for report in self.registrations.exclude(raw=''):
+            data = report.raw_data
+            name = data['NORM_BUS']
             if (not unique or not history) or (history and name != history[-1][0]):
                 history.append((name, report))
         return history
@@ -400,21 +410,30 @@ class RegistrationReport(RawDataMixin, models.Model):
 
     This is the report where someone officially registers as a lobbyist. It
     also lists the clients they represent. These reports can be amended, so a
-    registration from 2008 can be ammended in 2013 and change on you.
+    registration from 2008 can be amended in 2013 and change on you.
 
     A report only has one `Lobbyist`, but can have many `Interest`s.
     """
     lobbyist = models.ForeignKey(Lobbyist, related_name="registrations")
+    # REPNO
     report_id = models.IntegerField(unique=True)
+    # RPT_DATE
     report_date = models.DateField()
+    # YEAR_APPL
     year = models.IntegerField()
-    address = models.ForeignKey(Address)
+    address = models.ForeignKey(Address,
+        help_text='The address the lobbyist listed for themself.')
 
     class Meta:
-        ordering = ('year', )
+        ordering = ('year', 'report_date')
 
     def __unicode__(self):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
+
+    def get_absolute_url(self):
+        return reverse('tx_lobbying:registration_detail', kwargs={
+            'pk': self.pk,
+        })
 
 
 class Coversheet(RawDataMixin, models.Model):
@@ -560,15 +579,20 @@ class Compensation(RawDataMixin, models.Model):
     start_date = models.DateField(null=True, blank=True)
     # TERMDATE
     end_date = models.DateField(null=True, blank=True)
+    # RPT_DATE
+    updated_at = models.DateField()
+    # relationships to other models
     annum = models.ForeignKey(LobbyistAnnum)
     interest = models.ForeignKey(Interest)
     address = models.ForeignKey(Address, null=True, blank=True,
         help_text='The address the lobbyist listed for the `Interest`')
-    # report = models.ForeignKey(Report)  maybe add this to link compensation
-    # data to the original report because sometimes a lobbyist will file
-    # multiple reports a year with the same interests so their compensation
-    # ends up double counted
-    updated_at = models.DateField()
+    # temporarily make nullable during data transition
+    # CLIENT_NUM
+    client_num = models.PositiveSmallIntegerField(null=True, blank=True,
+        help_text='Client ID for lobbyist. The client number assigned to this '
+        'client on the most recently filed registration.')
+    # temporarily make nullable during data transition
+    report = models.ForeignKey(RegistrationReport, null=True, blank=True)
 
     # denormalized fields
     amount_guess = models.IntegerField()  # denormalized, f(amount_low, amount_high)
