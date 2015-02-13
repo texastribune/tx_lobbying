@@ -1,0 +1,59 @@
+{% extends "tx_lobbying/base.html" %}
+{% load intcomma from humanize %}
+
+{% block head_title %}{{ object }}{% endblock %}
+
+{% block main %}
+  <h1>Form REG for <a href="{{ object.lobbyist }}">{{ object.lobbyist }}</a>, {{ object.year }}</h1>
+  <dl>
+    <dt>Filed</dt>
+    <dd>{{ object.report_date }}</dd>
+    <dt>Date Range</dt>
+    <dd>{{ object.raw_data.LOSTART }} - {{ object.raw_data.LOTERM }}</dd>
+    <dt>Normal Business</dt>
+    <dd>{{ object.raw_data.NORM_BUS }}</dd>
+    {% if object.raw_data.FIRM_NAME %}
+      <dt>Lobbying firm</dt>
+      <dd>{{ object.raw_data.FIRM_NAME }}</dd>
+    {% endif %}
+    {% if object.raw_data.I4E_NAML %}
+      <dt>Individual or entity</dt>
+      <dd>{{ object.raw_data.I4E_NAML }}</dd>
+    {% endif %}
+  </dl>
+
+  <section>
+    <h2>
+      <i class="fa fa-building"></i>
+      Address
+    </h2>
+    {{ object.address.as_adr }}
+  </section>
+
+  <section>
+    <h2><i class="fa fa-suitcase"></i> Clients</h2>
+    <ul>
+      {% for compensation in object.compensation_set.all %}
+        <li>
+          {{ compensation.raw_data.STARTDT }}
+          -
+          {{ compensation.raw_data.TERMDATE }}
+          {% if compensation.interest.canonical %}
+              <a href="{{ compensation.interest.canonical.get_absolute_url }}">{{ compensation.interest.canonical.name|default:"TODO" }}</a>
+              <small class="parenthetical">
+                (originally:
+                <a href="{{ compensation.interest.get_absolute_url }}">{{ compensation.interest.name|default:"TODO" }}</a>)
+              </small>
+          {% else %}
+            <a href="{{ compensation.interest.get_absolute_url }}">{{ compensation.interest.name|default:"TODO" }}</a>
+          {% endif %}
+          ${{ compensation.amount_low|intcomma }} &mdash; ${{ compensation.amount_high|intcomma }}
+          <small class="parenthetical">
+            ({{ compensation.raw_data.TYPECOPM }})
+          </small>
+        </li>
+      {% endfor %}
+    </ul>
+    {# TODO have a map of all these client addresses too #}
+  </section>
+{% endblock %}

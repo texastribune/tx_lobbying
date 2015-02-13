@@ -130,6 +130,14 @@ class LobbyistDetail(DetailView):
         return data
 
 
+class RegistrationDetail(DetailView):
+    queryset = (models.RegistrationReport.objects.all()
+        .select_related('lobbyist')
+        .prefetch_related('compensation_set__interest'))
+    slug_field = 'report_id'
+    slug_url_kwarg = 'repno'
+
+
 class CoversheetDetail(DetailView):
     queryset = models.Coversheet.objects.select_related('subjects')
     slug_field = 'report_id'

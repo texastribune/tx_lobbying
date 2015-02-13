@@ -430,6 +430,11 @@ class RegistrationReport(RawDataMixin, models.Model):
     def __unicode__(self):
         return u"%s %s %s" % (self.report_id, self.report_date, self.lobbyist)
 
+    def get_absolute_url(self):
+        return reverse('tx_lobbying:registration_detail', kwargs={
+            'pk': self.pk,
+        })
+
 
 class Coversheet(RawDataMixin, models.Model):
     """
