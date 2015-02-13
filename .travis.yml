@@ -2,7 +2,7 @@ language: python
 addons:
   postgresql: "9.3"
 env:
-  PYTHONPATH='.'
+  PYTHONPATH=. ENVIRONMENT=test DATABASE_URL="postgis:///tx_lobbying"
 install: "pip install -r requirements.txt --download-cache $HOME/.pip-cache"
 # Enable pip download cache for faster builds, caching site-packages does not
 # seem to work :(
