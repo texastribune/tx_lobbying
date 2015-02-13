@@ -1,10 +1,11 @@
 {% extends "tx_lobbying/base.html" %}
 {% load intcomma from humanize %}
+{% load currency from tx_lobbying %}
 
-{% block head_title %}{{ object }}{% endblock %}
+{% block head_title %}{{ object.lobbyist }}, {{ object.year }}{% endblock %}
 
 {% block main %}
-  <h1>Form REG for <a href="{{ object.lobbyist }}">{{ object.lobbyist }}</a>, {{ object.year }}</h1>
+  <h1>Form REG for <a href="{{ object.lobbyist.get_absolute_url }}">{{ object.lobbyist }}</a>, {{ object.year }}</h1>
   <dl>
     <dt>Filed</dt>
     <dd>{{ object.report_date }}</dd>
@@ -30,30 +31,53 @@
     {{ object.address.as_adr }}
   </section>
 
-  <section>
+  <section class="map-many">
     <h2><i class="fa fa-suitcase"></i> Clients</h2>
-    <ul>
-      {% for compensation in object.compensation_set.all %}
-        <li>
-          {{ compensation.raw_data.STARTDT }}
-          -
-          {{ compensation.raw_data.TERMDATE }}
-          {% if compensation.interest.canonical %}
-              <a href="{{ compensation.interest.canonical.get_absolute_url }}">{{ compensation.interest.canonical.name|default:"TODO" }}</a>
-              <small class="parenthetical">
-                (originally:
-                <a href="{{ compensation.interest.get_absolute_url }}">{{ compensation.interest.name|default:"TODO" }}</a>)
-              </small>
-          {% else %}
-            <a href="{{ compensation.interest.get_absolute_url }}">{{ compensation.interest.name|default:"TODO" }}</a>
-          {% endif %}
-          ${{ compensation.amount_low|intcomma }} &mdash; ${{ compensation.amount_high|intcomma }}
-          <small class="parenthetical">
-            ({{ compensation.raw_data.TYPECOPM }})
-          </small>
-        </li>
-      {% endfor %}
-    </ul>
-    {# TODO have a map of all these client addresses too #}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Start</th>
+          <th>End</th>
+          <th>Client Name</th>
+          <th></th>
+          <th>Low</th>
+          <th>High</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for compensation in object.compensation_set.all %}
+          <tr>
+            <td>
+              {{ compensation.raw_data.STARTDT }}
+            </td>
+            <td>
+              {{ compensation.raw_data.TERMDATE }}
+            </td>
+            <td>
+              {# Don't use canonical name, use name as lobbyist reported it #}
+              <a href="{{ compensation.interest.get_absolute_url }}">{{ compensation.interest.name|default:"TODO" }}</a>
+            </td>
+            <td>
+              <a href="{{ compensation.interest.address.get_absolute_url }}">
+                <i class="fa fa-building" title="{{ compensation.interest.address }}"></i>
+                {% if compensation.interest.address.coordinate %}<i class="fa fa-crosshairs"></i>{% endif %}
+              </a>
+              {% include "tx_lobbying/includes/address_geo.html" with object=compensation.interest.address %}
+            </td>
+            <td>
+              {{ compensation.amount_low|currency }}
+            </td>
+            <td>
+              {{ compensation.amount_high|currency }}
+            </td>
+            <td>
+              {{ compensation.raw_data.TYPECOPM }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="map"></div>
   </section>
 {% endblock %}

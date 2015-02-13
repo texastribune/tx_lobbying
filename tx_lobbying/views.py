@@ -133,7 +133,7 @@ class LobbyistDetail(DetailView):
 class RegistrationDetail(DetailView):
     queryset = (models.RegistrationReport.objects.all()
         .select_related('lobbyist')
-        .prefetch_related('compensation_set__interest'))
+        .prefetch_related('compensation_set__interest__address'))
     slug_field = 'report_id'
     slug_url_kwarg = 'repno'
 
