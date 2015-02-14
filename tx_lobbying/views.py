@@ -158,6 +158,9 @@ class InterestDetail(DetailView):
         data['compensation_set'] = (self.object.compensation_set_massive
             .prefetch_related('interest', 'annum__lobbyist')
             .order_by('annum__lobbyist', 'annum__year'))
+        # perf, force this query to get run now
+        len(self.object.stats.all())
+        data['object_stats_all'] = self.object.stats.all()
         return data
 
 
