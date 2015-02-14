@@ -154,6 +154,18 @@ LOGGING = {
         'level': os.environ.get('LOGGING_LEVEL', 'WARNING'),
         'handlers': ['console'],
     },
+    'formatters': {
+        'verbose': {
+            'format': ' '.join([
+                '%(levelname)s',
+                '%(asctime)s',
+                '%(name)s',
+                '%(module)s',
+                '%(process)d',
+                '%(thread)d',
+                '%(message)s']),
+        },
+    },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse',
@@ -169,6 +181,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'project_runpy.ColorizingStreamHandler',
+            # 'formatter': 'verbose',
         },
     },
     'loggers': {
@@ -181,6 +194,10 @@ LOGGING = {
         'factory': {
             'level': 'ERROR',
             'propagate': False,
-        }
+        },
+        'elasticsearch': {
+            'level': 'ERROR',
+            'propagate': False,
+        },
     }
 }
