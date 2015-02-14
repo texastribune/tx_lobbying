@@ -130,8 +130,17 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     'django_extensions',
+    'haystack',
     'tx_lobbying',
 ]
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': env.get('HAYSTACK_URL'),
+        'INDEX_NAME': 'tx_lobbying',
+    },
+}
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
