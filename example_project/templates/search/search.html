@@ -22,7 +22,7 @@
     <ul>
       {% for result in page.object_list %}
         <li>
-          <a href="{{ result.object.get_absolute_url }}">{{ result.text }}</a> {{ result.verbose_name }}
+          <a href="{{ result.url }}">{{ result.text }}</a> {{ result.verbose_name }}
         </li>
       {% empty %}
         <li>No results found.</li>

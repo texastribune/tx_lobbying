@@ -9,5 +9,5 @@ def autocomplete(request):
         sqs = SearchQuerySet().autocomplete(content_auto=query)[:10]
     else:
         sqs = ()
-    data = [{'label': result.text, 'value': result.object.get_absolute_url()} for result in sqs]
+    data = [{'label': result.text, 'value': result.url} for result in sqs]
     return JsonResponse(data, safe=False)
