@@ -32,6 +32,7 @@ Set your environment variables. One way is to have a `.env` file with:
 ```
 DJANGO_SETTINGS_MODULE=example_project.settings
 DATABASE_URL=postgres:///tx_lobbying
+HAYSTACK_URL=http://1270.0.01:9200/
 
 # optional if you want to geocode
 # https://geoservices.tamu.edu/Services/Geocode/WebService/

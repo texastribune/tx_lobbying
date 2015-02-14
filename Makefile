@@ -100,3 +100,7 @@ docker/build:
 docker/run:
 	docker run --rm --env-file env-docker --link postgis:postgis -p 8080:8080 ${IMAGE} waitress-serve \
 	  "example_project.wsgi:application"
+
+# a sample elasticsearch for you
+docker/es:
+	docker run -d -p 9200:9200 -p 9300:9300 --name es1 dockerfile/elasticsearch

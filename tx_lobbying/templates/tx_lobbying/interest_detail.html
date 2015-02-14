@@ -74,7 +74,7 @@
       </p>
     {% else %}
       <ul>
-        {% for annum in object.stats.all %}
+        {% for annum in object_stats_all %}
           <li>
             In {{ annum.year }}, they spent between ${{ annum.low|intcomma }}
             and ${{ annum.high|intcomma }} on {{ annum.lobbyist_count }} lobbyists.
@@ -104,7 +104,7 @@
       <thead>
         <tr>
           <td></td>
-          {% for annum in object.stats.all %}
+          {% for annum in object_stats_all %}
             <th>{{ annum.year }}</th>
           {% endfor %}
         </tr>
@@ -115,7 +115,7 @@
             <td>
               <a href="{{ lobbyist.grouper.get_absolute_url }}">{{ lobbyist.grouper }}</a>
             </td>
-            {% for annum in object.stats.all %}
+            {% for annum in object_stats_all %}
               <td class="year-{{ annum.year }}"></td>
             {% endfor %}
           </tr>

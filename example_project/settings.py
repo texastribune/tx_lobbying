@@ -130,8 +130,17 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     'django_extensions',
+    'haystack',
     'tx_lobbying',
 ]
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': env.get('HAYSTACK_URL'),
+        'INDEX_NAME': 'tx_lobbying',
+    },
+}
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -144,6 +153,18 @@ LOGGING = {
     'root': {
         'level': os.environ.get('LOGGING_LEVEL', 'WARNING'),
         'handlers': ['console'],
+    },
+    'formatters': {
+        'verbose': {
+            'format': ' '.join([
+                '%(levelname)s',
+                '%(asctime)s',
+                '%(name)s',
+                '%(module)s',
+                '%(process)d',
+                '%(thread)d',
+                '%(message)s']),
+        },
     },
     'filters': {
         'require_debug_false': {
@@ -160,6 +181,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'project_runpy.ColorizingStreamHandler',
+            # 'formatter': 'verbose',
         },
     },
     'loggers': {
@@ -172,6 +194,10 @@ LOGGING = {
         'factory': {
             'level': 'ERROR',
             'propagate': False,
-        }
+        },
+        'elasticsearch': {
+            'level': 'ERROR',
+            'propagate': False,
+        },
     }
 }

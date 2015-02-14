@@ -20,19 +20,14 @@ module.exports = (grunt) ->
       all: [
         'example_project/static/js_src/**/*.js'
       ]
-    concat:
+    browserify:
       app:
-        src: [
-          'example_project/static/js_src/**/*.js'
-          # trick grunt into adding main.js last
-          '!example_project/static/js_src/main.js'
-          'example_project/static/js_src/main.js'
-        ]
-        dest: 'example_project/static/js/tx_lobbying.js'
+        files:
+          'example_project/static/js/tx_lobbying.js': 'example_project/static/js_src/main.js'
     uglify:
       app:
         files:
-          'example_project/static/js/tx_lobbying.min.js': ['<%= concat.app.dest %>']
+          'example_project/static/js/tx_lobbying.min.js': ['example_project/static/js/tx_lobbying.js']
     watch:
       # use live reload if the browser has it
       # if you don't have it you can get it here:
@@ -52,20 +47,20 @@ module.exports = (grunt) ->
           spawn: false
       scripts:
         files: ['example_project/static/js_src/**/*.js']
-        tasks: ['concat', 'uglify']
+        tasks: ['browserify', 'uglify']
         options:
           spawn: false
 
   grunt.loadNpmTasks 'grunt-sass'
   grunt.loadNpmTasks 'grunt-autoprefixer'
   grunt.loadNpmTasks 'grunt-contrib-jshint'
-  grunt.loadNpmTasks 'grunt-contrib-concat'
+  grunt.loadNpmTasks 'grunt-browserify'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-watch'
 
   # build the assets needed
-  grunt.registerTask('build', ['sass', 'autoprefixer', 'concat', 'uglify'])
+  grunt.registerTask('build', ['sass', 'autoprefixer', 'browserify', 'uglify'])
   # build the assets with sanity checks
-  grunt.registerTask('default', ['sass', 'autoprefixer', 'jshint', 'concat', 'uglify'])
+  grunt.registerTask('default', ['sass', 'autoprefixer', 'jshint', 'browserify', 'uglify'])
   # build assets and automatically re-build when a file changes
   grunt.registerTask('dev', ['build', 'watch'])

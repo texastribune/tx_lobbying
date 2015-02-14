@@ -1,0 +1,12 @@
+<nav class="navbar">
+  <ul>
+    <li class="navbar-item">
+      <a href="{% url 'tx_lobbying:home' %}">Home</a>
+    </li>
+    <li class="navbar-item navbar-right">
+      <form action="{% url 'haystack_search' %}">
+        <input type="search" id="site_search" name="q" autocomplete="off">
+      </form>
+    </li>
+  </ul>
+</nav>

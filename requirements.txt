@@ -4,8 +4,9 @@ dj-database-url==0.3.0
 psycopg2==2.5.4
 project-runpy==0.3.1
 requests==2.5.1
+django-haystack==2.3.1
+elasticsearch==1.4.0
 django-choices==1.3
-DjangoRestless==0.0.9
 
 
 # Heroku
