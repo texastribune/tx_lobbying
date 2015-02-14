@@ -5,6 +5,7 @@ from .models import Lobbyist, Interest
 
 class LobbyistIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(model_attr='name', document=True)
+    content_auto = indexes.EdgeNgramField(model_attr='name')
 
     def get_model(self):
         return Lobbyist
@@ -15,6 +16,7 @@ class LobbyistIndex(indexes.SearchIndex, indexes.Indexable):
 
 class InterestIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(model_attr='name', document=True)
+    content_auto = indexes.EdgeNgramField(model_attr='name')
 
     def get_model(self):
         return Interest
