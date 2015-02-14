@@ -88,13 +88,13 @@
                   {{ report.raw_data.TERMDATE }} {{ report.raw_data.LOTERM }}
                 {% endcomment %}
                 {% if report.interest.canonical %}
-                    <a href="{{ report.interest.canonical.get_absolute_url }}">{{ report.interest.canonical.name|default:"TODO" }}</a>
+                    <a href="{{ report.interest.canonical.get_absolute_url }}" class="interest-name">{{ report.interest.canonical.name }}</a>
                     <small class="parenthetical">
                       (originally:
-                      <a href="{{ report.interest.get_absolute_url }}">{{ report.interest.name|default:"TODO" }}</a>)
+                      <a href="{{ report.interest.get_absolute_url }}" class="interest-name">{{ report.interest.name }}</a>)
                     </small>
                 {% else %}
-                  <a href="{{ report.interest.get_absolute_url }}">{{ report.interest.name|default:"TODO" }}</a>
+                  <a href="{{ report.interest.get_absolute_url }}" class="interest-name">{{ report.interest.name }}</a>
                 {% endif %}
                 ${{ report.amount_low|intcomma }} &mdash; ${{ report.amount_high|intcomma }}
                 <small class="parenthetical">

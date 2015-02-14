@@ -9,9 +9,7 @@
   <ul>
     {% for interest in object_list %}
       <li>
-        <a href="{{ interest.get_absolute_url }}">
-          {{ interest.name|default:"(missing name)" }}
-        </a>
+        <a href="{{ interest.get_absolute_url }}" class="interest-name">{{ interest.name }}</a>
         {% with aliases=interest.aliases.all %}
           {% if aliases %}
             <br>
@@ -19,9 +17,7 @@
             <ul>
               {% for interest in aliases %}
                 <li>
-                  <a href="{{ interest.get_absolute_url }}">
-                    {{ interest.name|default:"(missing name)" }}
-                  </a>
+                  <a href="{{ interest.get_absolute_url }}" class="interest-name">{{ interest.name }}</a>
                 </li>
               {% endfor %}
             </ul>
