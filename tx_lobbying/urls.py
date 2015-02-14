@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url, include
 from django.views.generic import RedirectView, TemplateView
 
+from . import search_views
 from . import views
 
 
@@ -46,6 +47,8 @@ urlpatterns = patterns('',
         name='subject_list'),
     url(r'^subject/(?P<slug>[-\w]*)/$', views.SubjectDetail.as_view(),
         name='subject_detail'),
+
+    url(r'^search/ac/', search_views.autocomplete, name='autocomplete'),
 
     # for debugging
     url(r'^_style/$',

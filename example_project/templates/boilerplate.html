@@ -13,9 +13,16 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
   {% block content %}{% endblock %}
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.2/leaflet.js"></script>
   <script src="{% static 'js/tx_lobbying.js' %}"></script>
+  {# django url adapters #}
+  <script>
+    var LOB = {
+      ac: '{% url "tx_lobbying:autocomplete" %}'
+    };
+  </script>
   {% block extra_script %}{% endblock %}
 </body>
 </html>
