@@ -38,7 +38,8 @@ expenses:
 # CSV of mappings of canonical Interest names
 nomenklatura:
 	mkdir -p nomenklatura
-	curl --silent "http://opennames.org/api/2/entities?dataset=tx-lobbying-interests&format=csv" > $@/interests.csv
+	curl --silent "http://opennames.org/api/2/entities?dataset=tx-lobbying-interests&format=csv" | \
+	  csvsort --reverse -c 4 > $@/interests.csv
 	curl --silent "http://opennames.org/api/2/entities?dataset=tx-lobbying-subjects&format=csv" > $@/subjects.csv
 
 

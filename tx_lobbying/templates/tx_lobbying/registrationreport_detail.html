@@ -56,7 +56,7 @@
             </td>
             <td>
               {# Don't use canonical name, use name as lobbyist reported it #}
-              <a href="{{ compensation.interest.get_absolute_url }}">{{ compensation.interest.name|default:"TODO" }}</a>
+              <a href="{{ compensation.interest.get_absolute_url }}" class="interest-name">{{ compensation.interest.name }}</a>
             </td>
             <td>
               <a href="{{ compensation.interest.address.get_absolute_url }}">

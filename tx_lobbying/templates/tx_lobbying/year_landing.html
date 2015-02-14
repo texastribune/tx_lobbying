@@ -40,7 +40,7 @@
         <tbody>
           {% for object in top_interests %}
             <tr>
-              <td><a href="{{ object.interest.get_absolute_url }}">{{ object.interest.name }}</a></td>
+              <td><a href="{{ object.interest.get_absolute_url }}" class="interest-name">{{ object.interest.name }}</a></td>
               <td class="extrainfo">{{ object.lobbyist_count }}</td>
               <td class="extrainfo">{{ object.low|currency }}</td>
               <td class="extrainfo">{{ object.high|currency }}</td>
