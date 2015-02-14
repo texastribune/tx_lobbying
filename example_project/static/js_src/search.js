@@ -1,12 +1,20 @@
-// FIXME browserify
+'use strict';
+/* global LOB */
+
+var $ = require('jquery');
+require('jquery-ui/autocomplete');
 
 var source = function (request, response_func) {
-  console.log(request);
   $.getJSON(LOB.ac, {q: request.term}, function (data) {
     response_func(data.results);
   });
 };
 
-$('#site_search').autocomplete({
-  source: source
-});
+var init = function () {
+  $('#site_search')  // XXX magic constant
+    .autocomplete({
+      source: source
+    });
+};
+
+exports.init = init;

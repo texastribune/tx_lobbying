@@ -11,11 +11,15 @@
   "devDependencies": {
     "grunt": "^0.4.4",
     "grunt-autoprefixer": "^0.7.6",
+    "grunt-browserify": "^3.3.0",
     "grunt-contrib-concat": "^0.4.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-sass": "^0.7.4",
     "grunt-contrib-uglify": "^0.4.1",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-sass": "^0.17.0"
+    "grunt-sass": "^0.17.0",
+    "jquery": "^2.1.3",
+    "jquery-ui": "^1.10.5",
+    "leaflet": "^0.7.3"
   }
 }

@@ -1,12 +1,13 @@
-/* global notebook, $ */
-(function (geocode) {
-  'use strict';
+'use strict';
 
-  if (document.getElementById('notebook')) {
-    notebook.retrieve('/');
-  }
+var geocode = require('./geocode');
+geocode.init();
 
-  $(function () {
-    geocode.process();
-  });
-})(this.geocode);
+var search = require('./search');
+search.init();
+
+
+// TODO
+// if (document.getElementById('notebook')) {
+//   notebook.retrieve('/');
+// }
