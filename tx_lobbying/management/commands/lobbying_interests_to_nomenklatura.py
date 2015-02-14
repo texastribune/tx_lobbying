@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
         writer = UnicodeWriter(stdout)
         writer.writerow(('name', 'state', 'address'))
-        for interest in Interest.objects.filter(nomenklatura_id=None):
+        for interest in Interest.objects.filter(nomenklatura_id=None).select_related('address'):
             row = (
                 interest.name,
                 unicode(interest.address.state),
