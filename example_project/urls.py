@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^', include('tx_lobbying.urls',
         namespace='tx_lobbying', app_name='tx_lobbying')),
 
+    url(r'^search/', include('haystack.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^robots.txt$', TemplateView.as_view(
         content_type='text/plain', template_name='robots.txt')),
