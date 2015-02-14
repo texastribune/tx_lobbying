@@ -19,12 +19,12 @@
   margin: 0.2em
   ul
     padding: 0
-  li
+  .navbar-item
     float: left
     list-style: none
     &:active
       font-weight: bold
-    a
+    > a
       color: #333
       display: block
       padding: 0.2em 0.3em
@@ -41,6 +41,7 @@
   padding: 0
   position: absolute
   z-index: 999  // to place over leaflet map
+  display: block !important // DEBUG
 
 .ui-menu-item
   list-style: none

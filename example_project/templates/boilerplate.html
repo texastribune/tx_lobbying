@@ -13,13 +13,13 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
   {% block content %}{% endblock %}
-  <script src="{% static 'js/tx_lobbying.js' %}"></script>
-  {# django url adapters #}
   <script>
     var LOB = {
       ac: '{% url "tx_lobbying:autocomplete" %}'
     };
   </script>
+  <script src="{% static 'js/tx_lobbying.js' %}"></script>
+  {# django url adapters #}
   {% block extra_script %}{% endblock %}
 </body>
 </html>

@@ -3,13 +3,11 @@ from haystack.query import SearchQuerySet
 
 
 def autocomplete(request):
-    query = request.GET.get('q', '')
+    """Autocomplete view specially formatted for jqueryui-autocomplete."""
+    query = request.GET.get('term', '')
     if query:
         sqs = SearchQuerySet().autocomplete(content_auto=query)[:10]
-        suggestions = [result.text for result in sqs]
     else:
-        suggestions = ()
-    data = {
-        'results': suggestions,
-    }
-    return JsonResponse(data)
+        sqs = ()
+    data = [{'label': result.text, 'value': result.object.get_absolute_url()} for result in sqs]
+    return JsonResponse(data, safe=False)

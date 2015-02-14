@@ -4,17 +4,16 @@
 var $ = require('jquery');
 require('jquery-ui/autocomplete');
 
-var source = function (request, response_func) {
-  $.getJSON(LOB.ac, {q: request.term}, function (data) {
-    response_func(data.results);
-  });
-};
-
 var init = function () {
   $('#site_search')  // XXX magic constant
     .autocomplete({
       appendTo: $('#site_search').closest('form'),
-      source: source
+      source: LOB.ac,
+      select: function (e, ui) {
+        // change urls
+        // does not capture 'click' so can't interpret middle click
+        document.location.href = ui.item.value;
+      }
     });
 };
 

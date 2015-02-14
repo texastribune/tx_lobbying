@@ -14,3 +14,10 @@
 
 .w-6
   width: 100% / 12 * 6
+
+// wrapper to represent a "page", there can be multiple pages in one html document
+.page-content
+  position: relative  // offset parent for .placeholder
+  overflow-x: auto
+  min-height: 300px  // so autocomplete can scroll on very short pages
+  white-space: normal  // fix wide content caused scrolling
