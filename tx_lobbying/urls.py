@@ -1,15 +1,7 @@
 from django.conf.urls import patterns, url, include
 from django.views.generic import RedirectView, TemplateView
 
-from . import api, views
-
-
-apipatterns = patterns('',
-    url(r'^lobbyist/$', api.LobbyistList.as_view(),
-        name='lobbyist_list'),
-    url(r'^lobbyist/(?P<filer_id>\d+)/$', api.LobbyistDetail.as_view(),
-        name='lobbyist_detail'),
-)
+from . import views
 
 
 urlpatterns = patterns('',
@@ -54,7 +46,6 @@ urlpatterns = patterns('',
         name='subject_list'),
     url(r'^subject/(?P<slug>[-\w]*)/$', views.SubjectDetail.as_view(),
         name='subject_detail'),
-    url(r'^api/1/', include(apipatterns, namespace='api')),
 
     # for debugging
     url(r'^_style/$',
