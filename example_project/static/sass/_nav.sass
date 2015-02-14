@@ -11,11 +11,24 @@
 
 .navbar
   +clearfix
+  background: #ddd
+  border: 1px solid #666
+  border-radius: 0.3em
+  font-size: 0.9em
+  padding: 0.2em
+  margin: 0.2em
   ul
     padding: 0
   li
     float: left
     list-style: none
+    &:active
+      font-weight: bold
+    a
+      color: #333
+      display: block
+      padding: 0.2em 0.3em
+      text-decoration: none
 
   .navbar-right
     float: right
@@ -26,6 +39,8 @@
   background: #bbb
   font-size: 0.85rem
   padding: 0
+  position: absolute
+  z-index: 999  // to place over leaflet map
 
 .ui-menu-item
   list-style: none

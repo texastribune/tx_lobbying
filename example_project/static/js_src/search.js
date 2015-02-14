@@ -13,6 +13,7 @@ var source = function (request, response_func) {
 var init = function () {
   $('#site_search')  // XXX magic constant
     .autocomplete({
+      appendTo: $('#site_search').closest('form'),
       source: source
     });
 };

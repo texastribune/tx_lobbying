@@ -6,8 +6,8 @@
 
 {% block content %}
   <div class="page-content">
+    {% include "tx_lobbying/includes/nav.html" %}
     <div class="site-nav">
-      {% include "tx_lobbying/includes/nav.html" %}
       {% block nav %}{% endblock %}
     </div>
     {% block main %}{% endblock %}
