@@ -1,7 +1,7 @@
-// If the document we're looking at has a canonical url set and it's different
-// thant he url we used to get here, then change the url to match. Make it
-// possible for users to run through ids trying to look for matches, and make
-// it so they get friendly urls too.
+// If the document we're looking at has a canonical url and it's different from
+// the url we used to get here, then change it to match. This makes it possible
+// for users to run through ids trying to look for matches, and gives them
+// friendly urls too.
 'use strict';
 
 var $ = require('jquery');
