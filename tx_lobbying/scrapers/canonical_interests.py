@@ -1,9 +1,22 @@
+#!/usr/bin/env python
 """
+Usage:
+  ./canonical_interests.py [options]
+
+Options:
+  --max-attempts=<n>  Maximum number of stale rows before quitting [default: 5]
+  --input=<path>      Specify alternate CSV input
+
+
 TODO change print to logger
 TODO set max attempts via command line
 """
+from __future__ import unicode_literals
+
 import logging
 import os
+
+from docopt import docopt
 
 from tx_lobbying.models import Interest
 from tx_lobbying.scrapers.utils import DictReader
@@ -36,16 +49,16 @@ def process_row(row):
             interest.nomenklatura_id = row['id']
             # ok to incur this extra save because it only happens the first time
             interest.save()
-            print('associating {}'.format(interest.name))
+            print('linking {}'.format(interest.name))
             did_update = True
         if row['canonical']:
             canonical = Interest.objects.get(name=row['canonical'])
             if interest.canonical != canonical:
-                print('set {} canonical: {}'.format(interest.name, canonical.name))
+                print('SET {} ==> {}'.format(interest.name, canonical.name))
                 set_canonical(interest, canonical)
                 did_update = True
         elif interest.canonical:
-            print "remove", interest
+            print('REMOVE {}'.format(interest))
             set_canonical(interest, None)
             did_update = True
     except Interest.MultipleObjectsReturned as e:
@@ -54,6 +67,7 @@ def process_row(row):
         pass
     except Interest.DoesNotExist:
         # don't care if source has extra interests
+        print('extra: {}'.format(row['name']))
         pass
     return did_update
 
@@ -87,9 +101,13 @@ def go(path, max_attempts=5):
 
 
 if __name__ == '__main__':
-    import django
-    django.setup()
-    base_dir = os.path.dirname(__file__)
-    path = os.path.join(
-        base_dir, '..', '..', 'data', 'nomenklatura', 'interests.csv')
-    go(path)
+    options = docopt(__doc__)
+    import django; django.setup()  # NOQA
+    max_attempts = int(options['--max-attempts'])
+    if options['--input']:
+        path = options['--input']
+    else:
+        base_dir = os.path.dirname(__file__)
+        path = os.path.join(
+            base_dir, '..', '..', 'data', 'nomenklatura', 'interests.csv')
+    go(path, max_attempts)
