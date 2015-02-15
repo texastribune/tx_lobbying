@@ -108,7 +108,8 @@ class YearLanding(TemplateView):
 
 
 class LobbyistList(ListView):
-    queryset = (Lobbyist.objects.all().order_by('sort_name')
+    queryset = (
+        Lobbyist.objects.all().order_by('sort_name')
         .annotate(spent=Sum('coversheets__spent_guess'))
         # .filter(spent__gt=0)
     )
@@ -121,6 +122,7 @@ class LobbyistDetail(DetailView):
         'coversheets__subjects',
     )
     slug_field = 'filer_id'
+    slug_url_kwarg = 'filer_id'
 
     def get_context_data(self, **kwargs):
         data = super(LobbyistDetail, self).get_context_data(**kwargs)
@@ -149,6 +151,7 @@ class InterestList(ListView):
 
 
 class InterestDetail(DetailView):
+    # we specify pk and slug, but DetailView will try pk first so we're ok
     model = models.Interest
 
     def get_context_data(self, **kwargs):

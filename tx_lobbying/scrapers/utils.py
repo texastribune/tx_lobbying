@@ -2,6 +2,8 @@ import codecs
 import csv
 import datetime
 
+from django.utils.text import slugify
+
 
 def convert_date_format(str):
     """Convert 12/25/2009 to date object."""
@@ -10,7 +12,7 @@ def convert_date_format(str):
     return datetime.date(int(year), int(month), int(day))
 
 
-def convert_date_format_YMD(str):
+def convert_date_format_YMD(str):  # NOQA
     """Convert 12/25/2009 to date object."""
     # TODO convert to Date so we can do comparisons
     year, month, day = str.split('-')
@@ -37,6 +39,7 @@ def get_name_data(row):
     data['title'] = row['FILER_NAMT']
     data['suffix'] = row['FILER_NAMS']
     data['nick_name'] = row['FILERSHORT']
+    data['slug'] = slugify(unicode(row['LOB_NAME']))
     return data
 
 

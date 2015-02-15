@@ -1,10 +1,8 @@
 'use strict';
 
-var geocode = require('./geocode');
-geocode.init();
-
-var search = require('./search');
-search.init();
+require('./canonical_urls').init();
+require('./geocode').init();
+require('./search').init();
 
 // HACK get jquery available globally
 window.$ = require('jquery');

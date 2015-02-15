@@ -125,6 +125,9 @@ class Interest(models.Model):
     name = models.CharField(max_length=200, unique=True)
     address = models.ForeignKey(Address)
 
+    # denormalized data
+    slug = models.SlugField(max_length=200, null=True, blank=True)  # not unique
+
     # USER FIELDS
     canonical = models.ForeignKey('self', related_name='aliases',
         null=True, blank=True)
@@ -140,7 +143,10 @@ class Interest(models.Model):
         return u"%s (%s)" % (self.name, self.address.state)
 
     def get_absolute_url(self):
-        return reverse('tx_lobbying:interest_detail', kwargs={'pk': self.pk})
+        return reverse('tx_lobbying:interest_detail', kwargs={
+            'pk': self.pk,
+            'slug': self.slug,
+        })
 
     # CUSTOM PROPERTIES
 
@@ -255,8 +261,9 @@ class Lobbyist(models.Model):
     suffix = models.CharField(max_length=5)
     nick_name = models.CharField(max_length=25)
     address = models.ForeignKey(Address, null=True, blank=True)
-    # NORM_BUS
-    # TODO business = models.CharField(max_length=100)
+
+    # denormalized data
+    slug = models.SlugField(max_length=100, null=True, blank=True)  # not unique
 
     class Meta:
         ordering = ('sort_name', )
@@ -265,7 +272,10 @@ class Lobbyist(models.Model):
         return Lobbyist.get_display_name(self.__dict__)
 
     def get_absolute_url(self):
-        return reverse('tx_lobbying:lobbyist_detail', kwargs=dict(slug=self.filer_id))
+        return reverse('tx_lobbying:lobbyist_detail', kwargs={
+            'filer_id': self.filer_id,
+            'slug': self.slug,
+        })
 
     # CUSTOM METHODS
 
@@ -503,7 +513,8 @@ class Coversheet(RawDataMixin, models.Model):
 
     def get_absolute_url(self):
         return reverse('tx_lobbying:coversheet_detail', kwargs={
-            'slug': self.lobbyist.filer_id,
+            'filer_id': self.lobbyist.filer_id,
+            'slug': self.lobbyist.slug,
             'report_id': self.report_id,
         })
 
