@@ -12,6 +12,8 @@ import logging
 import os
 import sys
 
+from django.utils.text import slugify
+
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.libs.address_normalizer import clean_zipcode
 from tx_lobbying.models import (
@@ -43,6 +45,7 @@ def get_or_create_interest(row):
     # TODO get other info from the csv
     defaults = dict(
         address=address,
+        slug=slugify(unicode(row['CONCERNAME'])),
     )
     interest, created = Interest.objects.get_or_create(
         name=row['CONCERNAME'],
@@ -96,6 +99,7 @@ def process_row(row, prev_pass=None):
             sort_name=row['SORTNAME'],  # not LOB_SORT like in coversheets
             updated_at=report_date,
             address=reg_address,
+            slug=slugify(unicode(row['LOBBYNAME'])),
         )
         lobbyist, created = Lobbyist.objects.update_or_create(
             filer_id=row['FILER_ID'],
