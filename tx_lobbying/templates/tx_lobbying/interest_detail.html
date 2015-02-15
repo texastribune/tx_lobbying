@@ -3,6 +3,10 @@
 
 {% block head_title %}{{ object }}{% endblock %}
 
+{% block meta %}{{ block.super }}
+  <link rel="canonical" href="{{ object.get_absolute_url }}">
+{% endblock %}
+
 {% block main %}
   <h1>
     <i class="fa fa-suitcase"></i>

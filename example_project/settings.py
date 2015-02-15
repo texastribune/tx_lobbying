@@ -199,5 +199,13 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': False,
         },
+        'urllib3': {
+            'level': 'WARNING',
+        },
+        'py.warnings': {
+            # silence fucking django RemovedInDjango18Warning bullshit
+            'level': 'ERROR',
+            'propagate': False,
+        },
     }
 }
