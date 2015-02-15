@@ -216,6 +216,9 @@ LOGGING = {
         'urllib3': {
             'level': 'WARNING',
         },
+        'requests.packages.urllib3': {
+            'level': 'WARNING',
+        },
         'py.warnings': {
             # silence fucking django RemovedInDjango18Warning bullshit
             'level': 'ERROR',

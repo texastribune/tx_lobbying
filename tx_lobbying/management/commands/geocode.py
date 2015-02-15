@@ -29,8 +29,9 @@ class Command(BaseCommand):
 
         try:
             for address in queryset:
-                print address
-                print geocode_address(address)
+                self.stdout.write('*' * 40)
+                self.stdout.write(address.get_display_name(sep=', '))
+                self.stdout.write(unicode(geocode_address(address)))
                 sleep(10)
         except KeyboardInterrupt:
             exit('bye')

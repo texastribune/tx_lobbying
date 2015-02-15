@@ -30,7 +30,11 @@ def update_interests_stats():
 
 
 def update_addresses():
-    """Collect addresses into canonical."""
+    """
+    Collect addresses into canonical.
+
+    The first address in a cluster is deemed the canonical one.
+    """
     qs = (
         Address.objects
         .filter(coordinate_quality__in=('00', '01', '02', '03'))
@@ -43,14 +47,18 @@ def update_addresses():
             # Assume the latest is the most up to date
             .order_by('-pk'))
         canon = same[0]
-        print(canon)
-        # ugh, must be a better way of doing this
+        changed = False
         if canon.canonical:
             canon.canonical = None
             canon.save()
+            changed = True
         for address in same[1:]:
-            address.canonical = canon
-            address.save()
+            if address.canonical != canon:
+                address.canonical = canon
+                address.save()
+                changed = True
+        if changed:
+            print(canon.get_display_name(sep=', '))
 
 
 class GeocodeException(Exception):
