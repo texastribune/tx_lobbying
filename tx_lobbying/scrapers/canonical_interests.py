@@ -1,5 +1,6 @@
 """
 TODO change print to logger
+TODO set max attempts via command line
 """
 import logging
 import os
@@ -22,23 +23,31 @@ def set_canonical(interest, canonical):
 
 
 def process_row(row):
+    """
+    Process a row of the nomenklatura csv.
+
+    Returns a bool indicating if this did any work.
+    """
+    did_update = False
     try:
         interest = Interest.objects.get(name=row['name'])
         # assert row['id']
-        if interest.nomenklatura_id != row['id']:
+        if unicode(interest.nomenklatura_id) != row['id']:
             interest.nomenklatura_id = row['id']
             # ok to incur this extra save because it only happens the first time
             interest.save()
+            print('associating {}'.format(interest.name))
+            did_update = True
         if row['canonical']:
             canonical = Interest.objects.get(name=row['canonical'])
             if interest.canonical != canonical:
-                print('set {} canonical: {}'.format(interest, canonical))
+                print('set {} canonical: {}'.format(interest.name, canonical.name))
                 set_canonical(interest, canonical)
-                return True
+                did_update = True
         elif interest.canonical:
             print "remove", interest
             set_canonical(interest, None)
-            return True
+            did_update = True
     except Interest.MultipleObjectsReturned as e:
         print "skip", row['name'], row['canonical'], e
         # TODO
@@ -46,6 +55,7 @@ def process_row(row):
     except Interest.DoesNotExist:
         # don't care if source has extra interests
         pass
+    return did_update
 
 
 def go(path, max_attempts=5):
