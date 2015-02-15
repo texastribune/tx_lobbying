@@ -6,15 +6,13 @@
 {% block main %}
   <h1>All Interests</h1>
   {# this grouping might be better done with regroup or client side #}
-  <ul>
+  <ul class="interests">
     {% for interest in object_list %}
       <li>
         <a href="{{ interest.get_absolute_url }}" class="interest-name">{{ interest.name }}</a>
         {% with aliases=interest.aliases.all %}
           {% if aliases %}
-            <br>
-            <b>Aliases:</b>
-            <ul>
+            <ul class="interests__aliases">
               {% for interest in aliases %}
                 <li>
                   <a href="{{ interest.get_absolute_url }}" class="interest-name">{{ interest.name }}</a>
