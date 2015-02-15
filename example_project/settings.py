@@ -181,7 +181,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'project_runpy.ColorizingStreamHandler',
-            # 'formatter': 'verbose',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
@@ -196,6 +196,14 @@ LOGGING = {
             'propagate': False,
         },
         'elasticsearch': {
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'urllib3': {
+            'level': 'WARNING',
+        },
+        'py.warnings': {
+            # silence fucking django RemovedInDjango18Warning bullshit
             'level': 'ERROR',
             'propagate': False,
         },
