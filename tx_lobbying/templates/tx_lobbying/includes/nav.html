@@ -4,9 +4,31 @@
       <a href="{% url 'tx_lobbying:home' %}">Home</a>
     </li>
     <li class="navbar-item navbar-right">
-      <form action="{% url 'haystack_search' %}">
-        <input type="search" id="site_search" name="q" autocomplete="off">
+      <form action="{% url 'haystack_search' %}" method="get">
+        <i class="fa fa-search hide-in-mobile"></i>
+        <input type="search" id="site_search" name="q" autocomplete="off" placeholder="Search">
       </form>
+    </li>
+    <li class="navbar-item">
+      <a href="{% url 'tx_lobbying:lobbyist_list' %}">
+        <i class="fa fa-user"></i> <span class="hide-in-mobile">All Lobbyists</span>
+      </a>
+    </li>
+    <li class="navbar-item">
+      <a href="{% url 'tx_lobbying:interest_list' %}">
+        <i class="fa fa-suitcase"></i> <span class="hide-in-mobile">All Interests</span>
+      </a>
+    </li>
+    <li class="navbar-item hide-in-mobile">
+      <a href="{% url 'tx_lobbying:address_list' %}"><i class="fa fa-building"></i> All Addresses</a>
+    </li>
+    <li class="navbar-item hide-in-mobile">
+      <a href="{% url 'tx_lobbying:subject_list' %}"><i class="fa fa-book"></i> All Subjects</a>
+    </li>
+    <li class="navbar-item navbar-right">
+      <a href="{% url 'tx_lobbying:about' %}">
+        <i class="fa fa-question-circle"></i> <span class="hide-in-mobile">About</span>
+      </a>
     </li>
   </ul>
 </nav>

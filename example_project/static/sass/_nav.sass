@@ -1,3 +1,4 @@
+// DEPRECATED
 .site-nav
   a
     background: darkslategray
@@ -9,15 +10,17 @@
     &:hover
       background: lighten(darkslategray, 5%)
 
+$bg: #ddd
 .navbar
   +clearfix
-  background: #ddd
-  border: 1px solid #666
+  background: $bg
+  border: 1px solid darken($bg, 10%)
   border-radius: 0.3em
   font-size: 0.9em
   padding: 0.2em
   margin: 0.2em
   ul
+    line-height: 2em  // seems like anything less than 2 makes chrome/firefox misalign
     padding: 0
   .navbar-item
     float: left
@@ -27,8 +30,11 @@
     > a
       color: #333
       display: block
-      padding: 0.2em 0.3em
+      padding: 0 0.3rem
       text-decoration: none
+      &:hover
+        color: black
+        background: lighten($bg, 3%)
 
   .navbar-right
     float: right
