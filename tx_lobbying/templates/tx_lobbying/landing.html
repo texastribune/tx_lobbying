@@ -17,9 +17,52 @@
 
 
 {% block main %}
-  <p>To find big spenders, pick a year:</p>
+  <h1>Quick Stats</h1>
+
   <section>
     <h2>Total Spent</h2>
+    <div class="intro">
+      <p>
+        Lobbyist spending by year. Data shown:
+      </p>
+      <ul>
+        <li>Total spent that year</li>
+        <li>
+
+          Total spent by category. The sum of the categories <em>is not</em>
+          the same as the total. Not shown is a parallel set of categories
+          (totals by who benefitted) that you'll find on a lobbyist's page.
+
+        </li>
+        <li>
+
+          The number of lobbyists who registered that year. Currently only
+          supports the Excel format the TEC started putting out in 2009.
+          <small>Source: http://www.ethics.state.tx.us/dfs/loblists.htm</small>
+
+        </li>
+
+        <li>
+
+          The number of lobbyists who actually reported spending that year (based
+          on cover sheets).
+
+        </li>
+        <li>
+
+          The number of coversheets submitted (you can think of this as &lt; 12
+          &times; the number of lobbyists that reported spending).
+
+        </li>
+        <li>
+
+          The number of coversheets that had detailed spending numbers attached.
+          This is for the rare occasion when a lobbyist spends above a threshold
+          and has it itemize their report.
+
+        </li>
+      </ul>
+    </div>
     <table class="table">
       <thead>
         <tr>
@@ -62,6 +105,13 @@
 
   <section>
     <h2>Total Itemized Spent</h2>
+    <p class="intro">
+
+      Here's how the itemized reports break down. You can see the gap in
+      reporting by comparing these to the amounts above. These numbers only go
+      to 2005 when the TEC switched from written reports to electronic.
+
+    </p>
     <table class="table">
       <thead>
         <tr>

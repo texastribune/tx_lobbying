@@ -1,10 +1,24 @@
 {% extends "tx_lobbying/base.html" %}
+{% load currency from tx_lobbying %}
 
 {% block head_title %}Styleguide{% endblock %}
 
 {% block main %}
 
   <h1>Styleguide</h1>
+
+  <h2>Intro</h2>
+
+  <div class="intro">
+    <p>
+      Into text shouldn't be too wide. Add the class <code>intro</code> to the
+      block level container. This should also be on other prose text.
+      Thus tarzan of his many unlucky things when the knight may be? Better than oysters some of their, unfathomable distance and formed from mother of putting out his hideous eyes to the minds and it should, be accepted with extreme slowness at, work they get killed what could possess any extraordinary courage? And ferocity? Have no sense in this undertaking commander farragut in person he stopped. Me harry he responded you must do the prices of these appeared to justify.</p>
+    <ul>
+      <li>item 1</li>
+      <li>item 2</li>
+    </ul>
+  </div>
 
   <section>
     <h2>normalize</h2>
@@ -23,29 +37,48 @@
   <section>
     <h2>layout</h2>
     <div class="row">
-      <div class="cell w-6">a cell</div>
-      <div class="cell w-6">only two to a row for now</div>
+      <div class="cell w-6">
+
+        Use <code>.row</code> to group <code>.cell</code> blocks. Use
+        <code>w-&lt;N&gt;</code> to denote how wide you want the cell to be. It
+        should add up to 12 or less.
+
+      </div>
+      <div class="cell w-6">
+
+        only 50/50 cells for now. No offset, and no gutter modification. But
+        there is some basic responsive code.
+
+      </div>
     </div>
   </section>
 
   <section>
     <h2>table</h2>
-    <p>use <code>.table</code> class</p>
+    <p class="intro">
+      To get this table styling, use the <code>.table</code> class. Tables have
+      a minimum width because skinny tables don't look good. Zebra stripes for
+      readability. Currency is right justified so place values are aligned.
+      You can turn off the denomination and enable cents with additional css.
+    </p>
     <table class="table">
       <thead>
         <tr>
           <th>A</th>
-          <th>A<br>B</th>
+          <th>Headings<br>Align<br>Bottom</th>
+          <th>total</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>1</td>
           <td>3</td>
+          <td>{{ 9001|currency }}</td>
         </tr>
         <tr>
           <td>2</td>
           <td>4</td>
+          <td>{{ 142.232|currency }}</td>
         </tr>
       </tbody>
     </table>

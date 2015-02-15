@@ -11,7 +11,6 @@ from . import models
 
 class Landing(TemplateView):
     template_name = "tx_lobbying/landing.html"
-    years = range(2005, 2015)
 
     def aggregate_covers(self):
         data = (
@@ -30,7 +29,7 @@ class Landing(TemplateView):
                 # missing no. of lobbyists that actually spent
                 # missing no. that actually had details
             )
-            .order_by('year')
+            .order_by('-year')
         )
         # fill in missing data
         n_itemized = {
@@ -71,7 +70,7 @@ class Landing(TemplateView):
         totals = (
             ExpenseDetailReport.objects.all().values('year', 'type')
             .annotate(sum=Sum('amount_guess'), count=Count('pk'))
-            .order_by('year')
+            .order_by('-year')
         )
         data = groupby(totals, key=itemgetter('year'))
         data = [(year, refactor(grouper)) for year, grouper in data]
