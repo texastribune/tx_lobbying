@@ -1,9 +1,9 @@
 {% load currency from tx_lobbying %}
 <div id="cover-{{ cover.report_id }}" class="coversheet report">
   <h1>
-    <a href="{{ cover.get_absolute_url }}">
-      Lobby Activites Report
-    </a>
+    <a href="{{ cover.get_absolute_url }}">Lobby Activites Report</a>
+    <a href="http://204.65.203.5/public/lobby/{{ cover.report_id }}.pdf"
+       target="_blank" rel="nofollow" title="View original from the TEC"><i class="fa fa-file-pdf-o"></i></a>
   </h1>
   Report Date: {{ cover.report_date|date:"Y-m-d" }}
   How Filed: {{ data.HOWFILED }}

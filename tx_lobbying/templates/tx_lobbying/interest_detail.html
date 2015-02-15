@@ -12,7 +12,7 @@
     <i class="fa fa-suitcase"></i>
     <span class="interest-name">{{ object.name }}</span>{% if object.address.state %} ({{ object.address.state }}){% endif %}
     {% if object.nomenklatura_id %}
-      <a href="{{ object.nomenklatura_review_url }}" target="_blank"><i class="fa fa-cube"></i></a>
+      <a href="{{ object.nomenklatura_review_url }}" target="_blank" rel="nofollow"><i class="fa fa-cube"></i></a>
     {% endif %}
   </h1>
   {% if object.canonical %}

@@ -181,7 +181,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'project_runpy.ColorizingStreamHandler',
-            'formatter': 'verbose',
+            # 'formatter': 'verbose',
         },
     },
     'loggers': {
