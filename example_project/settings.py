@@ -109,9 +109,12 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'example_project.middleware.DefaultCacheHeadersMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+CACHE_MIDDLEWARE_SECONDS = 86400 * 30  # cache things for 30 days
 
 ROOT_URLCONF = 'example_project.urls'
 
