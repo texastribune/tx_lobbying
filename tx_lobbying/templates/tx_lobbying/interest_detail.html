@@ -48,8 +48,8 @@
       All addresses that have been listed:
     </p>
     <div class="row map-many">
-      <div class="cell w-6">
-        <ul>
+      <div class="cell w-4">
+        <ul class="dense">
           {% for address in object.address_set_massive %}
             <li>
               <a href="{{ address.get_absolute_url }}">
@@ -63,7 +63,7 @@
           {% endfor %}
         </ul>
       </div>
-      <div class="cell w-6">
+      <div class="cell w-8">
         <div class="map"></div>
       </div>
     </div>
