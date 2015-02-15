@@ -12,7 +12,7 @@
         <a href="{{ interest.get_absolute_url }}" class="interest-name">{{ interest.name }}</a>
         {% with aliases=interest.aliases.all %}
           {% if aliases %}
-            <ul class="interests__aliases">
+            <ul class="aliases">
               {% for interest in aliases %}
                 <li>
                   <a href="{{ interest.get_absolute_url }}" class="interest-name">{{ interest.name }}</a>

@@ -6,7 +6,7 @@
 
 {% block main %}
   <h1><i class="fa fa-building"></i> All Addresses</h1>
-  <ul>
+  <ul class="addresses">
     {% for address in object_list %}
       <li>
         <a href="{{ address.get_absolute_url }}">
@@ -14,9 +14,7 @@
           {% if address.coordinate %}<i class="fa fa-crosshairs"></i>{% endif %}</a>
         {% with aliases=address.aliases.all %}
           {% if aliases %}
-            <br>
-            <b>Aliases:</b>
-            <ul>
+            <ul class="aliases">
               {% for address in aliases %}
                 <li>
                   <a href="{{ address.get_absolute_url }}">
