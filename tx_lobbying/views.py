@@ -86,13 +86,13 @@ class Landing(TemplateView):
 class YearLanding(TemplateView):
     template_name = "tx_lobbying/year_landing.html"
 
-    def get_top_lobbyists(self, count=20):
+    def get_top_lobbyists(self, count=50):
         qs = (models.LobbyistStats.objects.filter(year=self.year)
             .select_related('lobbyist')
             .order_by('-spent_guess')[:count])
         return qs
 
-    def get_top_interests(self, count=20):
+    def get_top_interests(self, count=50):
         qs = (models.InterestStats.objects
             .filter(year=self.year, interest__canonical__isnull=True)
             .select_related('interest')
