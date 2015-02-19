@@ -274,6 +274,10 @@ class LobbyistTest(TestCase):
         self.assertEqual(history[1].address, a3)
         self.assertEqual(history[2].address, a2)
 
+    def test_get_score_works(self):
+        with self.assertNumQueries(5):
+            self.assertEqual(self.lobbyist.get_score(), 0)
+
     def test_make_stats_does_nothing_with_no_coversheets(self):
         self.assertEqual(self.lobbyist.coversheets.count(), 0)
         self.lobbyist.make_stats()

@@ -267,6 +267,7 @@ class Lobbyist(models.Model):
 
     # denormalized data
     slug = models.SlugField(max_length=100, null=True, blank=True)  # not unique
+    score = models.IntegerField(null=True)
 
     class Meta:
         ordering = ('sort_name', )
@@ -329,6 +330,42 @@ class Lobbyist(models.Model):
                 # only append address if it changed
                 history.append(Item(address, reg))
         return history
+
+    def get_score(self):
+        """
+        Generate an arbitrary score for this lobbyist.
+
+        The more activity a lobbyist has, the higher this score.
+        """
+        # spending
+        coversheets = self.coversheets.values('year').annotate(Count('pk'))
+        # to avoid another database hit doing a .count()
+        # n_coversheets = sum(x['pk__count'] for x in coversheets)
+        n_years = len(coversheets)
+
+        spent = self.coversheets.aggregate(spent=Sum('spent_guess'))['spent'] or 0
+
+        spent_per_year = spent / n_years if n_years else 0
+
+        # print n_coversheets, n_years, spent, spent_per_year
+
+        # registration
+        # number of clients
+        interests = Interest.objects.filter(years_available__lobbyist=self)
+        n_client = interests.count()
+        n_unique_clients = interests.distinct().count()
+        n_years_registered = self.years.count()
+
+        clients_per_year = n_client / n_years_registered if n_years_registered else 0
+
+        # print n_client, n_unique_clients, n_years_registered
+        return (
+            1000 * n_years +  # seniority
+            spent +  # total influence
+            spent_per_year +  # big spender
+            100 * n_unique_clients +  # lots of clients
+            1000 * clients_per_year  # stays busy
+        )
 
     def make_stats(self):
         values = self.coversheets.values('year').annotate(
