@@ -10,6 +10,9 @@
       <li>
         <a href="{{ object.get_absolute_url }}">{{ object }}</a>
         {{ object.spent|currency }}
+        {% if object.score != None %}
+          {{ object.score }}
+        {% endif %}
       </li>
     {% endfor %}
   </ul>
