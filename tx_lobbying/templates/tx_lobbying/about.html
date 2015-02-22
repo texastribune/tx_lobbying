@@ -3,5 +3,47 @@
 {% block head_title %}About{% endblock %}
 
 {% block main %}
-You can see known data issues at <a href="https://github.com/texastribune/tx_lobbying/labels/data">GitHub</a>.
+  <section class="intro">
+    <h2>About the data</h2>
+
+    <p>
+      The two main sources of data are:
+    </p>
+
+    <ul>
+      <li>The lists of registered lobbyists, by year: http://www.ethics.state.tx.us/dfs/loblists.htm</li>
+      <li>
+        And the coversheets for the lobbyist activies reports (LA): http://www.ethics.state.tx.us/dfs/search_LOBBY.html
+      </li>
+    </ul>
+
+    <p>
+
+      Names come from both sources of data, but only the coversheets from
+      activity reports (<a
+      href="http://www.ethics.state.tx.us/filinginfo/lobfrm.htm">Form LA</a>)
+      have detailed information about names like first/last.
+
+    </p>
+
+    <p>
+
+      The information for lobbying interests come from the registration forms
+      (<a href="http://www.ethics.state.tx.us/filinginfo/lobfrm.htm">Form
+      REG</a>). This information is all entered by hand and will be very hard
+      to use without scrubbing.
+
+    </p>
+
+    <p>
+      You can see known data issues at <a href="https://github.com/texastribune/tx_lobbying/labels/data">GitHub</a>.
+    </p>
+
+  </section>
+
+  <section>
+    <p>
+      Stories from The Texas Tribune about lobbying: <a href="http://www.texastribune.org/tribpedia/lobbying/">Tribpedia: Lobbying</a>.
+    </p>
+  </section>
 {% endblock %}
