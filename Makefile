@@ -52,12 +52,13 @@ import:
 	DEBUG=0 python tx_lobbying/scrapers/canonical_addresses.py
 	DEBUG=0 $(MANAGE) lobbying_stats
 
-# hopefully a slimmer version for dev
+# hopefully a slimmer version for dev and for incremental updates
 import1:
 	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon15.csv
 	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon14.csv
-	DEBUG=0 YEAR_START=2013 $(MANAGE) lobbying_expenses data/expenses -v 2
+	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon13.csv
 	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon12.csv
+	DEBUG=0 YEAR_START=2012 $(MANAGE) lobbying_expenses data/expenses -v 2
 	DEBUG=0 python tx_lobbying/scrapers/canonical_interests.py
 	DEBUG=0 python tx_lobbying/scrapers/canonical_addresses.py
 	DEBUG=0 $(MANAGE) lobbying_stats
@@ -67,7 +68,6 @@ import2:
 	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon09.csv
 	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon10.csv
 	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon11.csv
-	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon13.csv
 	DEBUG=0 $(MANAGE) lobbying_expenses data/expenses -v 2
 	DEBUG=0 python tx_lobbying/scrapers/canonical_interests.py
 	DEBUG=0 python tx_lobbying/scrapers/canonical_addresses.py
