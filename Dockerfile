@@ -10,9 +10,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
   # for postgis
   libpq-dev libgeos-dev \
   # node to build static files
-  nodejs nodejs-legacy npm > /dev/null
+  nodejs nodejs-legacy npm \
+  > /dev/null
 # ubuntu version of pip is buggy
-RUN pip install --upgrade pip
+RUN pip install --upgrade "pip<6.0"
 RUN npm config set color false; \
   npm config set loglevel warn; \
   npm install -g grunt-cli --no-color
@@ -24,9 +25,9 @@ ADD . /app
 WORKDIR /app
 ENV PYTHONPATH /app
 
+RUN npm install > /dev/null
+RUN grunt build --no-color
+RUN python example_project/manage.py collectstatic --noinput -v0
+
 # default waitress port
 EXPOSE 8080
-
-RUN npm install
-RUN grunt build --no-color
-RUN python example_project/manage.py collectstatic --noinput

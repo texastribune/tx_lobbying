@@ -6,7 +6,7 @@
   "license": "Apache",
   "repository": {
     "type": "git",
-    "url": "git://github.com/texastribune/the-dp.git"
+    "url": "git://github.com/texastribune/tx_lobbying.git"
   },
   "devDependencies": {
     "grunt": "^0.4.4",
