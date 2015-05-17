@@ -67,6 +67,7 @@ class Address(geo_models.Model):
             'coordinates based on available information')
 
     address1 = models.CharField(max_length=200, null=True, blank=True)
+    # DEPRECATED
     address2 = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=75, null=True, blank=True)
     state = models.CharField(max_length=2)
