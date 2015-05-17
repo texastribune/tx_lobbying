@@ -1,16 +1,10 @@
-"""
-Take address objects and clean each individual fields.
-
-Other examples that all take full addresses:
-
-* http://pyparsing.wikispaces.com/file/view/streetAddressParser.py
-* https://github.com/pnpnpn/street-address
-* https://github.com/SwoopSearch/pyaddress
-"""
 from __future__ import unicode_literals
 
 import logging
 import re
+
+import usaddress
+
 
 logger = logging.getLogger(__name__)
 
@@ -27,28 +21,49 @@ def clean_zipcode(input):
     return input
 
 
+def component_format(label, value):
+    formatters = {
+        'StreetNamePostType': lambda x: {
+            'AVENUE': 'AVE',
+            'BOULEVARD': 'BLVD',
+            'STREET': 'ST',
+        }.get(x, x),
+        'OccupancyType': lambda x: {
+            'SUITE': 'STE',
+        }.get(x, x),
+        'StreetNamePreDirectional': lambda x: {
+            'EAST': 'E',
+            'NORTH': 'NW',
+            'SOUTH': 'S',
+            'WEST': 'W',
+        }.get(x, x),
+    }
+    if label in formatters:
+        return formatters[label](value.upper())
+    return value
+
+
 def clean_street(address1, address2=''):
     """
     Clean street address.
-
-    # address
-    # [predir_apprev] N S E W
-    # street_name
-    # street_type_abbrev
-    # postdir_abbrev
-    # internal
-
-    http://postgis.net/docs/Normalize_Address.html
     """
     # matchers that rely on knowing address lines
     # Strip "care of" lines
     if re.match(r'c/o ', address1, re.IGNORECASE):
         return address2
 
+    # concatenate line 1 and line 2
     address = '{} {}'.format(address1, address2).strip()
 
-    # collapse whitespace
-    address = re.sub(r'\s+', ' ', address)
-    # strip punctuation
-    address = re.sub(r'[.,]', '', address)
-    return address
+    if not address:
+        return address
+
+    addr, type_ = usaddress.tag(address)
+    if type_ == 'Street Address':
+        return ' '.join(
+            [component_format(label, value) for label, value in addr.items()])
+    elif type_ == 'PO Box':
+        return ' '.join(
+            [component_format(label, value) for label, value in addr.items()])
+    logger.warn('Ambiguous address: {}'.format(address), extra=addr)
+    return type_ + address
