@@ -116,8 +116,6 @@ class Address(geo_models.Model):
         bits = []
         if self.address1:
             bits.append(self.address1)
-        if self.address2:
-            bits.append(self.address2)
         bits.append(u'{0.city}, {0.state} {0.zipcode}'.format(self))
         output = sep.join(bits)
         if output.strip() == u',':

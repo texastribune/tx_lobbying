@@ -62,13 +62,13 @@ class RegistrationTest(TestCase):
             interest, address, created = get_or_create_interest(row)
 
         self.assertEqual(interest.name, 'Megacorp')
-        self.assertEqual(interest.address.address1, '123 Fake')
-        self.assertEqual(interest.address.address2, 'B')
+        self.assertEqual(interest.address.address1, '123 Fake B')
+        self.assertEqual(interest.address.address2, None)  # address2 is deprecated
         self.assertEqual(interest.address.city, 'C')
         self.assertEqual(interest.address.state, 'TX')
         self.assertEqual(interest.address.zipcode, '78701')
         # double check formatting
-        self.assertEqual(unicode(interest.address), '123 Fake \nB \nC, TX 78701')
+        self.assertEqual(unicode(interest.address), '123 Fake B \nC, TX 78701')
 
     def test_process_row_works(self):
         with self.assertNumQueries(24):
