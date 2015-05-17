@@ -40,6 +40,11 @@ class AddressTests(unittest.TestCase):
             ('1005 Congress Ave Ste 1000B', '1005 Congress AVE STE 1000B'),
             ('101 East Gillis PO Box 677', '101 E Gillis PO Box 677'),
             ('101 Parklane Boulevard Suite 301', '101 Parklane BLVD STE 301'),
+            ('901 E Street NW 10th Floor', '901 E ST NW 10th FL'),
+            ('1000 Louisiana ST. STE 5600', '1000 Louisiana ST STE 5600'),
+            ('1000 S. Beckham', '1000 S Beckham'),
+            # TODO
+            # ('P O Box 7230', 'PO Box 7230'),
         )
         for addr1, expected in fixtures:
             self.assertEqual(clean_street(addr1), expected)

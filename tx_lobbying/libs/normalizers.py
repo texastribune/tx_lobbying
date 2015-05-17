@@ -26,9 +26,12 @@ def component_format(label, value):
         'StreetNamePostType': lambda x: {
             'AVENUE': 'AVE',
             'BOULEVARD': 'BLVD',
+            'DRIVE': 'DR',
             'STREET': 'ST',
         }.get(x, x),
         'OccupancyType': lambda x: {
+            'FLOOR': 'FL',
+            'ST': 'STE',
             'SUITE': 'STE',
         }.get(x, x),
         'StreetNamePreDirectional': lambda x: {
@@ -37,7 +40,12 @@ def component_format(label, value):
             'SOUTH': 'S',
             'WEST': 'W',
         }.get(x, x),
+        # 'USPSBoxType': lambda x: {
+        #     'P O BOX': 'PO Box',
+        #     'PO BOX': 'PO Box',
+        # }.get(x, x),
     }
+    value = value.replace('.', '')
     if label in formatters:
         return formatters[label](value.upper())
     return value
@@ -58,7 +66,11 @@ def clean_street(address1, address2=''):
     if not address:
         return address
 
-    addr, type_ = usaddress.tag(address)
+    try:
+        addr, type_ = usaddress.tag(address)
+    except usaddress.RepeatedLabelError as e:
+        logger.warn(e)
+        return address
     if type_ == 'Street Address':
         return ' '.join(
             [component_format(label, value) for label, value in addr.items()])
@@ -66,4 +78,4 @@ def clean_street(address1, address2=''):
         return ' '.join(
             [component_format(label, value) for label, value in addr.items()])
     logger.warn('Ambiguous address: {}'.format(address), extra=addr)
-    return type_ + address
+    return address
