@@ -15,7 +15,7 @@ import sys
 from django.utils.text import slugify
 
 # don't use relative imports so this can also be run from the command line
-from tx_lobbying.libs.address_normalizer import clean_zipcode
+from tx_lobbying.libs.normalizers import clean_zipcode
 from tx_lobbying.models import (
     Address,
     Interest, Lobbyist, RegistrationReport,
@@ -77,7 +77,7 @@ def process_row(row, prev_pass=None):
         address2=row['ADDRESS2'],
         city=row['CITY'],
         state=row['STATE'],
-        zipcode=row['ZIPCODE'],
+        zipcode=clean_zipcode(row['ZIPCODE']),
     )
     # HAHAHAHAHAHA
     if (prev_pass and prev_pass.address.address1 == data['address1']
@@ -163,14 +163,20 @@ def process_row(row, prev_pass=None):
     return ProcessedRow(reg_address, lobbyist, report, compensation)
 
 
+from tqdm import tqdm
+
+
 def scrape(path, logger=logger):
     logger.info("Processing %s" % path)
     with open(path, 'rb') as f:
+        for total_rows, row in enumerate(f, start=1):
+            pass
+        f.seek(0)
         reader = DictReader(f)
         prev_pass = None
         first = True
         new_compensations = []
-        for row in reader:
+        for row in tqdm(reader, total=total_rows, leave=True):
             if first:
                 # wipe all `Compensation` objects for the year to avoid double
                 # counting corrected compensations
