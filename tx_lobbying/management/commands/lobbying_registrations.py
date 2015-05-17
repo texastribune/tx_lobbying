@@ -1,35 +1,27 @@
+import logging
+import os
+
 from django.core.management.base import BaseCommand, CommandError
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        import logging
-        import os
-
-        # from project_runpy import ColorizingStreamHandler
-
         from ...scrapers.registration import scrape
 
         if len(args) < 1 or not os.path.isfile(args[0]):
             raise CommandError('Need a file')
 
-        # WISHLIST there's got to be a better way to do logging levels without
-        # this dependency injection
-        logging_levels = [
-            logging.CRITICAL,
-            logging.WARNING,  # default
-            logging.INFO,
-            logging.DEBUG
-        ]
-        logging_level = logging_levels[int(options['verbosity'])]
-        logger = logging.getLogger(__name__)
-        logger.setLevel(logging_level)
-        # if options['no_color']:
-        #     logger.addHandler(logging.StreamHandler())
-        # else:
-        #     logger.addHandler(ColorizingStreamHandler())
+        verbosity = int(options['verbosity'])
+        if verbosity == 0:
+            logging.getLogger('tx_lobbying.scrapers.registration').setLevel(logging.WARN)
+        elif verbosity == 1:  # default
+            logging.getLogger('tx_lobbying.scrapers.registration').setLevel(logging.INFO)
+        elif verbosity > 1:
+            logging.getLogger('tx_lobbying.scrapers.registration').setLevel(logging.DEBUG)
+        if verbosity > 2:
+            logging.getLogger().setLevel(logging.DEBUG)
 
         try:
-            scrape(args[0], logger=logger)
+            scrape(args[0])
         except KeyboardInterrupt:
             exit(1)

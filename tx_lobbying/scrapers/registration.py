@@ -15,7 +15,10 @@ import sys
 from django.utils.text import slugify
 
 # don't use relative imports so this can also be run from the command line
-from tx_lobbying.libs.normalizers import clean_zipcode
+from tx_lobbying.libs.normalizers import (
+    clean_street,
+    clean_zipcode,
+)
 from tx_lobbying.models import (
     Address,
     Interest, Lobbyist, RegistrationReport,
@@ -36,8 +39,7 @@ def get_or_create_interest(row):
     DC are two separate interests, but AT&T Texas and AT & T Texas are the same.
     """
     address, __ = Address.objects.get_or_create(
-        address1=row['EC_ADR1'],
-        address2=row['EC_ADR2'],
+        address1=clean_street(row['EC_ADR1'], row['EC_ADR2']),
         city=row['EC_CITY'],
         state=row['EC_STCD'],
         zipcode=clean_zipcode(row['EC_ZIP4']),
@@ -73,15 +75,13 @@ def process_row(row, prev_pass=None):
     year = row['YEAR_APPL']
 
     data = dict(
-        address1=row['ADDRESS1'],
-        address2=row['ADDRESS2'],
+        address1=clean_street(row['ADDRESS1'], row['ADDRESS2']),
         city=row['CITY'],
         state=row['STATE'],
         zipcode=clean_zipcode(row['ZIPCODE']),
     )
     # HAHAHAHAHAHA
     if (prev_pass and prev_pass.address.address1 == data['address1']
-            and prev_pass.address.address2 == data['address2']
             and prev_pass.address.city == data['city']
             and prev_pass.address.state == data['state']
             and prev_pass.address.zipcode == data['zipcode']):
@@ -105,7 +105,7 @@ def process_row(row, prev_pass=None):
             filer_id=row['FILER_ID'],
             defaults=default_data)
         if created:
-            logger.info("LOBBYIST: %s" % lobbyist)
+            logger.debug("LOBBYIST: %s" % lobbyist)
 
     if row['CONCERNAME']:
         # interest/concern/client
@@ -129,7 +129,7 @@ def process_row(row, prev_pass=None):
             report_id=row['REPNO'],
             defaults=default_data)
         if created:
-            logger.info("REPORT: %s" % report)
+            logger.debug("REPORT: %s" % report)
 
     if interest:
         # lobbyist M2M to `Interest` through `Compensation`
@@ -166,7 +166,7 @@ def process_row(row, prev_pass=None):
 from tqdm import tqdm
 
 
-def scrape(path, logger=logger):
+def scrape(path):
     logger.info("Processing %s" % path)
     with open(path, 'rb') as f:
         for total_rows, row in enumerate(f, start=1):
@@ -186,7 +186,7 @@ def scrape(path, logger=logger):
             prev_pass = process_row(row, prev_pass=prev_pass)
             if prev_pass.compensation:
                 new_compensations.append(prev_pass.compensation)
-        logger.info('{} new compensations'.format(len(new_compensations)))
+        logger.debug('{} new compensations'.format(len(new_compensations)))
         Compensation.objects.bulk_create(new_compensations)
 
 

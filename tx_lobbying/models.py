@@ -82,6 +82,7 @@ class Address(geo_models.Model):
 
     class Meta:
         ordering = ('address1', )
+        unique_together = ('address1', 'city', 'state', 'zipcode')
         verbose_name_plural = 'addresses'
 
     def __unicode__(self):

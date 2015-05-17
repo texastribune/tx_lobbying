@@ -23,6 +23,14 @@ class ZipcodeTests(unittest.TestCase):
 
 
 class AddressTests(unittest.TestCase):
+    def test_it_works(self):
+        fixtures = (
+            ('123 Fake Street', '', '123 Fake Street'),
+            (' 123 Fake Street ', ' ', '123 Fake Street'),
+        )
+        for addr1, addr2, expected in fixtures:
+            self.assertEqual(clean_street(addr1, addr2), expected)
+
     def test_care_of(self):
         fixtures = (
             ('', '', ''),
