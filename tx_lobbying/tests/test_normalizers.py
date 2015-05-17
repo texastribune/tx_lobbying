@@ -1,18 +1,17 @@
 import unittest
 
-from address_normalizer import (
+from ..libs.normalizers import (
     clean_zipcode,
 )
 
 
-class Test_clean_zipcode(unittest.TestCase):
+class ZipcodeTests(unittest.TestCase):
     def test_it_works(self):
-        fixture = (
+        fixtures = (
             ('', ''),
             ('12345', '12345'),
             ('12345-1234', '12345-1234'),
             ('123456789', '12345-6789'),
         )
-        for input, expected in fixture:
+        for input, expected in fixtures:
             self.assertEqual(clean_zipcode(input), expected)
-

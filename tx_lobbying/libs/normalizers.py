@@ -7,6 +7,8 @@ Other examples that all take full addresses:
 * https://github.com/pnpnpn/street-address
 * https://github.com/SwoopSearch/pyaddress
 """
+from __future__ import unicode_literals
+
 import logging
 import re
 
@@ -17,7 +19,7 @@ def clean_zipcode(input):
     if len(input) == 9:
         # malformed zip+4
         logger.debug('cleaned zip code: {}'.format(input))
-        return u'{}-{}'.format(input[0:5], input[5:])
+        return '{}-{}'.format(input[0:5], input[5:])
     return input
 
 
