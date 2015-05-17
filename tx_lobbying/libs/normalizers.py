@@ -27,6 +27,20 @@ def clean_zipcode(input):
     return input
 
 
-def clean_street(input):
-    # TODO
-    return input
+def clean_street(address1, address2=''):
+    """
+    Clean street address.
+
+    # address
+    # [predir_apprev] N S E W
+    # street_name
+    # street_type_abbrev
+    # postdir_abbrev
+    # internal
+
+    http://postgis.net/docs/Normalize_Address.html
+    """
+    # Strip "care of" lines
+    if re.match(r'c/o ', address1, re.IGNORECASE):
+        return address2
+    return '{} {}'.format(address1, address2).strip()
