@@ -169,7 +169,7 @@ from tqdm import tqdm
 def scrape(path):
     logger.info("Processing %s" % path)
     with open(path, 'rb') as f:
-        for total_rows, row in enumerate(f, start=1):
+        for total_rows, row in enumerate(f):  # subtract 1 for header row
             pass
         f.seek(0)
         reader = DictReader(f)

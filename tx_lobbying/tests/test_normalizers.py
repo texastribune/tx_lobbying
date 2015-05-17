@@ -27,6 +27,9 @@ class AddressTests(unittest.TestCase):
         fixtures = (
             ('123 Fake Street', '', '123 Fake Street'),
             (' 123 Fake Street ', ' ', '123 Fake Street'),
+            ('123 Fake Street', 'Suite 1', '123 Fake Street Suite 1'),
+            ('123  Fake  Street', 'Suite 1', '123 Fake Street Suite 1'),
+            ('123 Fake Street.', 'Suite. 1', '123 Fake Street Suite 1'),
         )
         for addr1, addr2, expected in fixtures:
             self.assertEqual(clean_street(addr1, addr2), expected)

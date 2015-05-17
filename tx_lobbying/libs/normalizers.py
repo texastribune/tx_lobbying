@@ -40,7 +40,15 @@ def clean_street(address1, address2=''):
 
     http://postgis.net/docs/Normalize_Address.html
     """
+    # matchers that rely on knowing address lines
     # Strip "care of" lines
     if re.match(r'c/o ', address1, re.IGNORECASE):
         return address2
-    return '{} {}'.format(address1, address2).strip()
+
+    address = '{} {}'.format(address1, address2).strip()
+
+    # collapse whitespace
+    address = re.sub(r'\s+', ' ', address)
+    # strip punctuation
+    address = re.sub(r'[.,]', '', address)
+    return address
