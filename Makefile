@@ -103,3 +103,6 @@ docker/run:
 # a sample elasticsearch for you
 docker/es:
 	docker run -d -p 9200:9200 -p 9300:9300 --name es1 dockerfile/elasticsearch
+
+dump_geo:
+	$(MANAGE) dump_address_geo > address_geo.csv
