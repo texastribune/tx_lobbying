@@ -15,8 +15,12 @@ import re
 logger = logging.getLogger(__name__)
 
 
+# A zip+4 zipcode with a missing dash
+squished_zipcode = re.compile(r'^\d{9}$')
+
+
 def clean_zipcode(input):
-    if len(input) == 9:
+    if squished_zipcode.match(input):
         # malformed zip+4
         logger.debug('cleaned zip code: {}'.format(input))
         return '{}-{}'.format(input[0:5], input[5:])
