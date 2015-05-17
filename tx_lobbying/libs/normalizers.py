@@ -27,23 +27,37 @@ def component_format(label, value):
             'AVENUE': 'AVE',
             'BOULEVARD': 'BLVD',
             'DRIVE': 'DR',
+            'FREEWAY': 'FWY',
+            'FRWY': 'FWY',
+            'LANE': 'LN',
+            'PARKWAY': 'PKWY',
+            'PLACE': 'PL',
+            'ROAD': 'RD',
             'STREET': 'ST',
         }.get(x, x),
         'OccupancyType': lambda x: {
             'FLOOR': 'FL',
             'ST': 'STE',
             'SUITE': 'STE',
+            'SUTIE': 'STE',
         }.get(x, x),
         'StreetNamePreDirectional': lambda x: {
             'EAST': 'E',
-            'NORTH': 'NW',
+            'NORTH': 'N',
+            'NORTHWEST': 'NW',
             'SOUTH': 'S',
+            'SOUTHWEST': 'SW',
             'WEST': 'W',
         }.get(x, x),
-        # 'USPSBoxType': lambda x: {
-        #     'P O BOX': 'PO Box',
-        #     'PO BOX': 'PO Box',
-        # }.get(x, x),
+        # XXX
+        'USPSBoxType': lambda x: {
+            'P O BOX': 'PO Box',
+            'P O DRAWER': 'PO Drawer',
+            'PO BOX': 'PO Box',
+            'PO Drawer': 'PO Drawer',
+            'POBOX': 'PO Box',
+            'POST OFFICE BOX': 'PO Box',
+        }.get(x, x),
     }
     value = value.replace('.', '')
     if label in formatters:
@@ -51,7 +65,7 @@ def component_format(label, value):
     return value
 
 
-def clean_street(address1, address2=''):
+def clean_street(address1, address2='', zipcode=None):
     """
     Clean street address.
     """
@@ -67,10 +81,24 @@ def clean_street(address1, address2=''):
         return address
 
     try:
-        addr, type_ = usaddress.tag(address)
-    except usaddress.RepeatedLabelError as e:
-        logger.warn(e)
+        # Add arbitrary city/state/zip to get `usaddress` to parse the address
+        # as just the street address and not a full address
+        address_to_parse = '{}, Austin, TX {}'.format(address, zipcode) if zipcode else address
+        addr, type_ = usaddress.tag(address_to_parse)
+    except usaddress.RepeatedLabelError:
+        logger.warn('Unparseable address: {}'.format(address_to_parse))
         return address
+    if zipcode:
+        try:
+            addr.pop('PlaceName', None)
+            addr.pop('StateName', None)
+            guessed_zip = addr.pop('ZipCode')
+            assert guessed_zip == zipcode
+        except KeyError:
+            logger.warn('Expected a zipcode {} but found none'.format('zipcode'))
+        except AssertionError:
+            logger.warn('Guessed the wrong zipcode {} != {}'
+                        .format(guessed_zip, zipcode))
     if type_ == 'Street Address':
         return ' '.join(
             [component_format(label, value) for label, value in addr.items()])

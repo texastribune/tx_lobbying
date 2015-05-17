@@ -13,6 +13,7 @@ import os
 import sys
 
 from django.utils.text import slugify
+from tqdm import tqdm
 
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.libs.normalizers import (
@@ -38,11 +39,12 @@ def get_or_create_interest(row):
     Uses the name and state for uniquess. So we assume that AT&T Texas and AT&T
     DC are two separate interests, but AT&T Texas and AT & T Texas are the same.
     """
+    zipcode = clean_zipcode(row['EC_ZIP4'])
     address, __ = Address.objects.get_or_create(
-        address1=clean_street(row['EC_ADR1'], row['EC_ADR2']),
+        address1=clean_street(row['EC_ADR1'], row['EC_ADR2'], zipcode=zipcode),
         city=row['EC_CITY'],
         state=row['EC_STCD'],
-        zipcode=clean_zipcode(row['EC_ZIP4']),
+        zipcode=zipcode,
     )
     # TODO get other info from the csv
     defaults = dict(
@@ -74,11 +76,12 @@ def process_row(row, prev_pass=None):
     report_date = convert_date_format_YMD(row['RPT_DATE'])
     year = row['YEAR_APPL']
 
+    zipcode = clean_zipcode(row['ZIPCODE'])
     data = dict(
-        address1=clean_street(row['ADDRESS1'], row['ADDRESS2']),
+        address1=clean_street(row['ADDRESS1'], row['ADDRESS2'], zipcode=zipcode),
         city=row['CITY'],
         state=row['STATE'],
-        zipcode=clean_zipcode(row['ZIPCODE']),
+        zipcode=zipcode,
     )
     # HAHAHAHAHAHA
     if (prev_pass and prev_pass.address.address1 == data['address1']
@@ -163,9 +166,6 @@ def process_row(row, prev_pass=None):
     return ProcessedRow(reg_address, lobbyist, report, compensation)
 
 
-from tqdm import tqdm
-
-
 def scrape(path):
     logger.info("Processing %s" % path)
     with open(path, 'rb') as f:
@@ -176,7 +176,7 @@ def scrape(path):
         prev_pass = None
         first = True
         new_compensations = []
-        for row in tqdm(reader, total=total_rows, leave=True):
+        for row in tqdm(reader, total=total_rows, leave=True, mininterval=1.0, miniters=100):
             if first:
                 # wipe all `Compensation` objects for the year to avoid double
                 # counting corrected compensations

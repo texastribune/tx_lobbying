@@ -43,11 +43,18 @@ class AddressTests(unittest.TestCase):
             ('901 E Street NW 10th Floor', '901 E ST NW 10th FL'),
             ('1000 Louisiana ST. STE 5600', '1000 Louisiana ST STE 5600'),
             ('1000 S. Beckham', '1000 S Beckham'),
-            # TODO
-            # ('P O Box 7230', 'PO Box 7230'),
+            ('P O Box 7230', 'PO Box 7230'),
         )
         for addr1, expected in fixtures:
             self.assertEqual(clean_street(addr1), expected)
+
+    def test_can_pass_in_zipcode(self):
+        fixtures = (
+            ('P O Box 7230', '12345', 'PO Box 7230'),
+            ('P O Box 7230', 'gibberish', 'PO Box 7230'),  # XXX
+        )
+        for addr1, zipcode, expected in fixtures:
+            self.assertEqual(clean_street(addr1, zipcode=zipcode), expected)
 
     def test_care_of(self):
         fixtures = (
