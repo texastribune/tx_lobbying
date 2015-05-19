@@ -5,12 +5,12 @@ a lot of stupid .decode('latin_1') calls.
 
 """
 from decimal import Decimal
-import json
 import logging
 import os
 import re
 
 from django.utils.text import slugify
+from tqdm import tqdm
 
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.models import (Lobbyist,
@@ -201,15 +201,7 @@ def process_csv(path, _inner_func, **kwargs):
         # store output from the last pass since coversheet and lobbyist don't
         # really change row to row to save some queries.
         last_pass = None
-        for i, row in enumerate(reader):
-            if not i % 1000:
-                logger.info(u'{}/{} filed date: {} report date:{}'
-                    .format(
-                        i,
-                        total,
-                        row.get('FILED_DATE'),
-                        row.get('RPT_DATE')
-                    ))
+        for row in tqdm(reader, total=total, leave=True, mininterval=1.0, miniters=100):
             if YEAR_START and int(row['YEAR_APPL']) < YEAR_START:
                 continue
             try:
