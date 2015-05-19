@@ -13,9 +13,13 @@ import os
 import sys
 
 from django.utils.text import slugify
+from tqdm import tqdm
 
 # don't use relative imports so this can also be run from the command line
-from tx_lobbying.libs.address_normalizer import clean_zipcode
+from tx_lobbying.libs.normalizers import (
+    clean_street,
+    clean_zipcode,
+)
 from tx_lobbying.models import (
     Address,
     Interest, Lobbyist, RegistrationReport,
@@ -35,12 +39,12 @@ def get_or_create_interest(row):
     Uses the name and state for uniquess. So we assume that AT&T Texas and AT&T
     DC are two separate interests, but AT&T Texas and AT & T Texas are the same.
     """
+    zipcode = clean_zipcode(row['EC_ZIP4'])
     address, __ = Address.objects.get_or_create(
-        address1=row['EC_ADR1'],
-        address2=row['EC_ADR2'],
+        address1=clean_street(row['EC_ADR1'], row['EC_ADR2'], zipcode=zipcode),
         city=row['EC_CITY'],
         state=row['EC_STCD'],
-        zipcode=clean_zipcode(row['EC_ZIP4']),
+        zipcode=zipcode,
     )
     # TODO get other info from the csv
     defaults = dict(
@@ -72,16 +76,15 @@ def process_row(row, prev_pass=None):
     report_date = convert_date_format_YMD(row['RPT_DATE'])
     year = row['YEAR_APPL']
 
+    zipcode = clean_zipcode(row['ZIPCODE'])
     data = dict(
-        address1=row['ADDRESS1'],
-        address2=row['ADDRESS2'],
+        address1=clean_street(row['ADDRESS1'], row['ADDRESS2'], zipcode=zipcode),
         city=row['CITY'],
         state=row['STATE'],
-        zipcode=row['ZIPCODE'],
+        zipcode=zipcode,
     )
     # HAHAHAHAHAHA
     if (prev_pass and prev_pass.address.address1 == data['address1']
-            and prev_pass.address.address2 == data['address2']
             and prev_pass.address.city == data['city']
             and prev_pass.address.state == data['state']
             and prev_pass.address.zipcode == data['zipcode']):
@@ -105,7 +108,7 @@ def process_row(row, prev_pass=None):
             filer_id=row['FILER_ID'],
             defaults=default_data)
         if created:
-            logger.info("LOBBYIST: %s" % lobbyist)
+            logger.debug("LOBBYIST: %s" % lobbyist)
 
     if row['CONCERNAME']:
         # interest/concern/client
@@ -129,7 +132,7 @@ def process_row(row, prev_pass=None):
             report_id=row['REPNO'],
             defaults=default_data)
         if created:
-            logger.info("REPORT: %s" % report)
+            logger.debug("REPORT: %s" % report)
 
     if interest:
         # lobbyist M2M to `Interest` through `Compensation`
@@ -163,14 +166,17 @@ def process_row(row, prev_pass=None):
     return ProcessedRow(reg_address, lobbyist, report, compensation)
 
 
-def scrape(path, logger=logger):
+def scrape(path):
     logger.info("Processing %s" % path)
     with open(path, 'rb') as f:
+        for total_rows, row in enumerate(f):  # subtract 1 for header row
+            pass
+        f.seek(0)
         reader = DictReader(f)
         prev_pass = None
         first = True
         new_compensations = []
-        for row in reader:
+        for row in tqdm(reader, total=total_rows, leave=True, mininterval=1.0, miniters=100):
             if first:
                 # wipe all `Compensation` objects for the year to avoid double
                 # counting corrected compensations
@@ -180,7 +186,7 @@ def scrape(path, logger=logger):
             prev_pass = process_row(row, prev_pass=prev_pass)
             if prev_pass.compensation:
                 new_compensations.append(prev_pass.compensation)
-        logger.info('{} new compensations'.format(len(new_compensations)))
+        logger.debug('{} new compensations'.format(len(new_compensations)))
         Compensation.objects.bulk_create(new_compensations)
 
 

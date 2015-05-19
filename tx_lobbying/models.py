@@ -67,6 +67,7 @@ class Address(geo_models.Model):
             'coordinates based on available information')
 
     address1 = models.CharField(max_length=200, null=True, blank=True)
+    # DEPRECATED
     address2 = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=75, null=True, blank=True)
     state = models.CharField(max_length=2)
@@ -81,6 +82,7 @@ class Address(geo_models.Model):
 
     class Meta:
         ordering = ('address1', )
+        unique_together = ('address1', 'city', 'state', 'zipcode')
         verbose_name_plural = 'addresses'
 
     def __unicode__(self):
@@ -90,12 +92,36 @@ class Address(geo_models.Model):
         return reverse('tx_lobbying:address_detail', kwargs={'pk': self.pk})
 
     # CUSTOM PROPERTIES
+    ###################
 
     @property
     def coordinate_quality_label(self):
         return self.Quality.values.get(self.coordinate_quality)
 
+    @property
+    def original_addresses(self):
+        """
+        The address as it was originally entered into registration reports.
+        """
+        def lob_addr(x):
+            return '{ADDRESS1} {ADDRESS2}, {CITY}, {STATE} {ZIPCODE}'.format(**x)
+
+        def comp_addr(compensation):
+            return '{EC_ADR1} {EC_ADR2}, {EC_CITY}, {EC_STCD} {EC_ZIP4}'.format(**compensation)
+
+        addresses_used = defaultdict(list)
+        for item in self.registrationreport_set.all().select_related('lobbyist'):
+            address = lob_addr(item.raw_data)
+            addresses_used[address].append(item)
+        for item in self.compensation_set.all().select_related('report__lobbyist'):
+            address = comp_addr(item.raw_data)
+            addresses_used[address].append(item.report)
+        # XXX cast back to dict so Django templates don't freak out
+        # https://code.djangoproject.com/ticket/16335
+        return dict(addresses_used)
+
     # CUSTOM METHODS
+    ################
 
     def as_adr(self, enclosing_tag='p'):
         """
@@ -114,8 +140,6 @@ class Address(geo_models.Model):
         bits = []
         if self.address1:
             bits.append(self.address1)
-        if self.address2:
-            bits.append(self.address2)
         bits.append(u'{0.city}, {0.state} {0.zipcode}'.format(self))
         output = sep.join(bits)
         if output.strip() == u',':
@@ -445,7 +469,7 @@ class RegistrationReport(RawDataMixin, models.Model):
 
     def get_absolute_url(self):
         return reverse('tx_lobbying:registration_detail', kwargs={
-            'pk': self.pk,
+            'repno': self.report_id,
         })
 
 
