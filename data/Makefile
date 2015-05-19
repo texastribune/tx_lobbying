@@ -37,6 +37,7 @@ expenses:
 	rm TEC_LA_CSV.zip
 
 
+# OBSOLETE
 # CSV of mappings of canonical Interest names
 nomenklatura:
 	mkdir -p nomenklatura
@@ -45,7 +46,7 @@ nomenklatura:
 	curl --silent "http://opennames.org/api/2/entities?dataset=tx-lobbying-subjects&format=csv" > $@/subjects.csv
 
 
-all: lobcon lobcon/csv expenses nomenklatura
+all: lobcon lobcon/csv expenses
 
 
 .PHONY: expenses nomenklatura all

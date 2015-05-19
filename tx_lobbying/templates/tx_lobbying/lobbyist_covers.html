@@ -10,7 +10,7 @@
   <section id="coversheets" class="extrainfo">
     <h2><i class="fa fa-file-o"></i> Cover Sheets</h2>
     {% for cover in object.coversheets.all %}
-      {% include "tx_lobbying/includes/coversheet.html" with data=cover.raw_data %}
+      {% include "tx_lobbying/includes/coversheet.html" with data=cover.raw %}
       {% if cover.details.exists %}
         <ul>
           {% for detail in cover.details.all %}

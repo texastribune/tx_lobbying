@@ -87,9 +87,9 @@
             {% for report in annum.compensation_set.all %}
               <li>
                 {% comment %}
-                  {{ report.raw_data.STARTDT }} {{ report.raw_data.LOSTART }}
+                  {{ report.raw.STARTDT }} {{ report.raw.LOSTART }}
                   -
-                  {{ report.raw_data.TERMDATE }} {{ report.raw_data.LOTERM }}
+                  {{ report.raw.TERMDATE }} {{ report.raw.LOTERM }}
                 {% endcomment %}
                 {% if report.interest.canonical %}
                     <a href="{{ report.interest.canonical.get_absolute_url }}" class="interest-name">{{ report.interest.canonical.name }}</a>
@@ -102,15 +102,15 @@
                 {% endif %}
                 ${{ report.amount_low|intcomma }} &mdash; ${{ report.amount_high|intcomma }}
                 <small class="parenthetical">
-                  ({{ report.raw_data.TYPECOPM }})
+                  ({{ report.raw.TYPECOPM }})
                 </small>
                 <small class="source">
                   reported
                   {{ report.updated_at|date:"Y-m-d" }}
                   in
                   {# avoid table join by using serialized json #}
-                  <a href="{% url 'tx_lobbying:registration_detail' repno=report.raw_data.REPNO %}">
-                    {{ report.raw_data.REPNO }}
+                  <a href="{% url 'tx_lobbying:registration_detail' repno=report.raw.REPNO %}">
+                    {{ report.raw.REPNO }}
                   </a>
                 </small>
               </li>

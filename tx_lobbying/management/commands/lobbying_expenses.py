@@ -2,7 +2,11 @@ from django.core.management.base import BaseCommand, CommandError
 
 
 class Command(BaseCommand):
+    def add_arguments(self, parser):
+        parser.add_argument('directory')
+
     def handle(self, *args, **options):
+        import ipdb; ipdb.set_trace()
         import logging
         import os
 

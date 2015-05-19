@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict, namedtuple
-import json
 
 from django.contrib.gis.db import models as geo_models
+from django.contrib.postgres.fields import HStoreField
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Count, Sum, Q
 from django.template import Context
 from django.template.loader import get_template
-from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from djchoices import DjangoChoices, ChoiceItem
 
@@ -19,15 +18,10 @@ from djchoices import DjangoChoices, ChoiceItem
 
 class RawDataMixin(models.Model):
     """For models that store raw data."""
-    raw = models.TextField()
+    raw = HStoreField(null=True)
 
     class Meta:
         abstract = True
-
-    @cached_property
-    def raw_data(self):
-        # TODO handle ''
-        return json.loads(self.raw)
 
 
 ##########
@@ -111,10 +105,10 @@ class Address(geo_models.Model):
 
         addresses_used = defaultdict(list)
         for item in self.registrationreport_set.all().select_related('lobbyist'):
-            address = lob_addr(item.raw_data)
+            address = lob_addr(item.raw)
             addresses_used[address].append(item)
         for item in self.compensation_set.all().select_related('report__lobbyist'):
-            address = comp_addr(item.raw_data)
+            address = comp_addr(item.raw)
             addresses_used[address].append(item.report)
         # XXX cast back to dict so Django templates don't freak out
         # https://code.djangoproject.com/ticket/16335
@@ -324,8 +318,8 @@ class Lobbyist(models.Model):
         """Get a list of all the different names a `Lobbyist` has used."""
         from .scrapers.utils import get_name_data
         history = []
-        for report in self.coversheets.exclude(raw=''):
-            data = get_name_data(report.raw_data)
+        for report in self.coversheets.exclude(raw=None):
+            data = get_name_data(report.raw)
             name = Lobbyist.get_display_name(data)
             if (not unique or not history) or (history and name != history[-1][0]):
                 history.append((name, report))
@@ -334,8 +328,8 @@ class Lobbyist(models.Model):
     def get_occupation_history(self, unique=True):
         """Get a list of all the different occupations listed."""
         history = []
-        for report in self.registrations.exclude(raw=''):
-            data = report.raw_data
+        for report in self.registrations.exclude(raw=None):
+            data = report.raw
             name = data['NORM_BUS']
             if (not unique or not history) or (history and name != history[-1][0]):
                 history.append((name, report))
@@ -346,7 +340,7 @@ class Lobbyist(models.Model):
         # TODO get data off `RegistrationReport`, .registrations.all()
 
         history = []
-        Item = namedtuple('Item', ['address', 'registration'])
+        Item = namedtuple('Item', ['address', 'registration'])  # NOQA
         for reg in self.registrations.all().order_by('year'):
             address = reg.address
             if not history or address != history[-1].address:

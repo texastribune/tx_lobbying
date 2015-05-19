@@ -10,16 +10,16 @@
     <dt>Filed</dt>
     <dd>{{ object.report_date }}</dd>
     <dt>Date Range</dt>
-    <dd>{{ object.raw_data.LOSTART }} - {{ object.raw_data.LOTERM }}</dd>
+    <dd>{{ object.raw.LOSTART }} - {{ object.raw.LOTERM }}</dd>
     <dt>Normal Business</dt>
-    <dd>{{ object.raw_data.NORM_BUS }}</dd>
-    {% if object.raw_data.FIRM_NAME %}
+    <dd>{{ object.raw.NORM_BUS }}</dd>
+    {% if object.raw.FIRM_NAME %}
       <dt>Lobbying firm</dt>
-      <dd>{{ object.raw_data.FIRM_NAME }}</dd>
+      <dd>{{ object.raw.FIRM_NAME }}</dd>
     {% endif %}
-    {% if object.raw_data.I4E_NAML %}
+    {% if object.raw.I4E_NAML %}
       <dt>Individual or entity</dt>
-      <dd>{{ object.raw_data.I4E_NAML }}</dd>
+      <dd>{{ object.raw.I4E_NAML }}</dd>
     {% endif %}
   </dl>
 
@@ -49,10 +49,10 @@
         {% for compensation in object.compensation_set.all %}
           <tr>
             <td>
-              {{ compensation.raw_data.STARTDT }}
+              {{ compensation.raw.STARTDT }}
             </td>
             <td>
-              {{ compensation.raw_data.TERMDATE }}
+              {{ compensation.raw.TERMDATE }}
             </td>
             <td>
               {# Don't use canonical name, use name as lobbyist reported it #}
@@ -72,7 +72,7 @@
               {{ compensation.amount_high|currency }}
             </td>
             <td>
-              {{ compensation.raw_data.TYPECOPM }}
+              {{ compensation.raw.TYPECOPM }}
             </td>
           </tr>
         {% endfor %}

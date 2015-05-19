@@ -51,7 +51,7 @@ def row_CVR(row, **kwargs):
 
     # Coversheet
     default_data = dict(
-        raw=json.dumps(row),
+        raw=row,
         lobbyist=lobbyist,
         report_date=report_date,
         correction=row['CORR_NUM'],
@@ -113,7 +113,7 @@ def row_Detail(row, type, **kwargs):
         cover=cover,
         lobbyist=lobbyist,
         year=int(row['YEAR_APPL']),
-        raw=json.dumps(row),
+        raw=row,
     )
 
     if amount is None:

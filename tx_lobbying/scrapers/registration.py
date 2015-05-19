@@ -122,7 +122,7 @@ def process_row(row, prev_pass=None):
         report = prev_pass.report
     else:
         default_data = dict(
-            raw=json.dumps(row),
+            raw=row,
             report_date=report_date,
             year=year,
             address=reg_address,
@@ -145,7 +145,7 @@ def process_row(row, prev_pass=None):
             amount_low=int(round(float(row['NLOW'] or "0"))),
             compensation_type=row['TYPECOPM'],
             address=interest_address,
-            raw=json.dumps(row),
+            raw=row,
             updated_at=report_date,
             report=report,
             client_num=row['CLIENT_NUM'],

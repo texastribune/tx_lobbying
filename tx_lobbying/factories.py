@@ -67,7 +67,6 @@ class RegistrationReportFactory(factory.DjangoModelFactory):
     report_date = '1970-01-01'
     year = 1970
     address = factory.SubFactory(AddressFactory)
-    raw = '{}'
 
 
 class CoversheetFactory(factory.DjangoModelFactory):
