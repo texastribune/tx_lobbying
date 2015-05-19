@@ -1,0 +1,36 @@
+name,created_at,updated_at,invalid,dataset,reviewed,id,canonical
+"auto industry, IT, cloud computing, telecom",2014-05-16T22:48:45.229457,2014-05-16T22:48:45.229463,False,tx-lobbying-subjects,False,24215,
+"Film Incentives, TIRZ, and billboard regulations",2014-05-16T22:48:45.434370,2014-05-16T22:48:45.434381,False,tx-lobbying-subjects,False,24221,
+pharmaceuticals,2014-05-16T22:48:45.783383,2014-05-16T22:48:45.783395,False,tx-lobbying-subjects,False,24232,
+workers' compensation insurance,2014-05-16T22:48:46.218127,2014-05-16T22:48:46.218138,False,tx-lobbying-subjects,False,24246,
+Pharmacy Benefits Management,2014-05-16T22:48:45.878968,2014-05-16T22:49:01.263355,False,tx-lobbying-subjects,True,24235,
+capital punishment,2014-05-16T22:48:45.371217,2014-05-16T22:49:05.515284,False,tx-lobbying-subjects,True,24219,
+Tobacco Issues,2014-05-16T22:48:46.186546,2014-05-16T22:49:16.164639,False,tx-lobbying-subjects,True,24245,Tobacco
+technology,2014-05-16T22:48:46.033254,2014-05-16T22:49:22.068718,False,tx-lobbying-subjects,True,24240,
+Sale of IBM Products and Services,2014-05-16T22:48:45.959369,2014-05-16T22:49:28.871789,False,tx-lobbying-subjects,True,24238,IBM Products and Services
+Cable TV & Telecommunications,2014-05-16T22:48:45.339319,2014-05-16T22:49:33.531912,False,tx-lobbying-subjects,True,24218,
+child protection,2014-05-16T22:48:45.402462,2014-05-16T22:49:37.872116,False,tx-lobbying-subjects,True,24220,
+IBM Products and Services,2014-05-16T22:48:45.519404,2014-05-16T22:49:48.597179,False,tx-lobbying-subjects,True,24224,
+REAL ESTATE INVESTMENT,2014-05-16T22:48:45.927730,2014-05-16T22:49:53.510218,False,tx-lobbying-subjects,True,24237,
+Finance,2014-05-16T22:48:45.458448,2014-05-16T22:49:59.455972,False,tx-lobbying-subjects,True,24222,
+Information communication technology,2014-05-16T22:48:45.561019,2014-05-16T22:50:03.323441,False,tx-lobbying-subjects,True,24225,
+Accounting Profession,2014-05-16T22:48:44.905039,2014-05-16T22:50:09.327162,False,tx-lobbying-subjects,True,24212,
+liberty interests,2014-05-16T22:48:45.625645,2014-05-16T22:50:15.366314,False,tx-lobbying-subjects,True,24227,
+Cable TV and Telecommunications,2014-05-16T22:48:45.316679,2014-05-16T22:50:20.125245,False,tx-lobbying-subjects,True,24217,Cable TV & Telecommunications
+Tobacco,2014-05-16T22:48:46.154232,2014-05-16T22:50:23.759227,False,tx-lobbying-subjects,True,24244,
+Membership Organization,2014-05-16T22:48:45.720468,2014-05-16T22:50:29.483916,False,tx-lobbying-subjects,True,24230,
+IT products (fees),2014-05-16T22:48:45.593830,2014-05-16T22:50:39.218792,False,tx-lobbying-subjects,True,24226,
+Biomedical research,2014-05-16T22:48:45.265470,2014-05-16T22:50:42.714499,False,tx-lobbying-subjects,True,24216,
+TIRZ issues & billboard regulation,2014-05-16T22:48:46.095216,2014-05-16T22:50:57.238914,False,tx-lobbying-subjects,True,24242,TIRZ issues & billboard regulations
+Sales of IBM Products and Services,2014-05-16T22:48:45.992427,2014-05-16T22:51:12.304578,False,tx-lobbying-subjects,True,24239,IBM Products and Services
+TIRZ issues and billboard regulations,2014-05-16T22:48:46.071069,2014-05-16T22:51:17.281873,False,tx-lobbying-subjects,True,24241,TIRZ issues & billboard regulations
+Manufacturing,2014-05-16T22:48:45.656920,2014-05-16T22:51:23.242517,False,tx-lobbying-subjects,True,24228,
+Privacy,2014-05-16T22:48:45.902892,2014-05-16T22:51:25.862534,False,tx-lobbying-subjects,True,24236,
+all matters affecting alcohol beverage regulation,2014-05-16T22:48:45.178843,2014-05-16T22:51:32.057634,False,tx-lobbying-subjects,True,24214,
+pharmacies,2014-05-16T22:48:45.815483,2014-05-16T22:51:45.083545,False,tx-lobbying-subjects,True,24233,
+MSW,2014-05-16T22:48:45.752839,2014-05-16T22:51:50.792568,False,tx-lobbying-subjects,True,24231,
+TIRZ issues & billboard regulations,2014-05-16T22:48:46.122870,2014-05-16T22:51:55.538419,False,tx-lobbying-subjects,True,24243,
+Home Visiting,2014-05-16T22:48:45.487600,2014-05-16T22:51:57.567480,False,tx-lobbying-subjects,True,24223,
+pharmacy,2014-05-16T22:48:45.846908,2014-05-16T22:52:01.278637,False,tx-lobbying-subjects,True,24234,pharmacies
+Matters affecting OPT/Alcohol industry,2014-05-16T22:48:45.688883,2014-05-16T22:52:15.543037,False,tx-lobbying-subjects,True,24229,all matters affecting alcohol beverage regulation
+All matters afecting alcohol beverage regulation,2014-05-16T22:48:45.147452,2014-05-16T22:52:19.302596,False,tx-lobbying-subjects,True,24213,all matters affecting alcohol beverage regulation
