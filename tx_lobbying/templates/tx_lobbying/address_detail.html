@@ -75,4 +75,20 @@
     <h3>Other interests in this building</h3>
     {% include "tx_lobbying/includes/interest_list.html" with object_list=other_interests_here %}
   </section>
+
+  <section>
+    <h2>Originally entered addresses</h2>
+    <ul>
+      {% for address, reports in object.original_addresses.items %}
+        <li>
+          {{ address }}
+          {% for report in reports %}
+            <a href="{{ report.get_absolute_url }}">
+              {{ report.report_date|date:"Y-m-d" }} {{ report.lobbyist }}
+            </a>
+          {% endfor %}
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
 {% endblock %}

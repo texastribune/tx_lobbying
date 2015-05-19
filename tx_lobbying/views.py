@@ -1,3 +1,4 @@
+from collections import defaultdict
 from itertools import groupby
 from operator import itemgetter
 
@@ -205,12 +206,11 @@ class AddressDetail(DetailView):
 
     def other_interests_here(self, radius=0):
         # TODO implement radius
-        filter_kwargs = (dict(
-            compensation__address__coordinate=self.object.coordinate
-        ) if self.object.coordinate and int(self.object.coordinate_quality) < 4
-            else dict(
-                compensation__address=self.object
-            ))
+        filter_kwargs = (
+            dict(compensation__address__coordinate=self.object.coordinate)
+            if self.object.coordinate and int(self.object.coordinate_quality) < 4
+            else dict(compensation__address=self.object)
+        )
 
         return (
             models.Interest.objects
