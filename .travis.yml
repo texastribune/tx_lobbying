@@ -16,6 +16,7 @@ cache:
 sudo: false
 before_script:
   - psql -U postgres -c 'CREATE DATABASE tx_lobbying;'
+  - psql -U postgres -c "CREATE EXTENSION hstore" -d tx_lobbying
   - psql -U postgres -c "CREATE EXTENSION postgis" -d tx_lobbying
   - psql -U postgres -c "CREATE EXTENSION postgis_topology" -d tx_lobbying
 script: make test
