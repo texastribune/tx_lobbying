@@ -29,7 +29,7 @@ test:
 
 resetdb:
 	echo "DROP SCHEMA public CASCADE; CREATE SCHEMA public; \
-	CREATE EXTENSION postgis;" | $(MANAGE) dbshell
+	CREATE EXTENSION postgis; CREATE EXTENSION hstore;" | $(MANAGE) dbshell
 # sqlclear does not work on postgres
 #	$(MANAGE) sqlclear tx_lobbying | $(MANAGE) dbshell
 	$(MANAGE) migrate --noinput
