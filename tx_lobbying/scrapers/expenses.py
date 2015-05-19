@@ -242,9 +242,7 @@ def get_record_count(path):
         return 0
 
 
-def main(working_dir, logging_level=None):
-    if logging_level:
-        logger.setLevel(logging_level)
+def main(working_dir):
     process_csv(os.path.join(working_dir, "LaCVR.csv"),
         _inner_func=row_CVR)
     process_csv(os.path.join(working_dir, "LaSub.csv"),

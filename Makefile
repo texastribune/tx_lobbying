@@ -39,7 +39,7 @@ data:
 	cd data && $(MAKE) all
 
 import:
-	DEBUG=0 $(MANAGE) lobbying_expenses data/expenses -v 2
+	DEBUG=0 $(MANAGE) lobbying_expenses data/expenses -v 1
 	$(MAKE) -s import/registrations
 	DEBUG=0 python tx_lobbying/scrapers/canonical_interests.py
 	DEBUG=0 python tx_lobbying/scrapers/canonical_addresses.py
