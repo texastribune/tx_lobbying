@@ -5,10 +5,13 @@ from django.core.management.base import BaseCommand, CommandError
 
 
 class Command(BaseCommand):
-    def handle(self, *args, **options):
+    def add_arguments(self, parser):
+        parser.add_argument('file')
+
+    def handle(self, **options):
         from ...scrapers.registration import scrape
 
-        if len(args) < 1 or not os.path.isfile(args[0]):
+        if not os.path.isfile(options['file']):
             raise CommandError('Need a file')
 
         verbosity = int(options['verbosity'])
@@ -22,6 +25,6 @@ class Command(BaseCommand):
             logging.getLogger().setLevel(logging.DEBUG)
 
         try:
-            scrape(args[0])
+            scrape(options['file'])
         except KeyboardInterrupt:
             exit(1)

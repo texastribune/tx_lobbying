@@ -39,7 +39,7 @@ data:
 	cd data && $(MAKE) all
 
 import:
-	DEBUG=0 $(MANAGE) lobbying_expenses data/expenses -v 1
+	DEBUG=0 $(MANAGE) lobbying_expenses data/expenses
 	$(MAKE) -s import/registrations
 	DEBUG=0 python tx_lobbying/scrapers/canonical_interests.py
 	DEBUG=0 python tx_lobbying/scrapers/canonical_addresses.py
@@ -51,7 +51,7 @@ import1:
 	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon14.csv
 	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon13.csv
 	DEBUG=0 $(MANAGE) lobbying_registrations data/lobcon/LobCon12.csv
-	DEBUG=0 YEAR_START=2012 $(MANAGE) lobbying_expenses data/expenses -v 2
+	DEBUG=0 YEAR_START=2012 $(MANAGE) lobbying_expenses data/expenses
 	DEBUG=0 python tx_lobbying/scrapers/canonical_interests.py
 	DEBUG=0 python tx_lobbying/scrapers/canonical_addresses.py
 	DEBUG=0 $(MANAGE) lobbying_stats

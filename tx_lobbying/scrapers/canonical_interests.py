@@ -109,5 +109,5 @@ if __name__ == '__main__':
     else:
         base_dir = os.path.dirname(__file__)
         path = os.path.join(
-            base_dir, '..', '..', 'data', 'nomenklatura', 'interests.csv')
+            base_dir, '..', '..', 'data', 'nomenklatura', 'interests_sorted.csv')
     go(path, max_attempts)
