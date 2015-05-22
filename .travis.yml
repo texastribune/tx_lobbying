@@ -2,7 +2,7 @@ language: python
 addons:
   postgresql: "9.4"
 env:
-  PYTHONPATH=. ENVIRONMENT=test DATABASE_URL="postgis:///tx_lobbying"
+  PYTHONPATH=. DATABASE_URL="postgis:///tx_lobbying"
 install: "pip install -r requirements.txt --download-cache $HOME/.pip-cache"
 # Enable pip download cache for faster builds, caching site-packages does not
 # seem to work :(
@@ -14,9 +14,4 @@ cache:
 # Enable faster container-based builds
 # http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/
 sudo: false
-before_script:
-  - psql -U postgres -c 'CREATE DATABASE test_tx_lobbying;'
-  - psql -U postgres -c "CREATE EXTENSION hstore" -d test_tx_lobbying
-  - psql -U postgres -c "CREATE EXTENSION postgis" -d test_tx_lobbying
-  - psql -U postgres -c "CREATE EXTENSION postgis_topology" -d test_tx_lobbying
 script: python ./example_project/manage.py test --noinput
