@@ -85,11 +85,19 @@ def process_row(row, prev_pass=None):
     year = row['YEAR_APPL']
 
     zipcode = clean_zipcode(row['ZIPCODE'])
+    cleaned_address, address_components = clean_street(
+        row['ADDRESS1'],
+        row['ADDRESS2'],
+        zipcode=zipcode,
+    )
     data = dict(
-        address1=normalize_street(row['ADDRESS1'], row['ADDRESS2'], zipcode=zipcode),
+        address1=cleaned_address,
         city=row['CITY'],
         state=row['STATE'],
         zipcode=zipcode,
+        defaults=dict(
+            components=address_components,
+        )
     )
     # HAHAHAHAHAHA
     if (prev_pass and prev_pass.address.address1 == data['address1']

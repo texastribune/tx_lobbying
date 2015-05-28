@@ -24,7 +24,10 @@ clean:
 
 
 test:
-	ENVIRONMENT=test $(MANAGE) test --keepdb
+	ENVIRONMENT=test $(MANAGE) test --keepdb --noinput
+
+test2:
+	ENVIRONMENT=test $(MANAGE) test --noinput
 
 
 resetdb:
