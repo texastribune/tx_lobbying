@@ -74,10 +74,10 @@ class RegistrationTest(TestCase):
         with self.assertNumQueries(24):
             process_row(sample_rows.LOBCON)
         # assert re-running uses fewer queries
-        with self.assertNumQueries(9):
+        with self.assertNumQueries(10):
             prev_pass = process_row(sample_rows.LOBCON)
         # assert re-running uses even fewer queries with prev_pass
-        with self.assertNumQueries(4):
+        with self.assertNumQueries(5):
             process_row(sample_rows.LOBCON, prev_pass=prev_pass)
 
 

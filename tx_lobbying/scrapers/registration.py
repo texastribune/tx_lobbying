@@ -17,6 +17,7 @@ from tqdm import tqdm
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.libs.normalizers import (
     normalize_street,
+    clean_street,
     clean_zipcode,
 )
 from tx_lobbying.models import (
@@ -39,11 +40,19 @@ def get_or_create_interest(row):
     DC are two separate interests, but AT&T Texas and AT & T Texas are the same.
     """
     zipcode = clean_zipcode(row['EC_ZIP4'])
-    address, __ = Address.objects.get_or_create(
-        address1=normalize_street(row['EC_ADR1'], row['EC_ADR2'], zipcode=zipcode),
+    cleaned_address, address_components = clean_street(
+        row['EC_ADR1'],
+        row['EC_ADR2'],
+        zipcode=zipcode,
+    )
+    address, __ = Address.objects.update_or_create(
+        address1=cleaned_address,
         city=row['EC_CITY'],
         state=row['EC_STCD'],
         zipcode=zipcode,
+        defaults=dict(
+            components=address_components,
+        )
     )
     # TODO get other info from the csv
     defaults = dict(
