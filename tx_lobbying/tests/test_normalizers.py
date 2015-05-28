@@ -4,7 +4,7 @@ import unittest
 
 from ..libs.normalizers import (
     clean_zipcode,
-    clean_street,
+    normalize_street,
 )
 
 
@@ -29,7 +29,7 @@ class AddressTests(unittest.TestCase):
             (' 123 Fake Street ', ' ', '123 Fake ST'),
         )
         for addr1, addr2, expected in fixtures:
-            self.assertEqual(clean_street(addr1, addr2), expected)
+            self.assertEqual(normalize_street(addr1, addr2), expected)
 
     def test_it_works(self):
         fixtures = (
@@ -46,7 +46,7 @@ class AddressTests(unittest.TestCase):
             ('P O Box 7230', 'PO Box 7230'),
         )
         for addr1, expected in fixtures:
-            self.assertEqual(clean_street(addr1), expected)
+            self.assertEqual(normalize_street(addr1), expected)
 
     def test_can_pass_in_zipcode(self):
         fixtures = (
@@ -54,7 +54,7 @@ class AddressTests(unittest.TestCase):
             ('P O Box 7230', 'gibberish', 'PO Box 7230'),  # XXX
         )
         for addr1, zipcode, expected in fixtures:
-            self.assertEqual(clean_street(addr1, zipcode=zipcode), expected)
+            self.assertEqual(normalize_street(addr1, zipcode=zipcode), expected)
 
     def test_care_of(self):
         fixtures = (
@@ -63,4 +63,4 @@ class AddressTests(unittest.TestCase):
             ('C/O Dude', 'PO Box 123', 'PO Box 123'),
         )
         for addr1, addr2, expected in fixtures:
-            self.assertEqual(clean_street(addr1, addr2), expected)
+            self.assertEqual(normalize_street(addr1, addr2), expected)

@@ -7,7 +7,6 @@ http://www.ethics.state.tx.us/dfs/loblists.htm
 Use csvkit's `in2csv` or open and re-save as CSV.
 """
 from collections import namedtuple
-import json
 import logging
 import os
 import sys
@@ -17,7 +16,7 @@ from tqdm import tqdm
 
 # don't use relative imports so this can also be run from the command line
 from tx_lobbying.libs.normalizers import (
-    clean_street,
+    normalize_street,
     clean_zipcode,
 )
 from tx_lobbying.models import (
@@ -41,7 +40,7 @@ def get_or_create_interest(row):
     """
     zipcode = clean_zipcode(row['EC_ZIP4'])
     address, __ = Address.objects.get_or_create(
-        address1=clean_street(row['EC_ADR1'], row['EC_ADR2'], zipcode=zipcode),
+        address1=normalize_street(row['EC_ADR1'], row['EC_ADR2'], zipcode=zipcode),
         city=row['EC_CITY'],
         state=row['EC_STCD'],
         zipcode=zipcode,
@@ -78,7 +77,7 @@ def process_row(row, prev_pass=None):
 
     zipcode = clean_zipcode(row['ZIPCODE'])
     data = dict(
-        address1=clean_street(row['ADDRESS1'], row['ADDRESS2'], zipcode=zipcode),
+        address1=normalize_street(row['ADDRESS1'], row['ADDRESS2'], zipcode=zipcode),
         city=row['CITY'],
         state=row['STATE'],
         zipcode=zipcode,
